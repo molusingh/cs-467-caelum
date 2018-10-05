@@ -11,31 +11,29 @@ scene.add(cube);
 camera.position.z = 5;
 
 
-$("#menuButton").click(turnOnMenu);
-var menuStatus = true;
+$("#menuButton").click(flipMenuDisplay);
 
-function turnOnMenu()
+function flipMenuDisplay(event)
 {
- menuStatus = !menuStatus;
- if (menuStatus)
- {
-  $("#menu").show();
-  return;
- }
- $("#menu").hide();
-
-
+	if ($("#menu").css("display") == "none")
+	{
+		$("#menu").show();
+	}
+	else
+	{
+		$("#menu").hide();
+	}
 }
 
 function animate()
 {
- requestAnimationFrame(animate);
+	requestAnimationFrame(animate);
 
- cube.rotation.x += 0.01;
- cube.rotation.y += 0.01;
- renderer.setSize(window.innerWidth, window.innerHeight);
+	cube.rotation.x += 0.01;
+	cube.rotation.y += 0.01;
+	renderer.setSize(window.innerWidth, window.innerHeight);
 
- renderer.render(scene, camera);
+	renderer.render(scene, camera);
 };
 
 

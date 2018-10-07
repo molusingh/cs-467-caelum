@@ -1,29 +1,64 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta charset="UTF-8">
-        <title>Mama Duck Redemption</title>
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <!-- jQuery library -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="css/style.css">
-        <!-- Latest compiled JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    </head>
+<!-- 
+TEAM CAELUM  
+OSU CS467 Capstone
+WebGL Game
+Fall 2018
+Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
+-->
 
-    <body>
-        <canvas id="app"></canvas>
-        <div class="elements">
-            <button id="menuButton">menu</button>
-        </div>
-        <div id="menu" class="elements">
-            <h5>Welcome to Mama Duck Redemption!</h5>
-        </div>
-        <script src="js/three.js"></script>
-        <script src="js/script.js"></script>
-    </body>
+<head>
+	<title>Duck Game</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/interface.css">
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+</head>
+
+<body>
+
+	<!-- library scripts -->
+	<script src="lib/three.js"></script>
+
+	<script src="lib/MapControls.js"></script>
+	<script src="lib/GLTFLoader.js"></script>
+	<script src="lib/FBXLoader.js"></script>
+	<script src="lib/inflate.min.js"></script>
+
+	<!-- game scripts -->
+	<script src="scripts/userInterface.js"></script>
+	<script src="scripts/playerControls.js"></script>
+
+	<script src="scripts/assetGen.js"></script>
+	<script src="scripts/assetLoader.js"></script>
+
+	<script src="scripts/sound.js"></script>
+	<script src="scripts/animation.js"></script>
+
+	<script src="scripts/grid.js"></script>
+	<script src="scripts/pathfinding.js"></script>
+
+	<script src="scripts/state.js"></script>
+	<script src="scripts/event.js"></script>
+	<script src="scripts/entity.js"></script>
+
+	<script src="scripts/hawkAI.js"></script>
+	<script src="scripts/croqAI.js"></script>
+	<script src="scripts/foxAI.js"></script>
+	<script src="scripts/ducklingAI.js"></script>
+
+	<script src="scripts/levelAI.js"></script>
+	<script src="scripts/gameAI.js"></script>
+
+	<script src="scripts/main.js"></script>
+
+	<!--
+		<script src="js/Detector.js"></script>
+        <script src="js/libs/stats.min.js"></script>
+	-->
+
+</body>
 
 </html>

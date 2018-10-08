@@ -1,5 +1,4 @@
 (function () {
-  /* ---------- private -------------- */
   var clock = new THREE.Clock();
 
   var screenDimensions = {
@@ -15,6 +14,8 @@
   var camera = buildCamera(screenDimensions);
   var entities = createEngineEntities(scene);
   var light = buildLight();
+  var ambientLight = new THREE.AmbientLight(0x222222);
+  scene.add(ambientLight);
   var debug = addDebugger();
   var pan = addPanControls();
   addScreenChangeHandler(300, "orientationchange");
@@ -47,17 +48,26 @@
     scene.add(gridHelper);
 
     scene.add(new THREE.AxesHelper(20));
+
+    var shadowHelper = new THREE.CameraHelper(light.shadow.camera);
+    scene.add(shadowHelper);
   }
 
   function addFPOGeo() {
+
+    var shadowMat = new THREE.ShadowMaterial({
+      color: 0xff0000, transparent: true, opacity: 0.5
+    });
+
     var loader = new THREE.FBXLoader();
     loader.load('../geo/envFPO.fbx', function (object) {
       object.traverse(function (child) {
 
         if (child instanceof THREE.Mesh) {
-
           //child.scale.x = 10;
-
+          child.castShadow = true;
+          child.receiveShadow = true;
+          child.shadowMaterial = shadowMat;
         }
 
       });
@@ -68,6 +78,52 @@
       object.receiveShadow = true;
       scene.add(object);
     });
+
+    /*
+    var loader = new THREE.FBXLoader();
+    loader.load('../geo/cube.fbx', function (object) {
+      object.traverse(function (child) {
+
+        if (child instanceof THREE.Mesh) {
+          //child.scale.x = 10;
+        }
+
+      });
+      object.scale.x = 100;
+      object.scale.y = 100;
+      object.scale.z = 100;
+      object.castShadow = true;
+      object.receiveShadow = true;
+      scene.add(object);
+    });
+    */
+
+    var geometry = new THREE.BoxBufferGeometry(20, 20, 20);
+
+    var diffuseColor = new THREE.Color().setHSL(0.5, 0.5, 1 * 0.5 + 0.1);
+    var material = new THREE.MeshLambertMaterial({
+      color: diffuseColor,
+    });
+
+    var mesh = new THREE.Mesh(geometry, material, shadowMat);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+
+    var geometry2 = new THREE.BoxBufferGeometry(20, 20, 20);
+
+    var diffuseColor2 = new THREE.Color().setHSL(0.9, 0.5, 1 * 0.5 + 0.1);
+    var material2 = new THREE.MeshLambertMaterial({
+      color: diffuseColor2,
+    });
+
+    var mesh2 = new THREE.Mesh(geometry2, material2, shadowMat);
+    mesh2.castShadow = true;
+    mesh2.receiveShadow = true;
+    mesh2.position.x = -20;
+    mesh2.position.y = -5;
+    scene.add(mesh2);
+
   }
 
   function addFullScreenControls() {
@@ -83,11 +139,22 @@
   }
 
   function buildLight() {
-    var light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(10, 10, 10);
+    var light = new THREE.DirectionalLight(0xffffff, 1, 100);
+    light.position.set(100, 200, 150);
     light.castShadow = true;
-    light.shadowDarkness = 0.5;
+    light.shadowCameraVisible = true;
     scene.add(light);
+
+    light.shadow.camera.top = 250;
+    light.shadow.camera.bottom = -250;
+    light.shadow.camera.left = -250;
+    light.shadow.camera.right = 250;
+
+    light.shadow.mapSize.width = 2048;
+    light.shadow.mapSize.height = 2048;
+    light.shadow.camera.near = 0.5;
+    light.shadow.camera.far = 500;
+
     return light;
   }
 
@@ -100,7 +167,7 @@
     pan.screenSpacePanning = false;
 
     pan.minDistance = 100;
-    pan.maxDistance = 100;
+    pan.maxDistance = 1000;
 
     pan.maxPolarAngle = Math.PI / 2;
 
@@ -140,6 +207,7 @@
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
     renderer.shadowMap.enabled = true;
+    //renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
     return renderer;
@@ -156,7 +224,7 @@
       nearPlane,
       farPlane
     );
-    camera.position.set(2, 10, 0.25);
+    camera.position.set(20, 100, 2.5);
 
     return camera;
   }

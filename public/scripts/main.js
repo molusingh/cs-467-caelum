@@ -18,6 +18,7 @@
   scene.add(ambientLight);
   var debug = addDebugger();
   var pan = addPanControls();
+  var limit = createLimit();
   addScreenChangeHandler(300, "orientationchange");
   addScreenChangeHandler(0, "resize");
   //temp
@@ -110,19 +111,6 @@
     mesh.receiveShadow = true;
     scene.add(mesh);
 
-    var geometry2 = new THREE.BoxBufferGeometry(20, 20, 20);
-
-    var diffuseColor2 = new THREE.Color().setHSL(0.9, 0.5, 1 * 0.5 + 0.1);
-    var material2 = new THREE.MeshLambertMaterial({
-      color: diffuseColor2,
-    });
-
-    var mesh2 = new THREE.Mesh(geometry2, material2, shadowMat);
-    mesh2.castShadow = true;
-    mesh2.receiveShadow = true;
-    mesh2.position.x = -20;
-    mesh2.position.y = -5;
-    scene.add(mesh2);
 
   }
 
@@ -166,8 +154,11 @@
 
     pan.screenSpacePanning = false;
 
-    pan.minDistance = 100;
-    pan.maxDistance = 1000;
+    pan.minDistance = 150;
+    pan.maxDistance = 150;
+
+    pan.enableZoom = false;
+    pan.enableRotate = false;
 
     pan.maxPolarAngle = Math.PI / 2;
 
@@ -309,6 +300,39 @@
     }
   }
 
+  function checkPanLimits(limitObject) {
+    var frustum = new THREE.Frustum();
+    var cameraViewProjectionMatrix = new THREE.Matrix4();
+
+    // every time the camera or objects change position (or every frame)
+
+    camera.updateMatrixWorld(); // make sure the camera matrix is updated
+    camera.matrixWorldInverse.getInverse(camera.matrixWorld);
+    cameraViewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    frustum.setFromMatrix(cameraViewProjectionMatrix);
+
+    // frustum is now ready to check all the objects you need
+    console.log("HERE: " + frustum.intersectsObject(limitObject));
+  }
+
+
+  function createLimit() {
+    var geometry2 = new THREE.BoxBufferGeometry(20, 20, 20);
+
+    var diffuseColor2 = new THREE.Color().setHSL(0.9, 0.5, 1 * 0.5 + 0.1);
+    var material2 = new THREE.MeshLambertMaterial({
+      color: diffuseColor2,
+    });
+
+    var mesh2 = new THREE.Mesh(geometry2, material2);
+    mesh2.castShadow = true;
+    mesh2.receiveShadow = true;
+    mesh2.position.x = -20;
+    mesh2.position.y = -5;
+    scene.add(mesh2);
+    return mesh2;
+  }
+
   function updateEngine() {
     requestAnimationFrame(updateEngine);
     var elapsedTime = clock.getElapsedTime();
@@ -318,6 +342,8 @@
     //TO DO: 1.limit horiz + vert pan 2. adjust portrait zoom for mobile
     //console.log("CAM: " + camera.position.x);
     //if camera.position.x > then...
+
+    checkPanLimits(limit);
     pan.update();
 
     renderer.render(scene, camera);

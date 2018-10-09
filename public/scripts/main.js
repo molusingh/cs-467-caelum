@@ -343,8 +343,9 @@
     //console.log("CAM: " + camera.position.x);
     //if camera.position.x > then...
 
-    checkPanLimits(limit);
-    pan.update();
+    //if (checkPanLimits(limit) === false)
+    pan.update(true);
+    //pan.update(checkPanLimits(limit));
 
     renderer.render(scene, camera);
   }

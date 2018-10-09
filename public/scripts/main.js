@@ -215,16 +215,21 @@
 
   function buildCamera({ width, height }) {
     var aspectRatio = width / height;
-    var fieldOfView = 70;
+    //var fieldOfView = 20;
+    //var fieldOfView = 70;
+    var fieldOfView = 50;
     var nearPlane = 0.25;
-    var farPlane = 200;
+    //var farPlane = 600;
+    //var farPlane = 200;
+    var farPlane = 400;
     var camera = new THREE.PerspectiveCamera(
       fieldOfView,
       aspectRatio,
       nearPlane,
       farPlane
     );
-    camera.position.set(20, 100, 2.5);
+    //camera.position.set(20, 500, 0);
+    camera.position.set(20, 150, 0);
 
     return camera;
   }

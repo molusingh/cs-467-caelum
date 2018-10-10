@@ -15,7 +15,8 @@
 //    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
 //    Pan - left mouse, or arrow keys / touch: one-finger move
 
-THREE.MapControls = function (object, domElement) {
+THREE.MapControls = function(object, domElement)
+{
 
 	this.object = object;
 
@@ -42,7 +43,7 @@ THREE.MapControls = function (object, domElement) {
 
 	// How far you can orbit horizontally, upper and lower limits.
 	// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
-	this.minAzimuthAngle = - Infinity; // radians
+	this.minAzimuthAngle = -Infinity; // radians
 	this.maxAzimuthAngle = Infinity; // radians
 
 	// Set to true to enable damping (inertia)
@@ -63,7 +64,7 @@ THREE.MapControls = function (object, domElement) {
 	this.enablePan = true;
 	this.panSpeed = 1.0;
 	this.screenSpacePanning = false; // if true, pan in screen-space
-	this.keyPanSpeed = 7.0;	// pixels moved per arrow key push
+	this.keyPanSpeed = 7.0; // pixels moved per arrow key push
 
 	// Set to true to automatically rotate around the target
 	// If auto-rotate is enabled, you must call controls.update() in your animation loop
@@ -88,19 +89,22 @@ THREE.MapControls = function (object, domElement) {
 	// public methods
 	//
 
-	this.getPolarAngle = function () {
+	this.getPolarAngle = function()
+	{
 
 		return spherical.phi;
 
 	};
 
-	this.getAzimuthalAngle = function () {
+	this.getAzimuthalAngle = function()
+	{
 
 		return spherical.theta;
 
 	};
 
-	this.saveState = function () {
+	this.saveState = function()
+	{
 
 		scope.target0.copy(scope.target);
 		scope.position0.copy(scope.object.position);
@@ -108,7 +112,8 @@ THREE.MapControls = function (object, domElement) {
 
 	};
 
-	this.reset = function () {
+	this.reset = function()
+	{
 
 		scope.target.copy(scope.target0);
 		scope.object.position.copy(scope.position0);
@@ -124,7 +129,8 @@ THREE.MapControls = function (object, domElement) {
 	};
 
 	// this method is exposed, but perhaps it would be better if we can make it private...
-	this.update = function () {
+	this.update = function()
+	{
 
 		var offset = new THREE.Vector3();
 
@@ -135,8 +141,9 @@ THREE.MapControls = function (object, domElement) {
 		var lastPosition = new THREE.Vector3();
 		var lastQuaternion = new THREE.Quaternion();
 
-		return function update(doit) {
-			console.log("DD: " + doit);
+		return function update(doit)
+		{
+			// console.log("DD: " + doit);
 			var position = scope.object.position;
 
 			offset.copy(position).sub(scope.target);
@@ -147,7 +154,8 @@ THREE.MapControls = function (object, domElement) {
 			// angle from z-axis around y-axis
 			spherical.setFromVector3(offset);
 
-			if (scope.autoRotate && state === STATE.NONE) {
+			if (scope.autoRotate && state === STATE.NONE)
+			{
 
 				rotateLeft(getAutoRotationAngle());
 
@@ -182,14 +190,17 @@ THREE.MapControls = function (object, domElement) {
 
 			scope.object.lookAt(scope.target);
 
-			if (scope.enableDamping === true) {
+			if (scope.enableDamping === true)
+			{
 
 				sphericalDelta.theta *= (1 - scope.dampingFactor);
 				sphericalDelta.phi *= (1 - scope.dampingFactor);
 
 				panOffset.multiplyScalar(1 - scope.dampingFactor);
 
-			} else {
+			}
+			else
+			{
 
 				sphericalDelta.set(0, 0, 0);
 
@@ -205,7 +216,8 @@ THREE.MapControls = function (object, domElement) {
 
 			if (zoomChanged ||
 				lastPosition.distanceToSquared(scope.object.position) > EPS ||
-				8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
+				8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS)
+			{
 
 				scope.dispatchEvent(changeEvent);
 
@@ -223,7 +235,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}();
 
-	this.dispose = function () {
+	this.dispose = function()
+	{
 
 		scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
 		scope.domElement.removeEventListener('mousedown', onMouseDown, false);
@@ -292,38 +305,44 @@ THREE.MapControls = function (object, domElement) {
 	var dollyEnd = new THREE.Vector2();
 	var dollyDelta = new THREE.Vector2();
 
-	function getAutoRotationAngle() {
+	function getAutoRotationAngle()
+	{
 
 		return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
 
 	}
 
-	function getZoomScale() {
+	function getZoomScale()
+	{
 
 		return Math.pow(0.95, scope.zoomSpeed);
 
 	}
 
-	function rotateLeft(angle) {
+	function rotateLeft(angle)
+	{
 
 		sphericalDelta.theta -= angle;
 
 	}
 
-	function rotateUp(angle) {
+	function rotateUp(angle)
+	{
 
 		sphericalDelta.phi -= angle;
 
 	}
 
-	var panLeft = function () {
+	var panLeft = function()
+	{
 
 		var v = new THREE.Vector3();
 
-		return function panLeft(distance, objectMatrix) {
+		return function panLeft(distance, objectMatrix)
+		{
 
 			v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
-			v.multiplyScalar(- distance);
+			v.multiplyScalar(-distance);
 
 			panOffset.add(v);
 
@@ -331,17 +350,22 @@ THREE.MapControls = function (object, domElement) {
 
 	}();
 
-	var panUp = function () {
+	var panUp = function()
+	{
 
 		var v = new THREE.Vector3();
 
-		return function panUp(distance, objectMatrix) {
+		return function panUp(distance, objectMatrix)
+		{
 
-			if (scope.screenSpacePanning === true) {
+			if (scope.screenSpacePanning === true)
+			{
 
 				v.setFromMatrixColumn(objectMatrix, 1);
 
-			} else {
+			}
+			else
+			{
 
 				v.setFromMatrixColumn(objectMatrix, 0);
 				v.crossVectors(scope.object.up, v);
@@ -357,15 +381,18 @@ THREE.MapControls = function (object, domElement) {
 	}();
 
 	// deltaX and deltaY are in pixels; right and down are positive
-	var pan = function () {
+	var pan = function()
+	{
 
 		var offset = new THREE.Vector3();
 
-		return function pan(deltaX, deltaY) {
+		return function pan(deltaX, deltaY)
+		{
 
 			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
-			if (scope.object.isPerspectiveCamera) {
+			if (scope.object.isPerspectiveCamera)
+			{
 
 				// perspective
 				var position = scope.object.position;
@@ -379,13 +406,17 @@ THREE.MapControls = function (object, domElement) {
 				panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix);
 				panUp(2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix);
 
-			} else if (scope.object.isOrthographicCamera) {
+			}
+			else if (scope.object.isOrthographicCamera)
+			{
 
 				// orthographic
 				panLeft(deltaX * (scope.object.right - scope.object.left) / scope.object.zoom / element.clientWidth, scope.object.matrix);
 				panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.clientHeight, scope.object.matrix);
 
-			} else {
+			}
+			else
+			{
 
 				// camera neither orthographic nor perspective
 				console.warn('WARNING: MapControls.js encountered an unknown camera type - pan disabled.');
@@ -397,19 +428,25 @@ THREE.MapControls = function (object, domElement) {
 
 	}();
 
-	function dollyIn(dollyScale) {
+	function dollyIn(dollyScale)
+	{
 
-		if (scope.object.isPerspectiveCamera) {
+		if (scope.object.isPerspectiveCamera)
+		{
 
 			scale /= dollyScale;
 
-		} else if (scope.object.isOrthographicCamera) {
+		}
+		else if (scope.object.isOrthographicCamera)
+		{
 
 			scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom * dollyScale));
 			scope.object.updateProjectionMatrix();
 			zoomChanged = true;
 
-		} else {
+		}
+		else
+		{
 
 			console.warn('WARNING: MapControls.js encountered an unknown camera type - dolly/zoom disabled.');
 			scope.enableZoom = false;
@@ -418,19 +455,25 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function dollyOut(dollyScale) {
+	function dollyOut(dollyScale)
+	{
 
-		if (scope.object.isPerspectiveCamera) {
+		if (scope.object.isPerspectiveCamera)
+		{
 
 			scale *= dollyScale;
 
-		} else if (scope.object.isOrthographicCamera) {
+		}
+		else if (scope.object.isOrthographicCamera)
+		{
 
 			scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / dollyScale));
 			scope.object.updateProjectionMatrix();
 			zoomChanged = true;
 
-		} else {
+		}
+		else
+		{
 
 			console.warn('WARNING: MapControls.js encountered an unknown camera type - dolly/zoom disabled.');
 			scope.enableZoom = false;
@@ -443,7 +486,8 @@ THREE.MapControls = function (object, domElement) {
 	// event callbacks - update the object state
 	//
 
-	function handleMouseDownRotate(event) {
+	function handleMouseDownRotate(event)
+	{
 
 		//console.log( 'handleMouseDownRotate' );
 
@@ -451,7 +495,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleMouseDownDolly(event) {
+	function handleMouseDownDolly(event)
+	{
 
 		//console.log( 'handleMouseDownDolly' );
 
@@ -459,7 +504,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleMouseDownPan(event) {
+	function handleMouseDownPan(event)
+	{
 
 		//console.log( 'handleMouseDownPan' );
 
@@ -467,7 +513,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleMouseMoveRotate(event) {
+	function handleMouseMoveRotate(event)
+	{
 
 		//console.log( 'handleMouseMoveRotate' );
 
@@ -487,7 +534,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleMouseMoveDolly(event) {
+	function handleMouseMoveDolly(event)
+	{
 
 		//console.log( 'handleMouseMoveDolly' );
 
@@ -495,11 +543,14 @@ THREE.MapControls = function (object, domElement) {
 
 		dollyDelta.subVectors(dollyEnd, dollyStart);
 
-		if (dollyDelta.y > 0) {
+		if (dollyDelta.y > 0)
+		{
 
 			dollyIn(getZoomScale());
 
-		} else if (dollyDelta.y < 0) {
+		}
+		else if (dollyDelta.y < 0)
+		{
 
 			dollyOut(getZoomScale());
 
@@ -511,7 +562,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleMouseMovePan(event) {
+	function handleMouseMovePan(event)
+	{
 
 		//console.log( 'handleMouseMovePan' );
 
@@ -527,21 +579,26 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleMouseUp(event) {
+	function handleMouseUp(event)
+	{
 
 		// console.log( 'handleMouseUp' );
 
 	}
 
-	function handleMouseWheel(event) {
+	function handleMouseWheel(event)
+	{
 
 		// console.log( 'handleMouseWheel' );
 
-		if (event.deltaY < 0) {
+		if (event.deltaY < 0)
+		{
 
 			dollyOut(getZoomScale());
 
-		} else if (event.deltaY > 0) {
+		}
+		else if (event.deltaY > 0)
+		{
 
 			dollyIn(getZoomScale());
 
@@ -551,11 +608,13 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleKeyDown(event) {
+	function handleKeyDown(event)
+	{
 
 		//console.log( 'handleKeyDown' );
 
-		switch (event.keyCode) {
+		switch (event.keyCode)
+		{
 
 			case scope.keys.UP:
 				pan(0, scope.keyPanSpeed);
@@ -563,7 +622,7 @@ THREE.MapControls = function (object, domElement) {
 				break;
 
 			case scope.keys.BOTTOM:
-				pan(0, - scope.keyPanSpeed);
+				pan(0, -scope.keyPanSpeed);
 				scope.update();
 				break;
 
@@ -573,7 +632,7 @@ THREE.MapControls = function (object, domElement) {
 				break;
 
 			case scope.keys.RIGHT:
-				pan(- scope.keyPanSpeed, 0);
+				pan(-scope.keyPanSpeed, 0);
 				scope.update();
 				break;
 
@@ -581,7 +640,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleTouchStartRotate(event) {
+	function handleTouchStartRotate(event)
+	{
 
 		// console.log( 'handleTouchStartRotate' );
 
@@ -593,9 +653,11 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleTouchStartDolly(event) {
+	function handleTouchStartDolly(event)
+	{
 
-		if (scope.enableZoom) {
+		if (scope.enableZoom)
+		{
 
 			// console.log( 'handleTouchStartDolly' );
 
@@ -610,9 +672,11 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleTouchStartPan(event) {
+	function handleTouchStartPan(event)
+	{
 
-		if (scope.enablePan) {
+		if (scope.enablePan)
+		{
 
 			// console.log( 'handleTouchStartPan' );
 
@@ -622,7 +686,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleTouchMoveRotate(event) {
+	function handleTouchMoveRotate(event)
+	{
 
 		if (scope.enableRotate === false) return;
 		if ((state & STATE.ROTATE) === 0) return;
@@ -638,7 +703,8 @@ THREE.MapControls = function (object, domElement) {
 		rotateDeltaStartFingers.subVectors(rotateStart2, rotateStart);
 		rotateDeltaEndFingers.subVectors(rotateEnd2, rotateEnd);
 
-		if (isRotateUp()) {
+		if (isRotateUp())
+		{
 
 			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
@@ -648,7 +714,9 @@ THREE.MapControls = function (object, domElement) {
 			// Start rotateUp ==> disable all movement to prevent flickering
 			state = STATE.ROTATE_UP;
 
-		} else if ((state & STATE.ROTATE_LEFT) !== 0) {
+		}
+		else if ((state & STATE.ROTATE_LEFT) !== 0)
+		{
 
 			rotateLeft((rotateDeltaStartFingers.angle() - rotateDeltaEndFingers.angle()) * scope.rotateSpeed);
 
@@ -659,31 +727,36 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function isRotateUp() {
+	function isRotateUp()
+	{
 
 		// At start, does the two fingers are aligned horizontally
-		if (!isHorizontal(rotateDeltaStartFingers)) {
+		if (!isHorizontal(rotateDeltaStartFingers))
+		{
 
 			return false;
 
 		}
 
 		// At end, does the two fingers are aligned horizontally
-		if (!isHorizontal(rotateDeltaEndFingers)) {
+		if (!isHorizontal(rotateDeltaEndFingers))
+		{
 
 			return false;
 
 		}
 
 		// does the first finger moved vertically between start and end
-		if (!isVertical(rotateDelta)) {
+		if (!isVertical(rotateDelta))
+		{
 
 			return false;
 
 		}
 
 		// does the second finger moved vertically between start and end
-		if (!isVertical(rotateDelta2)) {
+		if (!isVertical(rotateDelta2))
+		{
 
 			return false;
 
@@ -694,11 +767,13 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	var isHorizontal = function () {
+	var isHorizontal = function()
+	{
 
 		var precision = Math.sin(Math.PI / 6);
 
-		return function isHorizontal(vector) {
+		return function isHorizontal(vector)
+		{
 
 			return Math.abs(Math.sin(vector.angle())) < precision;
 
@@ -706,11 +781,13 @@ THREE.MapControls = function (object, domElement) {
 
 	}();
 
-	var isVertical = function () {
+	var isVertical = function()
+	{
 
 		var precision = Math.cos(Math.PI / 2 - Math.PI / 6);
 
-		return function isVertical(vector) {
+		return function isVertical(vector)
+		{
 
 			return Math.abs(Math.cos(vector.angle())) < precision;
 
@@ -718,7 +795,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}();
 
-	function handleTouchMoveDolly(event) {
+	function handleTouchMoveDolly(event)
+	{
 
 		if (scope.enableZoom === false) return;
 		if ((state & STATE.DOLLY) === 0) return;
@@ -740,7 +818,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleTouchMovePan(event) {
+	function handleTouchMovePan(event)
+	{
 
 		if (scope.enablePan === false) return;
 		if ((state & STATE.PAN) === 0) return;
@@ -757,7 +836,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function handleTouchEnd(event) {
+	function handleTouchEnd(event)
+	{
 
 		//console.log( 'handleTouchEnd' );
 
@@ -767,17 +847,20 @@ THREE.MapControls = function (object, domElement) {
 	// event handlers - FSM: listen for events and reset state
 	//
 
-	function onMouseDown(event) {
+	function onMouseDown(event)
+	{
 
 		if (scope.enabled === false) return;
 
 		event.preventDefault();
 
-		switch (event.button) {
+		switch (event.button)
+		{
 
 			case scope.mouseButtons.LEFT:
 
-				if (event.ctrlKey || event.metaKey) {
+				if (event.ctrlKey || event.metaKey)
+				{
 
 					if (scope.enableRotate === false) return;
 
@@ -785,7 +868,9 @@ THREE.MapControls = function (object, domElement) {
 
 					state = STATE.ROTATE;
 
-				} else {
+				}
+				else
+				{
 
 					if (scope.enablePan === false) return;
 
@@ -819,7 +904,8 @@ THREE.MapControls = function (object, domElement) {
 
 		}
 
-		if (state !== STATE.NONE) {
+		if (state !== STATE.NONE)
+		{
 
 			document.addEventListener('mousemove', onMouseMove, false);
 			document.addEventListener('mouseup', onMouseUp, false);
@@ -830,13 +916,15 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onMouseMove(event) {
+	function onMouseMove(event)
+	{
 
 		if (scope.enabled === false) return;
 
 		event.preventDefault();
 
-		switch (state) {
+		switch (state)
+		{
 
 			case STATE.ROTATE:
 
@@ -866,7 +954,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onMouseUp(event) {
+	function onMouseUp(event)
+	{
 
 		if (scope.enabled === false) return;
 
@@ -881,7 +970,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onMouseWheel(event) {
+	function onMouseWheel(event)
+	{
 
 		if (scope.enabled === false || scope.enableZoom === false || (state !== STATE.NONE && state !== STATE.ROTATE)) return;
 
@@ -896,7 +986,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onKeyDown(event) {
+	function onKeyDown(event)
+	{
 
 		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
 
@@ -904,15 +995,17 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onTouchStart(event) {
+	function onTouchStart(event)
+	{
 
 		if (scope.enabled === false) return;
 
 		event.preventDefault();
 
-		switch (event.touches.length) {
+		switch (event.touches.length)
+		{
 
-			case 1:	// one-fingered touch: pan
+			case 1: // one-fingered touch: pan
 
 				if (scope.enablePan === false) return;
 
@@ -922,7 +1015,7 @@ THREE.MapControls = function (object, domElement) {
 
 				break;
 
-			case 2:	// two-fingered touch: rotate-dolly
+			case 2: // two-fingered touch: rotate-dolly
 
 				if (scope.enableZoom === false && scope.enableRotate === false) return;
 
@@ -939,7 +1032,8 @@ THREE.MapControls = function (object, domElement) {
 
 		}
 
-		if (state !== STATE.NONE) {
+		if (state !== STATE.NONE)
+		{
 
 			scope.dispatchEvent(startEvent);
 
@@ -947,14 +1041,16 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onTouchMove(event) {
+	function onTouchMove(event)
+	{
 
 		if (scope.enabled === false) return;
 
 		event.preventDefault();
 		event.stopPropagation();
 
-		switch (event.touches.length) {
+		switch (event.touches.length)
+		{
 
 			case 1: // one-fingered touch: pan
 
@@ -987,7 +1083,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onTouchEnd(event) {
+	function onTouchEnd(event)
+	{
 
 		if (scope.enabled === false) return;
 
@@ -999,7 +1096,8 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-	function onContextMenu(event) {
+	function onContextMenu(event)
+	{
 
 		if (scope.enabled === false) return;
 
@@ -1029,11 +1127,14 @@ THREE.MapControls = function (object, domElement) {
 THREE.MapControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 THREE.MapControls.prototype.constructor = THREE.MapControls;
 
-Object.defineProperties(THREE.MapControls.prototype, {
+Object.defineProperties(THREE.MapControls.prototype,
+{
 
-	center: {
+	center:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .center has been renamed to .target');
 			return this.target;
@@ -1044,16 +1145,19 @@ Object.defineProperties(THREE.MapControls.prototype, {
 
 	// backward compatibility
 
-	noZoom: {
+	noZoom:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .noZoom has been deprecated. Use .enableZoom instead.');
 			return !this.enableZoom;
 
 		},
 
-		set: function (value) {
+		set: function(value)
+		{
 
 			console.warn('THREE.MapControls: .noZoom has been deprecated. Use .enableZoom instead.');
 			this.enableZoom = !value;
@@ -1062,16 +1166,19 @@ Object.defineProperties(THREE.MapControls.prototype, {
 
 	},
 
-	noRotate: {
+	noRotate:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .noRotate has been deprecated. Use .enableRotate instead.');
 			return !this.enableRotate;
 
 		},
 
-		set: function (value) {
+		set: function(value)
+		{
 
 			console.warn('THREE.MapControls: .noRotate has been deprecated. Use .enableRotate instead.');
 			this.enableRotate = !value;
@@ -1080,16 +1187,19 @@ Object.defineProperties(THREE.MapControls.prototype, {
 
 	},
 
-	noPan: {
+	noPan:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .noPan has been deprecated. Use .enablePan instead.');
 			return !this.enablePan;
 
 		},
 
-		set: function (value) {
+		set: function(value)
+		{
 
 			console.warn('THREE.MapControls: .noPan has been deprecated. Use .enablePan instead.');
 			this.enablePan = !value;
@@ -1098,16 +1208,19 @@ Object.defineProperties(THREE.MapControls.prototype, {
 
 	},
 
-	noKeys: {
+	noKeys:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .noKeys has been deprecated. Use .enableKeys instead.');
 			return !this.enableKeys;
 
 		},
 
-		set: function (value) {
+		set: function(value)
+		{
 
 			console.warn('THREE.MapControls: .noKeys has been deprecated. Use .enableKeys instead.');
 			this.enableKeys = !value;
@@ -1116,16 +1229,19 @@ Object.defineProperties(THREE.MapControls.prototype, {
 
 	},
 
-	staticMoving: {
+	staticMoving:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .staticMoving has been deprecated. Use .enableDamping instead.');
 			return !this.enableDamping;
 
 		},
 
-		set: function (value) {
+		set: function(value)
+		{
 
 			console.warn('THREE.MapControls: .staticMoving has been deprecated. Use .enableDamping instead.');
 			this.enableDamping = !value;
@@ -1134,16 +1250,19 @@ Object.defineProperties(THREE.MapControls.prototype, {
 
 	},
 
-	dynamicDampingFactor: {
+	dynamicDampingFactor:
+	{
 
-		get: function () {
+		get: function()
+		{
 
 			console.warn('THREE.MapControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
 			return this.dampingFactor;
 
 		},
 
-		set: function (value) {
+		set: function(value)
+		{
 
 			console.warn('THREE.MapControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
 			this.dampingFactor = value;

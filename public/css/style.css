@@ -1,4 +1,8 @@
 /*
+ * Sources: W3 Schools
+ */
+ 
+/*
  * Should apply to all elements in the game interface
  */
 
@@ -20,19 +24,11 @@ button {
  background-color: transparent;
 }
 
-/*
- * Source W3Schools
- */
-
 button:active {
  box-shadow: 0 5px #666;
  transform: translateY(4px);
  opacity: 0.5;
 }
-
-/*
- * W3Schools
- */
 
 button:hover {
  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
@@ -55,7 +51,7 @@ img {
 }
 
 #movementControls>button {
- width: 10vmax;
+ width: 7vmax;
  height: auto;
 }
 
@@ -67,8 +63,8 @@ img {
 #gameControls {
  bottom: 0%;
  width: 100%;
- text-align: center;
  margin-bottom: 2%;
+ text-align: center;
 }
 
 #gameControls>div {

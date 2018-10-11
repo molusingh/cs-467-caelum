@@ -1,7 +1,52 @@
 /*
  * Sources: W3 Schools
  */
- 
+
+.gameScreens {
+ background: linear-gradient(to bottom, #0000ff 0%, #00ccff 100%);
+ width: 100vw;
+ height: 100vh;
+ text-align: center;
+ position: fixed;
+ z-index: 25;
+}
+
+#startScreen {
+ width: 100vw;
+ height: 100vh;
+ text-align: center;
+ position: fixed;
+ z-index: 25;
+}
+
+#menu {
+ display: none;
+}
+
+#menu>button {
+ margin-top: 5vh;
+ width: 35vmax;
+ height: auto;
+}
+
+#title {
+ width: 60vmax;
+ height: auto;
+ margin: auto;
+ padding-top: 5vh;
+}
+
+#startButton {
+ width: 30vmax;
+ height: auto;
+ margin-top: 10vh;
+}
+
+#howToPlayButton {
+ width: 45vmax;
+ height: auto;
+ margin-top: 10vh;
+}
 /*
  * Should apply to all elements in the game interface
  */

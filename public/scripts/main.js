@@ -25,7 +25,8 @@
   addFPOGeo();
   addFullScreenControls();
   addHelpers();
-  updateEngine();
+  //var gameAI = new gameAI(clock, renderer, scene);
+  update();
   var fullScreen = false;
 
   function addDebugger() {
@@ -312,7 +313,8 @@
     frustum.setFromMatrix(cameraViewProjectionMatrix);
 
     // frustum is now ready to check all the objects you need
-    console.log("HERE: " + frustum.intersectsObject(limitObject));
+    console.log("limit visible: " + frustum.intersectsObject(limitObject));
+    return frustum.intersectsObject(limitObject);
   }
 
 
@@ -327,14 +329,14 @@
     var mesh2 = new THREE.Mesh(geometry2, material2);
     mesh2.castShadow = true;
     mesh2.receiveShadow = true;
-    mesh2.position.x = -20;
+    mesh2.position.x = -210;
     mesh2.position.y = -5;
     scene.add(mesh2);
     return mesh2;
   }
 
-  function updateEngine() {
-    requestAnimationFrame(updateEngine);
+  function update() {
+    requestAnimationFrame(update);
     var elapsedTime = clock.getElapsedTime();
 
     //for (var i = 0; i < entities.length; i++) entities[i].update(elapsedTime, scene, renderer);
@@ -343,9 +345,34 @@
     //console.log("CAM: " + camera.position.x);
     //if camera.position.x > then...
 
-    //if (checkPanLimits(limit) === false)
-    pan.update(true);
+    //console.log("deltaX: " + pan.getDelta().x + " deltaY: " + pan.getDelta().y);
+
+    var deltaX = pan.getDelta().x;
+    var deltaY = pan.getDelta().y;
+
+    console.log("POS: " + camera.position.x);
+
+    if (checkPanLimits(limit) === false) {
+      console.log("TRUE");
+      pan.enablePan = true;
+      pan.update();
+    }
+    else {
+      if (deltaY < 0) {
+        pan.enablePan = false;
+      }
+      else {
+        pan.enablePan = true;
+        pan.update();
+      }
+    }
+
+    /*
+    if (gameAI.isReady) {
+      gameAI.update();
+    }
     //pan.update(checkPanLimits(limit));
+    */
 
     renderer.render(scene, camera);
   }

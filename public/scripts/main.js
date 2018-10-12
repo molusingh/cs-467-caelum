@@ -8,7 +8,8 @@
 
   // Core Settings
   setFrameSize();
-  var container = buildContainer();
+  var container = document.getElementById("gameContainer"); // buildContainer();
+  console.log(container);
   var scene = buildScene();
   var renderer = buildRender(screenDimensions);
   var camera = buildCamera(screenDimensions);
@@ -16,7 +17,7 @@
   var light = buildLight();
   var ambientLight = new THREE.AmbientLight(0x222222);
   scene.add(ambientLight);
-  var debug = addDebugger();
+  // var debug = addDebugger();
   var pan = addPanControls();
   var limit = createLimit();
   addScreenChangeHandler(300, "orientationchange");

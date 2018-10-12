@@ -9,6 +9,7 @@
   // Core Settings
   setFrameSize();
   var container = buildContainer();
+  console.log(container);
   var scene = buildScene();
   var renderer = buildRender(screenDimensions);
   var camera = buildCamera(screenDimensions);
@@ -16,7 +17,7 @@
   var light = buildLight();
   var ambientLight = new THREE.AmbientLight(0x222222);
   scene.add(ambientLight);
-  var debug = addDebugger();
+  // var debug = addDebugger();
   var pan = addPanControls();
   var limit = createLimit();
   addScreenChangeHandler(300, "orientationchange");
@@ -25,7 +26,8 @@
   addFPOGeo();
   addFullScreenControls();
   addHelpers();
-  updateEngine();
+  var game = new gameAI(scene, clock);
+  update();
   var fullScreen = false;
 
   function addDebugger() {
@@ -312,7 +314,8 @@
     frustum.setFromMatrix(cameraViewProjectionMatrix);
 
     // frustum is now ready to check all the objects you need
-    console.log("HERE: " + frustum.intersectsObject(limitObject));
+    console.log("limit visible: " + frustum.intersectsObject(limitObject));
+    return frustum.intersectsObject(limitObject);
   }
 
 
@@ -327,25 +330,49 @@
     var mesh2 = new THREE.Mesh(geometry2, material2);
     mesh2.castShadow = true;
     mesh2.receiveShadow = true;
-    mesh2.position.x = -20;
+    mesh2.position.x = -210;
     mesh2.position.y = -5;
     scene.add(mesh2);
     return mesh2;
   }
 
-  function updateEngine() {
-    requestAnimationFrame(updateEngine);
+  function update() {
+    requestAnimationFrame(update);
     var elapsedTime = clock.getElapsedTime();
+    /*
+       //for (var i = 0; i < entities.length; i++) entities[i].update(elapsedTime, scene, renderer);
+   
+       //TO DO: 1.limit horiz + vert pan 2. adjust portrait zoom for mobile
+       //console.log("CAM: " + camera.position.x);
+       //if camera.position.x > then...
+   
+       //console.log("deltaX: " + pan.getDelta().x + " deltaY: " + pan.getDelta().y);
+   
+       var deltaX = pan.getDelta().x;
+       var deltaY = pan.getDelta().y;
+   
+       console.log("POS: " + camera.position.x);
+   
+       if (checkPanLimits(limit) === false) {
+         console.log("TRUE");
+         pan.enablePan = true;
+         pan.update();
+       }
+       else {
+         if (deltaY < 0) {
+           pan.enablePan = false;
+         }
+         else {
+           pan.enablePan = true;
+           pan.update();
+         }
+       }
+   
+   
+       */
 
-    //for (var i = 0; i < entities.length; i++) entities[i].update(elapsedTime, scene, renderer);
-
-    //TO DO: 1.limit horiz + vert pan 2. adjust portrait zoom for mobile
-    //console.log("CAM: " + camera.position.x);
-    //if camera.position.x > then...
-
-    //if (checkPanLimits(limit) === false)
-    pan.update(true);
-    //pan.update(checkPanLimits(limit));
+    game.update();
+    pan.update();
 
     renderer.render(scene, camera);
   }

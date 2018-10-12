@@ -84,6 +84,15 @@ THREE.MapControls = function (object, domElement) {
 	this.position0 = this.object.position.clone();
 	this.zoom0 = this.object.zoom;
 
+	this.getDelta = function () {
+		return panDelta;
+	}
+
+	var stopThis = false;
+	this.stop = function () {
+		stopThis = true;
+	}
+
 	//
 	// public methods
 	//
@@ -135,8 +144,7 @@ THREE.MapControls = function (object, domElement) {
 		var lastPosition = new THREE.Vector3();
 		var lastQuaternion = new THREE.Quaternion();
 
-		return function update(doit) {
-			console.log("DD: " + doit);
+		return function update() {
 			var position = scope.object.position;
 
 			offset.copy(position).sub(scope.target);
@@ -362,6 +370,7 @@ THREE.MapControls = function (object, domElement) {
 		var offset = new THREE.Vector3();
 
 		return function pan(deltaX, deltaY) {
+			//console.log("deltaX: " + deltaX + " deltaY: " + deltaY);
 
 			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 

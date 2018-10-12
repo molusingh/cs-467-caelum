@@ -10,6 +10,18 @@ Object.freeze(levelState);
 var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4 };
 Object.freeze(playerState);
 
+var ducklingState = { "init": 1, "ready": 2, "egg": 3, "waiting": 4, "called": 5, "dead": 6 };
+Object.freeze(playerState);
+
+var hawkState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
+Object.freeze(playerState);
+
+var croqState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
+Object.freeze(playerState);
+
+var foxState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
+Object.freeze(playerState);
+
 // CONSTANTS
 
 var motionUnit = 1.0;

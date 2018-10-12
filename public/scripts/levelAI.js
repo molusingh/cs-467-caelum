@@ -21,14 +21,14 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     function loadAssets() {
 
         var shadowMat = new THREE.ShadowMaterial({
-        color: 0xff0000, transparent: true, opacity: 0.5
+            color: 0xff0000, transparent: true, opacity: 0.5
         });
 
         var geometry2 = new THREE.BoxBufferGeometry(6, 8, 6);
 
         var diffuseColor2 = new THREE.Color().setHSL(0.9, 0.5, 1 * 0.5 + 0.1);
         var material2 = new THREE.MeshLambertMaterial({
-        color: diffuseColor2,
+            color: diffuseColor2,
         });
 
         duck = new THREE.Mesh(geometry2, material2, shadowMat);
@@ -43,6 +43,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     function initAssets() {
         //need to set up referencing
         player = new playerControls(scene, clock, duck);
+
     }
 
     function setState(state) {

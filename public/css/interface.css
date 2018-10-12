@@ -1,3 +1,6 @@
+/*
+ * Sources: W3 Schools
+ */
 
 body {
     font-family: Monospace;
@@ -5,4 +8,133 @@ body {
     color: #fff;
     margin: 0px;
     overflow: hidden;
+}
+
+#interface {
+    width: 100%;
+    height: 100%;
+}
+
+#interface>div,
+#menuButton {
+    position: fixed;
+    z-index: 10;
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+    font-size: xx-large;
+    font-size: 2vmax;
+}
+
+.gameScreens {
+    background: linear-gradient(to bottom, #0000ff 0%, #00ccff 100%);
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    position: fixed;
+    z-index: 25;
+}
+
+#startScreen {
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+    position: fixed;
+    z-index: 25;
+}
+
+#menu {
+    display: none;
+}
+
+#menu>button {
+    margin-top: 5vh;
+    width: 35vmax;
+    height: auto;
+}
+
+#title {
+    width: 60vmax;
+    height: auto;
+    margin: auto;
+    padding-top: 5vh;
+}
+
+#startButton {
+    width: 30vmax;
+    height: auto;
+    margin-top: 10vh;
+}
+
+#howToPlayButton {
+    width: 45vmax;
+    height: auto;
+    margin-top: 10vh;
+}
+
+button {
+    cursor: pointer;
+    width: 12vmax;
+    height: auto;
+    border: none;
+    background-color: transparent;
+}
+
+button:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+    opacity: 0.5;
+}
+
+button:hover {
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+
+button:focus {
+    outline: none;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+#menuButton {
+    width: 17vmax;
+    height: auto;
+    top: 2%;
+    left: 0%;
+}
+
+#movementControls>button {
+    width: 7vmax;
+    height: auto;
+}
+
+#gameStateLabels {
+    top: 2%;
+    right: 2vw;
+}
+
+#gameControls {
+    bottom: 0%;
+    width: 100%;
+    margin-bottom: 2%;
+    text-align: center;
+}
+
+#gameControls>div {
+    display: inline-block;
+}
+
+#actionButtons {
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+}
+
+#skillButtons {
+    position: absolute;
+    bottom: 0%;
+    left: 0%;
 }

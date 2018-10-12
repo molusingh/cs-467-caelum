@@ -24,6 +24,7 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 </head>
 
 <body>
+	
 	<div id="startScreen" class="gameScreens">
 		<div id="title">
 			<img src="./images/interface/title.png">
@@ -35,6 +36,7 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 			<img src="./images/interface/howtoplay.png">
 		</button> </br>
 	</div>
+	
 	<div id="menu" class="gameScreens">
 		<button id="closeMenuButton">
 			<img src="./images/interface/menu.png">
@@ -49,16 +51,17 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 			<img src="./images/interface/restart.png">
 		</button> </br>
 	</div>
-	<div id="gameContainer">
-		<button id="menuButton" class="interface">
+	
+	<div id="interface">
+		<button id="menuButton">
 			<img src="./images/interface/menu.png">
 		</button>
-		<div id="gameStateLabels" class="interface">
+		<div id="gameStateLabels">
 			Level: <span id="levelOutput">1</span> &ensp;
 			Score: <span id="scoreOutput">0</span> &ensp;
 			Sticks: <span id="sticksOutput">0</span>
 		</div>
-		<div id="gameControls" class="interface">
+		<div id="gameControls">
 			<div id="skillButtons">
 				<button id="quackButton">
 					<img src="./images/interface/superquackbutton.png">
@@ -99,7 +102,6 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 				</button>
 			</div>
 		</div>
-
 	</div>
 
 	<!-- library scripts -->

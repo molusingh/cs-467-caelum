@@ -1,3 +1,5 @@
+/* global $*/
+/* global location*/
 $("#menuButton").click(flipMenuDisplay);
 $("#closeMenuButton").click(flipMenuDisplay);
 $("#restartButton").click(restart);

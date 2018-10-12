@@ -8,7 +8,7 @@
 
   // Core Settings
   setFrameSize();
-  var container = document.getElementById("gameContainer"); // buildContainer();
+  var container = buildContainer();
   console.log(container);
   var scene = buildScene();
   var renderer = buildRender(screenDimensions);

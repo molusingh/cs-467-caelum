@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<!-- 
+<!-- 
 TEAM CAELUM  
 OSU CS467 Capstone
 WebGL Game
@@ -9,144 +9,138 @@ Fall 2018
 Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 -->
 
-	<head>
-		<title>Mama Duck Redemption</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="css/interface.css">
-		<link rel="stylesheet" type="text/css" href="css/util.css">
+<head>
+	<title>Mama Duck Redemption</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/interface.css">
+	<link rel="stylesheet" type="text/css" href="css/util.css">
 
-		<!-- temp css file not sure where to put which css -->
-		<link rel="stylesheet" href="css/style.css">
+	<!-- temp css file not sure where to put which css -->
+	<link rel="stylesheet" href="css/style.css">
 
-		<!-- jQuery library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	</head>
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
 
-	<body>
-		<div id="startScreen" class="gameScreens">
-			<div id="title">
-				<img src="./images/interface/title.png">
-			</div>
-			<button id="startButton">
-				<img src="./images/interface/start.png">
-			</button> </br>
-			<button id="howToPlayButton">
-				<img src="./images/interface/howtoplay.png">
-			</button> </br>
+<body>
+	<div id="startScreen" class="gameScreens">
+		<div id="title">
+			<img src="./images/interface/title.png">
 		</div>
-		<div id="menu" class="gameScreens">
-			<button id="closeMenuButton">
-				<img src="./images/interface/menu.png">
-			</button> </br>
-			<button id="soundButton">
-				<img src="./images/interface/sound.png">
-			</button> </br>
-			<button id="musicButton">
-				<img src="./images/interface/music.png">
-			</button> </br>
-			<button id="restartButton">
-				<img src="./images/interface/restart.png">
-			</button> </br>
+		<button id="startButton">
+			<img src="./images/interface/start.png">
+		</button> </br>
+		<button id="howToPlayButton">
+			<img src="./images/interface/howtoplay.png">
+		</button> </br>
+	</div>
+	<div id="menu" class="gameScreens">
+		<button id="closeMenuButton">
+			<img src="./images/interface/menu.png">
+		</button> </br>
+		<button id="soundButton">
+			<img src="./images/interface/sound.png">
+		</button> </br>
+		<button id="musicButton">
+			<img src="./images/interface/music.png">
+		</button> </br>
+		<button id="restartButton">
+			<img src="./images/interface/restart.png">
+		</button> </br>
+	</div>
+	<div id="gameContainer">
+		<button id="menuButton" class="interface">
+			<img src="./images/interface/menu.png">
+		</button>
+		<div id="gameStateLabels" class="interface">
+			Level: <span id="levelOutput">1</span> &ensp;
+			Score: <span id="scoreOutput">0</span> &ensp;
+			Sticks: <span id="sticksOutput">0</span>
 		</div>
-		<div id="gameContainer">
-			<button id="menuButton" class="interface">
-				<img src="./images/interface/menu.png">
-			</button>
-			<div id="gameStateLabels" class="interface">
-				Level: <span id="levelOutput">1</span> &ensp; 
-				Score: <span id="scoreOutput">0</span> &ensp; 
-				Sticks: <span id="sticksOutput">0</span>
+		<div id="gameControls" class="interface">
+			<div id="skillButtons">
+				<button id="quackButton">
+					<img src="./images/interface/superquackbutton.png">
+				</button> </br>
+				<button id="speedButton">
+					<img src="./images/interface/speedboostbutton.png">
+				</button> </br>
+				<button id="invisibilityButton">
+					<img src="./images/interface/invisibility.png">
+				</button>
 			</div>
-			<div id="gameControls" class="interface">
-				<div id="skillButtons">
-					<button id="quackButton">
-						<img src="./images/interface/superquackbutton.png">
-					</button> </br>
-						<button id="speedButton">
-							<img src="./images/interface/speedboostbutton.png">
-					</button> </br>
-					<button id="invisibilityButton">
-						<img src="./images/interface/invisibility.png">
-					</button>
-				</div>
-				<div id="movementControls">
-					<button id="leftButton">
-						<img src="./images/interface/leftarrow.png">
-					</button>
-					<button id="downButton">
-						<img src="./images/interface/downarrow.png">
-					</button>
-					<button id="upButton">
-						<img src="./images/interface/uparrow.png">
-					</button>
-					<button id="rightButton">
-						<img src="./images/interface/rightarrow.png">
-					</button>
-				</div>
-				<div id="actionButtons">
-					<button id="flyButton">
-						<img src="./images/interface/flybutton.png">
-					</button> </br>
-					<button id="jumpButton">
-						<img src="./images/interface/jumpbutton.png">
-					</button> </br>
-					<button id="callButton">
-						<img src="./images/interface/callbutton.png">
-					</button> </br>
-					<button id="nestButton">
-						<img src="./images/interface/nestbutton.png">
-					</button>
-				</div>
+			<div id="movementControls">
+				<button id="leftButton">
+					<img src="./images/interface/leftarrow.png">
+				</button>
+				<button id="downButton">
+					<img src="./images/interface/downarrow.png">
+				</button>
+				<button id="upButton">
+					<img src="./images/interface/uparrow.png">
+				</button>
+				<button id="rightButton">
+					<img src="./images/interface/rightarrow.png">
+				</button>
 			</div>
-
+			<div id="actionButtons">
+				<button id="flyButton">
+					<img src="./images/interface/flybutton.png">
+				</button> </br>
+				<button id="jumpButton">
+					<img src="./images/interface/jumpbutton.png">
+				</button> </br>
+				<button id="callButton">
+					<img src="./images/interface/callbutton.png">
+				</button> </br>
+				<button id="nestButton">
+					<img src="./images/interface/nestbutton.png">
+				</button>
+			</div>
 		</div>
 
-		<!-- library scripts -->
-		<script src="lib/three.js"></script>
+	</div>
 
-		<script src="lib/MapControls.js"></script>
-		<script src="lib/GLTFLoader.js"></script>
-		<script src="lib/FBXLoader.js"></script>
-		<script src="lib/inflate.min.js"></script>
+	<!-- library scripts -->
+	<script src="lib/three.js"></script>
 
-		<!-- game scripts -->
+	<script src="lib/MapControls.js"></script>
+	<script src="lib/GLTFLoader.js"></script>
+	<script src="lib/FBXLoader.js"></script>
+	<script src="lib/inflate.min.js"></script>
 
-		
-		<script src="scripts/userInterface.js"></script>
-		<!--
-		<script src="scripts/playerControls.js"></script>
+	<!-- game scripts -->
+	<script src="scripts/globals.js"></script>
+	<script src="scripts/userInterface.js"></script>
+	<script src="scripts/playerControls.js"></script>
 
-		<script src="scripts/assetGen.js"></script>
-		<script src="scripts/assetLoader.js"></script>
+	<script src="scripts/assetGen.js"></script>
+	<script src="scripts/assetLoader.js"></script>
 
-		<script src="scripts/sound.js"></script>
-		<script src="scripts/animation.js"></script>
+	<script src="scripts/sound.js"></script>
+	<script src="scripts/animation.js"></script>
 
-		<script src="scripts/grid.js"></script>
-		<script src="scripts/pathfinding.js"></script>
+	<script src="scripts/grid.js"></script>
+	<script src="scripts/pathfinding.js"></script>
 
-		<script src="scripts/state.js"></script>
-		<script src="scripts/event.js"></script>
-		<script src="scripts/entity.js"></script>
+	<script src="scripts/event.js"></script>
 
-		<script src="scripts/hawkAI.js"></script>
-		<script src="scripts/croqAI.js"></script>
-		<script src="scripts/foxAI.js"></script>
-		<script src="scripts/ducklingAI.js"></script>
+	<script src="scripts/hawkAI.js"></script>
+	<script src="scripts/croqAI.js"></script>
+	<script src="scripts/foxAI.js"></script>
+	<script src="scripts/ducklingAI.js"></script>
 
-		<script src="scripts/levelAI.js"></script>
-		<script src="scripts/gameAI.js"></script>
-		
-		-->
+	<script src="scripts/levelAI.js"></script>
+	<script src="scripts/gameAI.js"></script>
 
-		<script src="scripts/main.js"></script>
+	<script src="scripts/main.js"></script>
 
-		<!--
+	<!--
 		<script src="js/Detector.js"></script>
         <script src="js/libs/stats.min.js"></script>
 		-->
 
-	</body>
+</body>
 
 </html>

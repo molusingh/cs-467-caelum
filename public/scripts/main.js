@@ -26,7 +26,7 @@
   addFPOGeo();
   addFullScreenControls();
   addHelpers();
-  //var gameAI = new gameAI(clock, renderer, scene);
+  var game = new gameAI(scene, clock);
   update();
   var fullScreen = false;
 
@@ -339,41 +339,40 @@
   function update() {
     requestAnimationFrame(update);
     var elapsedTime = clock.getElapsedTime();
-
-    //for (var i = 0; i < entities.length; i++) entities[i].update(elapsedTime, scene, renderer);
-
-    //TO DO: 1.limit horiz + vert pan 2. adjust portrait zoom for mobile
-    //console.log("CAM: " + camera.position.x);
-    //if camera.position.x > then...
-
-    //console.log("deltaX: " + pan.getDelta().x + " deltaY: " + pan.getDelta().y);
-
-    var deltaX = pan.getDelta().x;
-    var deltaY = pan.getDelta().y;
-
-    console.log("POS: " + camera.position.x);
-
-    if (checkPanLimits(limit) === false) {
-      console.log("TRUE");
-      pan.enablePan = true;
-      pan.update();
-    }
-    else {
-      if (deltaY < 0) {
-        pan.enablePan = false;
-      }
-      else {
-        pan.enablePan = true;
-        pan.update();
-      }
-    }
-
     /*
-    if (gameAI.isReady) {
-      gameAI.update();
-    }
-    //pan.update(checkPanLimits(limit));
-    */
+       //for (var i = 0; i < entities.length; i++) entities[i].update(elapsedTime, scene, renderer);
+   
+       //TO DO: 1.limit horiz + vert pan 2. adjust portrait zoom for mobile
+       //console.log("CAM: " + camera.position.x);
+       //if camera.position.x > then...
+   
+       //console.log("deltaX: " + pan.getDelta().x + " deltaY: " + pan.getDelta().y);
+   
+       var deltaX = pan.getDelta().x;
+       var deltaY = pan.getDelta().y;
+   
+       console.log("POS: " + camera.position.x);
+   
+       if (checkPanLimits(limit) === false) {
+         console.log("TRUE");
+         pan.enablePan = true;
+         pan.update();
+       }
+       else {
+         if (deltaY < 0) {
+           pan.enablePan = false;
+         }
+         else {
+           pan.enablePan = true;
+           pan.update();
+         }
+       }
+   
+   
+       */
+
+    game.update();
+    pan.update();
 
     renderer.render(scene, camera);
   }

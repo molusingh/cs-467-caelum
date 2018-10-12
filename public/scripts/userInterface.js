@@ -7,28 +7,28 @@ $("#startButton").click(start);
 /*
  * Starts a new game
  */
-function start()
-{
+function start() {
 	$("#startScreen").hide();
 }
 /*
  * Restarts the game
  */
-function restart()
-{
-    location.reload();
+function restart() {
+	location.reload();
 }
 /*
  * flips the display of the menu
  */
-function flipMenuDisplay(event)
-{
-	if ($("#menu").css("display") == "none")
-	{
+function flipMenuDisplay(event) {
+	if ($("#menu").css("display") == "none") {
 		$("#menu").show();
 	}
-	else
-	{
+	else {
 		$("#menu").hide();
 	}
+}
+
+//public functions need to go inside as: this.functionName = function(){}
+function userInterface() {
+
 }

@@ -296,10 +296,12 @@
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    /*
     if (debug) {
       debug.innerHTML =
         "width: " + window.innerWidth + " height: " + window.innerHeight;
     }
+    */
   }
 
   function checkPanLimits(limitObject) {

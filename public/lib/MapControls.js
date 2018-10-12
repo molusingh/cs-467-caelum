@@ -370,7 +370,7 @@ THREE.MapControls = function (object, domElement) {
 		var offset = new THREE.Vector3();
 
 		return function pan(deltaX, deltaY) {
-			console.log("deltaX: " + deltaX + " deltaY: " + deltaY);
+			//console.log("deltaX: " + deltaX + " deltaY: " + deltaY);
 
 			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 

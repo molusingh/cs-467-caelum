@@ -70,7 +70,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
             //object.castShadow = true;
             //object.receiveShadow = true;
-            scene.add(object);
+            duck.add(object);
+            scene.add(duck);
         }, undefined, function (e) {
             console.error(e);
         });

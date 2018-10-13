@@ -1,7 +1,8 @@
-function foxAI(scene, clock, hawk) {
+function foxAI(scene, clock, fox) {
 
-    var currentState = hawkState.init;
+    var currentState = foxState.init;
 
+    //must report all enum states
     this.getState = function () {
 
         return currentState;

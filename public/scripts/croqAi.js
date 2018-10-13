@@ -1,7 +1,8 @@
 function croqAI(scene, clock, croq) {
 
-    var currentState = hawkState.init;
+    var currentState = croq.State.init;
 
+    //must report all enum states
     this.getState = function () {
 
         return currentState;

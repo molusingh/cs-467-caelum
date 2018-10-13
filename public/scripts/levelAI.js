@@ -1,7 +1,7 @@
 function levelAI(scene, clock, currentLevel, difficulty) {
 
     var currentState, score;
-    var levelAI, userInterface;
+    var userInterface;
     var assetArray;
     var player;
 
@@ -10,8 +10,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     determineAssets();
     loadAssets();
-    //initAssets();
     setupSubscriptions();
+
     //only if above successful 
     setState(levelState.ready);
 
@@ -68,8 +68,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
             object.scale.z = 10;
             object.position.x = -20;
 
-            //object.castShadow = true;
-            //object.receiveShadow = true;
             duck.add(object);
             scene.add(duck);
         }, undefined, function (e) {
@@ -79,7 +77,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     }
 
     function initAssets() {
-        //need to set up referencing
+
         player = new playerControls(scene, clock, duck);
 
     }

@@ -63,7 +63,8 @@ THREE.MapControls = function (object, domElement) {
 	this.enablePan = true;
 	this.panSpeed = 1.0;
 	this.screenSpacePanning = false; // if true, pan in screen-space
-	this.keyPanSpeed = 7.0;	// pixels moved per arrow key push
+// Updated from 7.0 to simulate camera follow (JDA) 
+	this.keyPanSpeed = 17.5;	// pixels moved per arrow key push
 
 	// Set to true to automatically rotate around the target
 	// If auto-rotate is enabled, you must call controls.update() in your animation loop
@@ -75,6 +76,9 @@ THREE.MapControls = function (object, domElement) {
 
 	// The four arrow keys
 	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+
+// Added for WSAD panning in game (JDA) 
+	this.WSADkeys = { LEFT: 65, UP: 87, RIGHT: 68, BOTTOM: 83 };
 
 	// Mouse buttons
 	this.mouseButtons = { LEFT: THREE.MOUSE.LEFT, MIDDLE: THREE.MOUSE.MIDDLE, RIGHT: THREE.MOUSE.RIGHT };
@@ -571,7 +575,19 @@ THREE.MapControls = function (object, domElement) {
 				scope.update();
 				break;
 
+// Added for WSAD panning in game (JDA) 
+			case scope.WSADkeys.UP:
+				pan(0, scope.keyPanSpeed);
+				scope.update();
+				break;
+
 			case scope.keys.BOTTOM:
+				pan(0, - scope.keyPanSpeed);
+				scope.update();
+				break;
+
+// Added for WSAD panning in game (JDA) 
+			case scope.WSADkeys.BOTTOM:
 				pan(0, - scope.keyPanSpeed);
 				scope.update();
 				break;
@@ -581,7 +597,19 @@ THREE.MapControls = function (object, domElement) {
 				scope.update();
 				break;
 
+// Added for WSAD panning in game (JDA) 
+			case scope.WSADkeys.LEFT:
+				pan(scope.keyPanSpeed, 0);
+				scope.update();
+				break;
+
 			case scope.keys.RIGHT:
+				pan(- scope.keyPanSpeed, 0);
+				scope.update();
+				break;
+
+// Added for WSAD panning in game (JDA) 
+			case scope.WSADkeys.RIGHT:
 				pan(- scope.keyPanSpeed, 0);
 				scope.update();
 				break;

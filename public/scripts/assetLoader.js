@@ -73,8 +73,6 @@ function assetLoader(scene) {
         object.scale.z = 10;
 
         duck.add(object);
-        duck.userData = { currentDirection: "down" }
-        console.log('Current direction is ' + duck.userData.currentDirection);
         scene.add(duck);
 
     }, undefined, function (e) {

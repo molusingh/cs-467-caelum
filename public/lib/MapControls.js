@@ -566,50 +566,63 @@ THREE.MapControls = function (object, domElement) {
 
 	function handleKeyDown(event) {
 
-		//console.log( 'handleKeyDown' );
+// variables to disable pan at edge of map (JDA)
+		var minX = -165;
+		var maxX = 205;
+		var minZ = -170;
+		var maxZ = 175;
 
 		switch (event.keyCode) {
 
+// if statements disable pan at camera location with duck at center at edge of map (JDA)
 			case scope.keys.UP:
+				if (object.position.x < minX) {break;}
 				pan(0, scope.keyPanSpeed);
 				scope.update();
 				break;
 
 // Added for WSAD panning in game (JDA) 
 			case scope.WSADkeys.UP:
+				if (object.position.x < minX) {break;}
 				pan(0, scope.keyPanSpeed);
 				scope.update();
 				break;
 
 			case scope.keys.BOTTOM:
+				if (object.position.x > maxX) {break;}
 				pan(0, - scope.keyPanSpeed);
 				scope.update();
 				break;
 
 // Added for WSAD panning in game (JDA) 
 			case scope.WSADkeys.BOTTOM:
+				if (object.position.x > maxX) {break;}
 				pan(0, - scope.keyPanSpeed);
 				scope.update();
 				break;
 
 			case scope.keys.LEFT:
+				if (object.position.z > maxZ) {break;}
 				pan(scope.keyPanSpeed, 0);
 				scope.update();
 				break;
 
 // Added for WSAD panning in game (JDA) 
 			case scope.WSADkeys.LEFT:
+				if (object.position.z > maxZ) {break;}
 				pan(scope.keyPanSpeed, 0);
 				scope.update();
 				break;
 
 			case scope.keys.RIGHT:
+				if (object.position.z < minZ) {break;}
 				pan(- scope.keyPanSpeed, 0);
 				scope.update();
 				break;
 
 // Added for WSAD panning in game (JDA) 
 			case scope.WSADkeys.RIGHT:
+				if (object.position.z < minZ) {break;}
 				pan(- scope.keyPanSpeed, 0);
 				scope.update();
 				break;

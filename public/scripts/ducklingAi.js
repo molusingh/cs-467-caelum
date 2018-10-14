@@ -1,6 +1,21 @@
 function ducklingAI(scene, clock, hawk) {
 
-    var currentState = hawkState.init;
+    /*
+    -- subscribe
+    call (params: start, stop)
+     -- then check if 
+     grid.isInCallRadius() //returns duck object to follow or null to ignore call 
+
+    -- check what's around you
+    grid.getSquareInfo(x,z)
+
+    -- find next location 
+    path.getPath(), could return either an array of points or just the next grid location
+
+    -- must update grid after every move
+    grid.updateActor(actorID)
+    */
+    var currentState = ducklingState.init;
 
     //must report all enum states
     this.getState = function () {

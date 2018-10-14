@@ -1,5 +1,10 @@
 function levelAI(scene, clock, currentLevel, difficulty) {
 
+    /*
+    publish: level scores
+    subscribe: userAction (nest)
+    */
+
     var currentState, score;
     var levelAI, userInterface;
     var assetArray;
@@ -67,18 +72,10 @@ function levelAI(scene, clock, currentLevel, difficulty) {
             object.scale.y = 10;
             object.scale.z = 10;
 
-// removed to move duck to center of axis 
-            // object.position.x = -20;
-  
-
-
-            //object.castShadow = true;
-            //object.receiveShadow = true;
             duck.add(object);
-            duck.userData = { currentDirection: "down"}
+            duck.userData = { currentDirection: "down" }
             console.log('Current direction is ' + duck.userData.currentDirection);
             scene.add(duck);
-            
 
         }, undefined, function (e) {
             console.error(e);

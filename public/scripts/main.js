@@ -9,7 +9,6 @@
   // Initial init 
   setFrameSize();
   var container = buildContainer();
-  console.log(container);
   var scene = buildScene();
   var renderer = buildRender(screenDimensions);
   var camera = buildCamera(screenDimensions);

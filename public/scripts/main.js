@@ -18,7 +18,6 @@
   scene.add(ambientLight);
   // var debug = addDebugger();
   var pan = addPanControls();
-  var limit = createLimit();
   addScreenChangeHandler(300, "orientationchange");
   addScreenChangeHandler(0, "resize");
   addFullScreenControls();

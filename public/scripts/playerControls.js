@@ -26,6 +26,13 @@ function playerControls(scene, clock, duck) {
     var maxPos = 185;
     duck.position.x += 5;
     duck.position.z += 5;
+    
+    var duckMover = new ObjectMover(duck);
+    $("#leftButton").click(duckMover.left);
+	$("#rightButton").click(duckMover.right);
+	$("#downButton").click(duckMover.down);
+	$("#upButton").click(duckMover.up);
+    
 
 
     document.addEventListener('keydown', onKeyDown);

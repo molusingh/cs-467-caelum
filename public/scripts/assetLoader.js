@@ -6,6 +6,9 @@ function assetLoader(scene) {
     var fox = new THREE.Object3D();
     fox.name = "fox";
 
+    var croq = new THREE.Object3D();
+    croq.name = "croq";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -76,15 +79,13 @@ function assetLoader(scene) {
         object.scale.z = 10;
 
         duck.add(object);
-        duck.userData = { currentDirection: "down" }
-        console.log('Current direction is ' + duck.userData.currentDirection);
         scene.add(duck);
 
     }, undefined, function (e) {
         console.error(e);
     });
 
-    //load fox 
+    //load Fox 
     var foxLoader = new THREE.FBXLoader(manager);
     foxLoader.load('./geo/fox.fbx', function (object) {
         object.traverse(function (child) {
@@ -96,12 +97,35 @@ function assetLoader(scene) {
             }
 
         });
-        object.scale.x = 10;
-        object.scale.y = 10;
-        object.scale.z = 10;
+        object.scale.x = 12;
+        object.scale.y = 12;
+        object.scale.z = 12;
 
         fox.add(object);
         scene.add(fox);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load Croq 
+    var croqLoader = new THREE.FBXLoader(manager);
+    croqLoader.load('./geo/croq.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        croq.add(object);
+        scene.add(croq);
 
     }, undefined, function (e) {
         console.error(e);

@@ -37,6 +37,12 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var duck = scene.getObjectByName("duck");
         player = new playerControls(scene, clock, duck);
 
+        var fox = scene.getObjectByName("fox");
+        fox = new foxAI(scene, clock, 0, fox);
+
+        var croq = scene.getObjectByName("croq");
+        croq = new croqAI(scene, clock, 0, croq);
+
     }
 
     function setState(state) {

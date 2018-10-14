@@ -1,4 +1,4 @@
-function foxAI(scene, clock, fox, grid) {
+function foxAI(scene, clock, grid, fox) {
 
     /*
     -- subscribe
@@ -18,6 +18,8 @@ function foxAI(scene, clock, fox, grid) {
     */
 
     var currentState = foxState.init;
+
+    fox.position.x -= 20;
 
     //must report all enum states
     this.getState = function () {

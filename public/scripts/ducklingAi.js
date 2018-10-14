@@ -1,4 +1,4 @@
-function ducklingAI(scene, clock, hawk) {
+function ducklingAI(scene, clock, grid, duckling) {
 
     /*
     -- subscribe

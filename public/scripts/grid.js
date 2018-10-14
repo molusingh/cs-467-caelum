@@ -1,4 +1,4 @@
-function grid(scene, clock, hawk) {
+function grid(scene) {
 
     /*
     subscribe: invisibility, superquack

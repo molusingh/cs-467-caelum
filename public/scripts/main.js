@@ -6,14 +6,13 @@
     height: window.innerHeight
   };
 
-  // Core Settings
+  // Initial init 
   setFrameSize();
   var container = buildContainer();
   console.log(container);
   var scene = buildScene();
   var renderer = buildRender(screenDimensions);
   var camera = buildCamera(screenDimensions);
-  var entities = createEngineEntities(scene);
   var light = buildLight();
   var ambientLight = new THREE.AmbientLight(0x222222);
   scene.add(ambientLight);
@@ -22,13 +21,12 @@
   var limit = createLimit();
   addScreenChangeHandler(300, "orientationchange");
   addScreenChangeHandler(0, "resize");
-  //temp
-  addFPOGeo();
   addFullScreenControls();
   addHelpers();
   var game = new gameAI(scene, clock);
   update();
   var fullScreen = false;
+
 
   function addDebugger() {
     if (!document.getElementById('debug')) {
@@ -54,66 +52,6 @@
 
     var shadowHelper = new THREE.CameraHelper(light.shadow.camera);
     scene.add(shadowHelper);
-  }
-
-  function addFPOGeo() {
-
-    var shadowMat = new THREE.ShadowMaterial({
-      color: 0xff0000, transparent: true, opacity: 0.5
-    });
-
-    var loader = new THREE.FBXLoader();
-    loader.load('../geo/envFPO.fbx', function (object) {
-      object.traverse(function (child) {
-
-        if (child instanceof THREE.Mesh) {
-          //child.scale.x = 10;
-          child.castShadow = true;
-          child.receiveShadow = true;
-          child.shadowMaterial = shadowMat;
-        }
-
-      });
-      object.scale.x = 100;
-      object.scale.y = 100;
-      object.scale.z = 100;
-      object.castShadow = true;
-      object.receiveShadow = true;
-      scene.add(object);
-    });
-
-    /*
-    var loader = new THREE.FBXLoader();
-    loader.load('../geo/cube.fbx', function (object) {
-      object.traverse(function (child) {
-
-        if (child instanceof THREE.Mesh) {
-          //child.scale.x = 10;
-        }
-
-      });
-      object.scale.x = 100;
-      object.scale.y = 100;
-      object.scale.z = 100;
-      object.castShadow = true;
-      object.receiveShadow = true;
-      scene.add(object);
-    });
-    */
-
-    var geometry = new THREE.BoxBufferGeometry(20, 20, 20);
-
-    var diffuseColor = new THREE.Color().setHSL(0.5, 0.5, 1 * 0.5 + 0.1);
-    var material = new THREE.MeshLambertMaterial({
-      color: diffuseColor,
-    });
-
-    var mesh = new THREE.Mesh(geometry, material, shadowMat);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    scene.add(mesh);
-
-
   }
 
   function addFullScreenControls() {
@@ -227,12 +165,6 @@
     return camera;
   }
 
-  function createEngineEntities() {
-    //var engineEntities = [new controls(scene, renderer)];
-    var engineEntities;
-
-    return engineEntities;
-  }
 
   function showFullScreen() {
     if (!fullScreen) {
@@ -304,6 +236,7 @@
     */
   }
 
+  /* resuse for AI
   function checkPanLimits(limitObject) {
     var frustum = new THREE.Frustum();
     var cameraViewProjectionMatrix = new THREE.Matrix4();
@@ -337,41 +270,11 @@
     scene.add(mesh2);
     return mesh2;
   }
+  */
 
   function update() {
     requestAnimationFrame(update);
     var elapsedTime = clock.getElapsedTime();
-    /*
-       //for (var i = 0; i < entities.length; i++) entities[i].update(elapsedTime, scene, renderer);
-   
-       //TO DO: 1.limit horiz + vert pan 2. adjust portrait zoom for mobile
-       //console.log("CAM: " + camera.position.x);
-       //if camera.position.x > then...
-   
-       //console.log("deltaX: " + pan.getDelta().x + " deltaY: " + pan.getDelta().y);
-   
-       var deltaX = pan.getDelta().x;
-       var deltaY = pan.getDelta().y;
-   
-       console.log("POS: " + camera.position.x);
-   
-       if (checkPanLimits(limit) === false) {
-         console.log("TRUE");
-         pan.enablePan = true;
-         pan.update();
-       }
-       else {
-         if (deltaY < 0) {
-           pan.enablePan = false;
-         }
-         else {
-           pan.enablePan = true;
-           pan.update();
-         }
-       }
-   
-   
-       */
 
     game.update();
     pan.update();

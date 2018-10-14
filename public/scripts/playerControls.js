@@ -20,6 +20,7 @@ function playerControls(scene, clock, duck) {
     -- must update grid after every move
     grid.updateActor(actorID)
     */
+
     var currentState = playerState.init;
     duck.position.x += 5;
     duck.position.z += 5;

@@ -2,7 +2,7 @@ function gameAI(scene, clock) {
 
     // private
 
-    var currentState 
+    var currentState
     var currentLevel, currentLevelDifficulty, gameScore;
     var level, interface;
 
@@ -28,13 +28,16 @@ function gameAI(scene, clock) {
 
     // public
 
-    this.getState = function(){
+    this.getState = function () {
         return currentState;
     }
 
     this.update = function () {
 
         var elapsedTime = clock.getElapsedTime();
+
+        //temp, needs to be inside conditionals
+        level.update();
 
         if (currentState === gameState.level) {
             switch (level.getState()) {

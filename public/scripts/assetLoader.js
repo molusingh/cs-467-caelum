@@ -3,6 +3,9 @@ function assetLoader(scene) {
     var duck = new THREE.Object3D();
     duck.name = "duck";
 
+    var fox = new THREE.Object3D();
+    duck.name = "fox";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -57,8 +60,8 @@ function assetLoader(scene) {
     });
 
     //load Mama Duck
-    var loader = new THREE.FBXLoader(manager);
-    loader.load('./geo/duck.fbx', function (object) {
+    var duckLoader = new THREE.FBXLoader(manager);
+    duckLoader.load('./geo/duck.fbx', function (object) {
         object.traverse(function (child) {
 
             if (child instanceof THREE.Mesh) {
@@ -80,6 +83,31 @@ function assetLoader(scene) {
     }, undefined, function (e) {
         console.error(e);
     });
+
+    //load Mama Duck
+    var foxLoader = new THREE.FBXLoader(manager);
+    foxLoader.load('./geo/fox.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 10;
+        object.scale.y = 10;
+        object.scale.z = 10;
+
+        fox.add(object);
+        console.log('Current direction is ' + duck.userData.currentDirection);
+        scene.add(fox);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
 
     this.checkAssetsLoaded = function () {
         if (allAssetsLoaded === true) {

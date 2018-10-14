@@ -9,8 +9,8 @@ function EventBus()
     var events = []; // private variable
 
     // public functions
-    this.subcribe = subscribe;
-    this.publish = publish;
+    EventBus.prototype.subscribe = subscribe;
+    EventBus.prototype.publish = publish;
 
     /*
      * Triggers the callbacks for the given event

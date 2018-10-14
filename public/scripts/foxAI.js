@@ -1,13 +1,14 @@
-function ducklingAI(scene, clock, grid, duckling) {
+function foxAI(scene, clock, grid, fox) {
 
     /*
     -- subscribe
-    call (params: start, stop)
-     -- then check if 
-     grid.isInCallRadius() //returns duck object to follow or null to ignore call 
+    stun
 
     -- check what's around you
     grid.getSquareInfo(x,z)
+
+    -- find pray
+    grid.getActorsInRadius(position(x,z), actorType)
 
     -- find next location 
     path.getPath(), could return either an array of points or just the next grid location
@@ -15,7 +16,10 @@ function ducklingAI(scene, clock, grid, duckling) {
     -- must update grid after every move
     grid.updateActor(actorID)
     */
-    var currentState = ducklingState.init;
+
+    var currentState = foxState.init;
+
+    fox.position.x -= 20;
 
     //must report all enum states
     this.getState = function () {

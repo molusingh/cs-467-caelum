@@ -22,11 +22,11 @@ function playerControls(scene, clock, duck) {
     */
 
     var currentState = playerState.init;
-    duck.userData = { currentDirection: "down" }
- 	var maxPos = 185;
+    duck.userData = { currentDirection: "down" };
+    var maxPos = 185;
     duck.position.x += 5;
     duck.position.z += 5;
- 
+
 
     document.addEventListener('keydown', onKeyDown);
 
@@ -46,8 +46,8 @@ function playerControls(scene, clock, duck) {
         switch (event.keyCode) {
 
             case 38: /*up*/
-            case 87: /*W*/  if (duck.position.x >= -maxPos) {duck.position.x -= 10;}
-                    if (duck.userData.currentDirection != 'up') {
+            case 87: /*W*/  if (duck.position.x >= -maxPos) { duck.position.x -= 10; }
+                if (duck.userData.currentDirection != 'up') {
                     if (duck.userData.currentDirection == 'left') { duck.rotateY(-(Math.PI / 2)); }
                     else if (duck.userData.currentDirection == 'down') { duck.rotateY(Math.PI); }
                     else if (duck.userData.currentDirection == 'right') { duck.rotateY(Math.PI / 2); }
@@ -57,7 +57,7 @@ function playerControls(scene, clock, duck) {
                 break;
 
             case 37: /*left*/
-            case 65: /*A*/ if (duck.position.z <= maxPos) {duck.position.z += 10};
+            case 65: /*A*/ if (duck.position.z <= maxPos) { duck.position.z += 10 };
                 if (duck.userData.currentDirection != 'left') {
                     if (duck.userData.currentDirection == 'down') { duck.rotateY(-(Math.PI / 2)); }
                     else if (duck.userData.currentDirection == 'right') { duck.rotateY(Math.PI); }
@@ -67,7 +67,7 @@ function playerControls(scene, clock, duck) {
                 break;
 
             case 40: /*down*/
-            case 83: /*S*/ if (duck.position.x <= maxPos) {duck.position.x += 10};
+            case 83: /*S*/ if (duck.position.x <= maxPos) { duck.position.x += 10 };
                 if (duck.userData.currentDirection != 'down') {
                     if (duck.userData.currentDirection == 'right') { duck.rotateY(-(Math.PI / 2)); }
                     else if (duck.userData.currentDirection == 'up') { duck.rotateY(Math.PI); }
@@ -78,7 +78,7 @@ function playerControls(scene, clock, duck) {
                 break;
 
             case 39: /*right*/
-            case 68: /*D*/ if (duck.position.z >= -maxPos) {duck.position.z -= 10};
+            case 68: /*D*/ if (duck.position.z >= -maxPos) { duck.position.z -= 10 };
                 if (duck.userData.currentDirection != 'right') {
                     if (duck.userData.currentDirection == 'up') { duck.rotateY(-(Math.PI / 2)); }
                     else if (duck.userData.currentDirection == 'left') { duck.rotateY(Math.PI); }

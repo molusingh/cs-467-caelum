@@ -4,7 +4,7 @@ function assetLoader(scene) {
     duck.name = "duck";
 
     var fox = new THREE.Object3D();
-    duck.name = "fox";
+    fox.name = "fox";
 
     var allAssetsLoaded = false;
 
@@ -84,7 +84,7 @@ function assetLoader(scene) {
         console.error(e);
     });
 
-    //load Mama Duck
+    //load fox 
     var foxLoader = new THREE.FBXLoader(manager);
     foxLoader.load('./geo/fox.fbx', function (object) {
         object.traverse(function (child) {
@@ -101,7 +101,6 @@ function assetLoader(scene) {
         object.scale.z = 10;
 
         fox.add(object);
-        console.log('Current direction is ' + duck.userData.currentDirection);
         scene.add(fox);
 
     }, undefined, function (e) {

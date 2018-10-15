@@ -43,6 +43,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var croq = scene.getObjectByName("croq");
         croq = new croqAI(scene, clock, 0, croq);
 
+        var duckling = scene.getObjectByName("duckling");
+        duckling = new ducklingAI(scene, clock, 0, duckling);
     }
 
     function setState(state) {

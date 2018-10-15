@@ -9,6 +9,9 @@ function assetLoader(scene) {
     var croq = new THREE.Object3D();
     croq.name = "croq";
 
+    var duckling = new THREE.Object3D();
+    duckling.name = "duckling";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -126,6 +129,29 @@ function assetLoader(scene) {
 
         croq.add(object);
         scene.add(croq);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load duckling 
+    var ducklingLoader = new THREE.FBXLoader(manager);
+    ducklingLoader.load('./geo/duckling.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        duckling.add(object);
+        scene.add(duckling);
 
     }, undefined, function (e) {
         console.error(e);

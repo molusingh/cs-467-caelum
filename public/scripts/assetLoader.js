@@ -12,6 +12,9 @@ function assetLoader(scene) {
     var duckling = new THREE.Object3D();
     duckling.name = "duckling";
 
+    var egg = new THREE.Object3D();
+    egg.name = "egg";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -152,6 +155,29 @@ function assetLoader(scene) {
 
         duckling.add(object);
         scene.add(duckling);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load egg 
+    var eggLoader = new THREE.FBXLoader(manager);
+    eggLoader.load('./geo/eggUncracked.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        egg.add(object);
+        scene.add(egg);
 
     }, undefined, function (e) {
         console.error(e);

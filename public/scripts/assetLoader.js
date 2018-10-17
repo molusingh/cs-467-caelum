@@ -15,6 +15,9 @@ function assetLoader(scene) {
     var egg = new THREE.Object3D();
     egg.name = "egg";
 
+    var hawk = new THREE.Object3D();
+    hawk.name = "hawk";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -178,6 +181,39 @@ function assetLoader(scene) {
 
         egg.add(object);
         scene.add(egg);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+
+    this.checkAssetsLoaded = function () {
+        if (allAssetsLoaded === true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //load egg 
+    var hawkLoader = new THREE.FBXLoader(manager);
+    hawkLoader.load('./geo/hawk.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        hawk.add(object);
+        scene.add(hawk);
 
     }, undefined, function (e) {
         console.error(e);

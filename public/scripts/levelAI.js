@@ -45,6 +45,9 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var duckling = scene.getObjectByName("duckling");
         duckling = new ducklingAI(scene, clock, 0, duckling);
+
+        var hawk = scene.getObjectByName("hawk");
+        hawk = new hawkAI(scene, clock, 0, hawk);
     }
 
     function setState(state) {

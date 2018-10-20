@@ -50,6 +50,7 @@ function assetLoader(scene) {
     }
 
     //load FPO env
+    /*
     var loader = new THREE.FBXLoader(manager);
     loader.load('./geo/envFPO.fbx', function (object) {
         object.traverse(function (child) {
@@ -70,6 +71,7 @@ function assetLoader(scene) {
         scene.add(object);
 
     });
+    */
 
     //load Mama Duck
     var duckLoader = new THREE.FBXLoader(manager);

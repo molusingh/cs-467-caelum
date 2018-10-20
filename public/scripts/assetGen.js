@@ -21,7 +21,8 @@ function assetGen(scene) {
         console.log("bottomRight " + corners[2]);
         console.log("bottomLeft: " + corners[3]);
 
-        create2DShape(corners);
+        var shape = create2DShape(corners);
+        var landMass = create3DGeo(shape);
 
     }
 
@@ -152,14 +153,37 @@ function assetGen(scene) {
         }
 
         function addLeft() {
+            console.log("ADD RIGHT");
+            //if top corners not level, add 2 vertices
+            if (corners[corner.bottomLeft][0] - corners[corner.topLeft][0] != 0) {
+                console.log("NOT EVEN");
+                //pick random point in z, between the two corners
+                var x = getRandomInt(corners[corner.bottomLeft][1] - corners[corner.topLeft][1] - 2);
+                console.log("X: " + x);
+                x += corners[corner.topLeft][1];
+                console.log("X AFTER: " + x);
 
+                //add vertices to make right angle
+                if (corner.bottomLeft[0] > corner.topLeft[0]) {
+                    vertices.push(new THREE.Vector2(corners[corner.topLeft][0], x));
+                    vertices.push(new THREE.Vector2(corners[corner.bottomLeft][0], x));
+                }
+                else {
+                    vertices.push(new THREE.Vector2(corners[corner.bottomLeft][0], x));
+                    vertices.push(new THREE.Vector2(corners[corner.topLeft][0], x));
+                }
+            }
         }
     }
 
 
     //extrudes 2d shape in Y to form 3d shape
-    function create3DShape() {
+    function create3DGeo(shape) {
+        var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, amount: 10 });
+        var material = new THREE.MeshLambertMaterial({ color: 0xb00000, wireframe: false });
+        var mesh = new THREE.Mesh(geo, material);
 
+        scene.add(mesh);
     }
 
     //creates (25) 8x8 tiles to fill 40x40 grid

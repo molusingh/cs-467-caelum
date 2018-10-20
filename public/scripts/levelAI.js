@@ -28,11 +28,16 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     }
 
     function loadAssets() {
+
+        envGenerator = new assetGen(scene);
+        envGenerator.buildEnv();
+
         loader = new assetLoader(scene);
         //load env here
     }
 
     function initAssets() {
+
         //need to set up referencing
         var duck = scene.getObjectByName("duck");
         player = new playerControls(scene, clock, duck);
@@ -48,6 +53,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var hawk = scene.getObjectByName("hawk");
         hawk = new hawkAI(scene, clock, 0, hawk);
+
     }
 
     function setState(state) {

@@ -14,20 +14,19 @@ function board() {
 
     var isInitialized = false;
 
-    initializeGrid(8, 8);
+    initializeGrid(40, 40);
 
     //sets up empty board, ready to receive info
     //board values default to water;
-    function initializeGrid(x, y) {
-        console.log("here!")
-        grid = new Array(x);
+    function initializeGrid(z, x) {
+        grid = new Array(z);
 
-        for (var i = 0; i < x; i++) {
-            grid[i] = new Array(y);
+        for (var i = 0; i < z; i++) {
+            grid[i] = new Array(x);
         }
 
-        for (var i = 0; i < x; i++) {
-            for (var j = 0; j < y; j++) {
+        for (var i = 0; i < z; i++) {
+            for (var j = 0; j < x; j++) {
                 grid[i][j] = componentType.water;
                 console.log(grid[i][j]);
             }
@@ -40,7 +39,7 @@ function board() {
     }
 
     //reports what's in the queried location. 
-    //returns actorType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
     this.getSquareInfo = function (x, z) {
 
         console.log("getSquareInfo: not implemented");
@@ -48,9 +47,9 @@ function board() {
     }
 
     //reports value of queried square. 
-    //takes center pointe coordiantes, actorType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    //returns actorType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    this.getActorsInRadius = function ({ x, z }, actorType) {
+    //takes center point coordiantes, componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    this.getActorsInRadius = function ({ x, z }, componentType) {
 
         console.log("getActorInRadius: not implemented");
         return 0;

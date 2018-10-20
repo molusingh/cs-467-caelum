@@ -1,28 +1,17 @@
 function assetGen(scene) {
 
-    var tileSize = 8;
+    var tileSize = 9;
+
+    var shadowMat = new THREE.ShadowMaterial({
+        color: 0xff0000, transparent: true, opacity: 0.5
+    });
 
     var corner = { "topLeft": 0, "topRight": 1, "bottomRight": 2, "bottomLeft": 3 };
     Object.freeze(playerState);
 
     this.buildEnv = function () {
-
-        //per level
-        var marginArray = [1, 1, 1, 1];
-        var connectOverrides = [1, 1, 1, 1];
-
-        //per square
-        var rangeArray = [2, 3, 3, 2];
-
-        var corners = generateRandomCorners(rangeArray);
-        console.log("CORNERS: ");
-        console.log("topLeft: " + corners[0]);
-        console.log("topRight: " + corners[1]);
-        console.log("bottomRight " + corners[2]);
-        console.log("bottomLeft: " + corners[3]);
-
-        var shape = create2DShape(corners);
-        var landMass = create3DGeo(shape);
+        createWater();
+        generateLand();
 
     }
 
@@ -78,6 +67,7 @@ function assetGen(scene) {
         }
 
         return createShape();
+
 
 
         function createShape() {
@@ -177,23 +167,64 @@ function assetGen(scene) {
     }
 
 
+    function createWater() {
+        var geo = new THREE.PlaneBufferGeometry(400, 400, 40, 40);
+        var mat = new THREE.MeshLambertMaterial({ color: 0x0033ff, side: THREE.SingleSide });
+        var water = new THREE.Mesh(geo, mat);
+        water.rotation.x = Math.PI / 2 * 3;
+        water.position.y -= 4;
+        water.receiveShadow = true;
+        water.shadowMaterial = shadowMat;
+        scene.add(water);
+    }
+
+
     //extrudes 2d shape in Y to form 3d shape
     function create3DGeo(shape) {
-        var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, amount: 10 });
-        var material = new THREE.MeshLambertMaterial({ color: 0xb00000, wireframe: false });
+        var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, amount: 3 });
+        var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
         var mesh = new THREE.Mesh(geo, material);
-
+        mesh.scale.set(10, 10, 1);
+        mesh.rotation.x = Math.PI / 2;
+        mesh.rotation.z = Math.PI / 2 * 3;
+        mesh.position.z += 10;
+        mesh.position.x -= 10;
+        mesh.position.y -= 1;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        mesh.shadowMaterial = shadowMat;
         scene.add(mesh);
+        return mesh;
     }
 
     //creates (25) 8x8 tiles to fill 40x40 grid
     function generateLand() {
 
+        var gridSquares = 40 / (tileSize - 1);
+        originZ = 210;
+        originX = -120;
+
+        //per level
+        var marginArray = [1, 1, 1, 1];
+        var connectOverrides = [1, 1, 1, 1];
+
+        //per square
+        var rangeArray = [2, 3, 3, 2];
+
+        for (var i = 0; i < gridSquares; i++) {
+            for (var j = 0; j < gridSquares; j++) {
+                var corners = generateRandomCorners(rangeArray);
+                var shape = create2DShape(corners);
+                var landSquare = create3DGeo(shape);
+                landSquare.position.z = originZ - (j * 8 * 10);
+                landSquare.position.x -= originX + (i * 8 * 10);
+            }
+        }
     }
 
 
     //populates grid with land info by ray sampling
-    function populateLand() {
+    function populateGrid() {
 
     }
 

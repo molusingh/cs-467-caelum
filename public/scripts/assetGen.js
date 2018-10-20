@@ -91,7 +91,7 @@ function assetGen(scene) {
         }
 
         function addTop() {
-            console.log("ADD TOP")
+            console.log("ADD TOP");
             //if top corners not level, add 2 vertices
             console.log("topRight x: " + corners[corner.topRight][1]);
             console.log("topLeft x: " + corners[corner.topLeft][1]);
@@ -108,11 +108,47 @@ function assetGen(scene) {
         }
 
         function addBottom() {
+            console.log("ADD BOTTOM");
+            //if top corners not level, add 2 vertices
+            if (corners[corner.bottomLeft][1] - corners[corner.bottomRight][1] != 0) {
+                console.log("NOT EVEN");
+                //pick random point in z, between the two corners
+                var z = getRandomInt(corners[corner.bottomRight][0] - corners[corner.bottomLeft][0] - 2);
+                z += corners[corner.bottomLeft][0];
 
+                //add vertices to make right angle
+                if (corner.bottomLeft[1] > corner.bottomRight[1]) {
+                    vertices.push(new THREE.Vector2(z, corners[corner.bottomLeft][1]));
+                    vertices.push(new THREE.Vector2(z, corners[corner.bottomRight][1]));
+                }
+                else {
+                    vertices.push(new THREE.Vector2(z, corners[corner.bottomRight][1]));
+                    vertices.push(new THREE.Vector2(z, corners[corner.bottomLeft][1]));
+                }
+            }
         }
 
         function addRight() {
+            console.log("ADD RIGHT");
+            //if top corners not level, add 2 vertices
+            if (corners[corner.bottomRight][0] - corners[corner.topRight][0] != 0) {
+                console.log("NOT EVEN");
+                //pick random point in z, between the two corners
+                var x = getRandomInt(corners[corner.bottomRight][1] - corners[corner.topRight][1] - 2);
+                console.log("X: " + x);
+                x += corners[corner.topRight][1];
+                console.log("X AFTER: " + x);
 
+                //add vertices to make right angle
+                if (corner.bottomRight[0] > corner.topRight[0]) {
+                    vertices.push(new THREE.Vector2(corners[corner.bottomRight][0], x));
+                    vertices.push(new THREE.Vector2(corners[corner.topRight][0], x));
+                }
+                else {
+                    vertices.push(new THREE.Vector2(corners[corner.topRight][0], x));
+                    vertices.push(new THREE.Vector2(corners[corner.bottomRight][0], x));
+                }
+            }
         }
 
         function addLeft() {

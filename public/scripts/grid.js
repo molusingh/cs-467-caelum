@@ -33,14 +33,9 @@ function board() {
         }
     }
 
-    //this sets the scene
-    function setScene(currentScene) {
-        scene = currentScene;
-    }
-
     //reports what's in the queried location. 
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    this.getNormalizedSquareInfo = function (x, y) {
+    getNormalizedSquareInfo = function (x, y) {
         //check for invalid requests
         if (x > 40 || y > 40) {
             return 0;
@@ -67,7 +62,7 @@ function board() {
     }
 
     //receives actor ID and updates the grid info, internally checks position
-    this.updateActorInGrid = function (actorID, componentType) {
+    this.updateActor = function (actorID, componentType) {
 
         console.log("updateActorInGrid: not implemented");
         return 0;
@@ -94,4 +89,16 @@ function board() {
         return 0;
     }
 
+    this.blockIsComponent = function (size, location, component) {
+        for (var i = location.x; i < location.x + size.x; i++) {
+            for (var j = location.y; j < location.y + size.y; j++) {
+                var squareComponent = getNormalizedSquareInfo(i, j);
+                console.log("squareInfo x: " + i + " j: " + j + " component: " + squareComponent);
+                if (squareComponent !== component) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

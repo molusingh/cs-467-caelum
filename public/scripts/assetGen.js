@@ -11,8 +11,11 @@ function assetGen(scene) {
 
     this.buildEnv = function () {
         createWater();
-        generateLand();
-
+        var landObjects = generateLand();
+        console.log("****LAND: " + landObjects.length);
+        recordLandInGrid(landObjects);
+        generateLandObstacles();
+        generateGrassObstacles();
     }
 
     //creates 4 points determining corners of 8x8 tile
@@ -193,12 +196,15 @@ function assetGen(scene) {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.shadowMaterial = shadowMat;
+        mesh.userData = { type: componentType.land };
         scene.add(mesh);
         return mesh;
     }
 
     //creates (25) 8x8 tiles to fill 40x40 grid
     function generateLand() {
+
+        var landObjects = [];
 
         var gridSquares = 40 / (tileSize - 1);
         originZ = 210;
@@ -218,13 +224,59 @@ function assetGen(scene) {
                 var landSquare = create3DGeo(shape);
                 landSquare.position.z = originZ - (j * 8 * 10);
                 landSquare.position.x -= originX + (i * 8 * 10);
+
+                landObjects.push(landSquare);
             }
         }
+
+        return landObjects;
     }
 
 
     //populates grid with land info by ray sampling
-    function populateGrid() {
+    function recordLandInGrid(landObjects) {
+        var vector = new THREE.Vector2(1, 2);
+        var isLand = identifyObject(vector, landObjects);
+    }
+
+    function identifyObject(gridLocation, landObjects) {
+        var raycaster = new THREE.Raycaster();
+        var intersects;
+        var direction = new THREE.Vector3();
+        var far = new THREE.Vector3();
+
+        var originY = -200;
+        var originX = 200;
+
+        var y = originY + (gridLocation.y * 10) + 5;
+        var x = originX - (gridLocation.x * 10) - 5;
+
+        var geometry = new THREE.SphereGeometry(2, 32, 32);
+        var material = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+
+        var origin = new THREE.Mesh(geometry, material);
+        origin.position.set(y, 20, x)
+        scene.add(origin);
+
+        var destination = new THREE.Mesh(geometry, material);
+        destination.position.set(y, -20, x)
+        scene.add(destination);
+
+        raycaster.set(origin.position, direction.subVectors(destination.position, origin.position).normalize());
+        raycaster.far = far.subVectors(destination.position, origin.position).length();
+        console.log("FAR: " + raycaster.far);
+
+        for (var x = 0; x < landObjects.length; x++) {
+            landObjects[x].updateMatrixWorld();
+        }
+
+        intersects = raycaster.intersectObjects(landObjects);
+        if (intersects.length > 0) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
 
     }
 

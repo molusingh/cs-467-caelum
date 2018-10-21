@@ -1,6 +1,7 @@
 function assetGen(scene) {
 
     var tileSize = 9;
+    var landObjects = [];
 
     var shadowMat = new THREE.ShadowMaterial({
         color: 0xff0000, transparent: true, opacity: 0.5
@@ -11,8 +12,8 @@ function assetGen(scene) {
 
     this.buildEnv = function () {
         createWater();
-        var landObjects = generateLand();
-        recordLandInGrid(landObjects);
+        generateLand();
+        recordLandInGrid();
         //grid.printGrid(0, 8, 0, 8);
         generateLandObstacles(20, 30);
         generateGrassObstacles();
@@ -190,8 +191,6 @@ function assetGen(scene) {
     //creates (25) 8x8 tiles to fill 40x40 grid
     function generateLand() {
 
-        var landObjects = [];
-
         var gridSquares = 40 / (tileSize - 1);
         originZ = 210;
         originX = -120;
@@ -215,12 +214,11 @@ function assetGen(scene) {
             }
         }
 
-        return landObjects;
     }
 
 
     //populates grid with land info by ray sampling
-    function recordLandInGrid(landObjects) {
+    function recordLandInGrid() {
         for (var i = 0; i < 40; i++) {
             for (var j = 0; j < 40; j++) {
                 var vector = new THREE.Vector2(i, j);
@@ -230,12 +228,10 @@ function assetGen(scene) {
                 }
             }
         }
-
-        var vector = new THREE.Vector2(1, 2);
-        var isLand = identifyObject(vector, landObjects);
     }
 
-    function identifyObject(gridLocation, landObjects) {
+    function identifyObject(gridLocation) {
+
         var raycaster = new THREE.Raycaster();
         var intersects;
         var direction = new THREE.Vector3();
@@ -297,6 +293,10 @@ function assetGen(scene) {
         numOfObstacles = 1;
 
         for (var i = 0; i < numOfObstacles; i++) {
+
+            var randomSizeX, randomSizeY;
+            var randomLocationX, randomLocationY;
+
             obstacle = new THREE.Mesh(cube.clone(), material.clone());
             obstacle.scale.set(10, 8, 10);
             obstacle.position.y -= 0.1;
@@ -308,19 +308,51 @@ function assetGen(scene) {
             var originY = -200;
             var originX = 200;
 
-            randomX = getRandomInt(40);
-            randomY = getRandomInt(40);
+            //add cut off for 100 attempts
+            var isLegal = false;
 
-            //var y = originY + (randomY * 10);
-            //var x = originX - (randomX * 10);
+            var size = new THREE.Vector2(randomSizeX, randomSizeY);
 
-            var y = originY + (4 * 10) - 10;
-            var x = originX - (2 * 10) + 10;
+            while (isLegal === false) {
+
+                randomLocationX = getRandomInt(40);
+                randomLocationY = getRandomInt(40);
+
+                var location = new THREE.Vector2(randomLocationX, randomLocationY);
+
+                isLegal = checkForLegalLocation(size, location);
+            }
+
+            var y = originY + (randomLocationY * 10) - 10;
+            var x = originX - (randomLocationX * 10) + 10;
 
             obstacle.position.z = x;
             obstacle.position.x = y;
+
+            registerInGrid(size, location, componentType.obstacle);
         }
 
+    }
+
+    function checkForLegalLocation(size, location) {
+        for (var i = location.x; i < location.x + size.x; i++) {
+            for (var j = location.y; j < location.y + size.y; j++) {
+                var vector = new THREE.Vector2(i, j);
+                var isLand = identifyObject(vector, landObjects);
+                if (isLand !== 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function registerInGrid(size, location, component) {
+        for (var i = location.x; i < location.x + size.x; i++) {
+            for (var j = location.y; j < location.y + size.y; j++) {
+                grid.setEnvSquare(i, j, component);
+            }
+        }
     }
 
     //creates 1x1 - 4x4 grass on land, not continous, doesn't grow on land obstacles

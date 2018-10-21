@@ -15,7 +15,7 @@ function assetGen(scene) {
         generateLand();
         recordLandInGrid();
         //grid.printGrid(0, 8, 0, 8);
-        generateLandObstacles(20, 30);
+        generateLandObstacles(40, 20);
         generateGrassObstacles();
     }
 
@@ -290,21 +290,21 @@ function assetGen(scene) {
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
         var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
 
-        numOfObstacles = 1;
+        //numOfObstacles = 1;
 
         for (var i = 0; i < numOfObstacles; i++) {
 
             var randomSizeX, randomSizeY;
             var randomLocationX, randomLocationY;
 
-            //randomSizeX = getRandomInt(2);
-            //randomSizeY = getRandomInt(2);
-            randomSizeX = 2;
-            randomSizeY = 2;
+            randomSizeX = getRandomInt(3);
+            randomSizeY = getRandomInt(3);
+            //randomSizeX = 3;
+            //randomSizeY = 1;
             var size = new THREE.Vector2(randomSizeX, randomSizeY);
 
             obstacle = new THREE.Mesh(cube.clone(), material.clone());
-            obstacle.scale.set(10 * randomSizeX, 8, 10 * randomSizeY);
+            obstacle.scale.set(10 * randomSizeY, 8, 10 * randomSizeX);
             obstacle.position.y -= 0.1;
             obstacle.castShadow = true;
             obstacle.receiveShadow = true;
@@ -323,15 +323,16 @@ function assetGen(scene) {
 
                 attempts++;
                 console.log("attempts: " + attempts);
-                randomLocationX = getRandomInt(7);
-                randomLocationY = getRandomInt(7);
+                randomLocationX = getRandomInt(40 - randomSizeX);
+                randomLocationY = getRandomInt(40 - randomSizeY);
+                //randomLocationX = getRandomInt(7);
+                //randomLocationY = getRandomInt(7);
 
                 var location = new THREE.Vector2(randomLocationX, randomLocationY);
 
                 isLegal = checkForLegalLocation(size, location);
-                //isLegal = true;
 
-                if (isLegal === false && attempts === 100) {
+                if (attempts > 100) {
                     console.log("attempts: DONE");
                     continue;
                 }

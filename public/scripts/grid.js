@@ -41,6 +41,10 @@ function board() {
     //reports what's in the queried location. 
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
     this.getNormalizedSquareInfo = function (x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40) {
+            return 0;
+        }
         return grid[x - 1][y - 1];
     }
 

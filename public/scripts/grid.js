@@ -40,7 +40,14 @@ function board() {
 
     //reports what's in the queried location. 
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    this.getSquareInfo = function (x, z) {
+    this.getNormalizedSquareInfo = function (x, y) {
+        return grid[x - 1][y - 1];
+    }
+
+    //reports what's in the queried location. 
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    //normalize input, then run above function
+    this.getSquareInfo = function (z, x) {
 
         console.log("getSquareInfo: not implemented");
         return 0;

@@ -297,8 +297,14 @@ function assetGen(scene) {
             var randomSizeX, randomSizeY;
             var randomLocationX, randomLocationY;
 
+            //randomSizeX = getRandomInt(2);
+            //randomSizeY = getRandomInt(2);
+            randomSizeX = 2;
+            randomSizeY = 2;
+            var size = new THREE.Vector2(randomSizeX, randomSizeY);
+
             obstacle = new THREE.Mesh(cube.clone(), material.clone());
-            obstacle.scale.set(10, 8, 10);
+            obstacle.scale.set(10 * randomSizeX, 8, 10 * randomSizeY);
             obstacle.position.y -= 0.1;
             obstacle.castShadow = true;
             obstacle.receiveShadow = true;
@@ -308,19 +314,27 @@ function assetGen(scene) {
             var originY = -200;
             var originX = 200;
 
-            //add cut off for 100 attempts
+            //is space under future obstacle all land
             var isLegal = false;
-
-            var size = new THREE.Vector2(randomSizeX, randomSizeY);
+            //add cut off for 100 attempts
+            var attempts = 0;
 
             while (isLegal === false) {
 
-                randomLocationX = getRandomInt(40);
-                randomLocationY = getRandomInt(40);
+                attempts++;
+                console.log("attempts: " + attempts);
+                randomLocationX = getRandomInt(7);
+                randomLocationY = getRandomInt(7);
 
                 var location = new THREE.Vector2(randomLocationX, randomLocationY);
 
                 isLegal = checkForLegalLocation(size, location);
+                //isLegal = true;
+
+                if (isLegal === false && attempts === 100) {
+                    console.log("attempts: DONE");
+                    continue;
+                }
             }
 
             var y = originY + (randomLocationY * 10) - 10;
@@ -335,11 +349,12 @@ function assetGen(scene) {
     }
 
     function checkForLegalLocation(size, location) {
+        grid.printGrid(0, 8, 0, 8);
         for (var i = location.x; i < location.x + size.x; i++) {
             for (var j = location.y; j < location.y + size.y; j++) {
-                var vector = new THREE.Vector2(i, j);
-                var isLand = identifyObject(vector, landObjects);
-                if (isLand !== 1) {
+                var squareComponent = grid.getNormalizedSquareInfo(i, j);
+                console.log("squareInfo x: " + i + " j: " + j + " component: " + squareComponent);
+                if (squareComponent !== componentType.land) {
                     return false;
                 }
             }
@@ -350,7 +365,7 @@ function assetGen(scene) {
     function registerInGrid(size, location, component) {
         for (var i = location.x; i < location.x + size.x; i++) {
             for (var j = location.y; j < location.y + size.y; j++) {
-                grid.setEnvSquare(i, j, component);
+                grid.setEnvSquare(i - 1, j - 1, component);
             }
         }
     }

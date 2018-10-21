@@ -63,8 +63,17 @@ function board() {
     }
 
     this.setEnvSquare = function (x, y, componentType) {
+        grid[x][y] = componentType;
+    }
 
-        console.log("setEnvSquare");
+    this.printGrid = function (start_x, end_x, start_y, end_y) {
+        for (var j = 0; j < end_y + 1; j++) {
+            var line = "";
+            for (var i = start_x; i < end_x + 1; i++) {
+                line += String(grid[i][j]);
+            }
+            console.log(line);
+        }
     }
 
     //checks if duckling is within duck's calling radius

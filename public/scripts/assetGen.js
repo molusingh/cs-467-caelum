@@ -14,6 +14,7 @@ function assetGen(scene) {
         var landObjects = generateLand();
         console.log("****LAND: " + landObjects.length);
         recordLandInGrid(landObjects);
+        grid.printGrid(0, 8, 0, 8);
         generateLandObstacles();
         generateGrassObstacles();
     }
@@ -235,6 +236,16 @@ function assetGen(scene) {
 
     //populates grid with land info by ray sampling
     function recordLandInGrid(landObjects) {
+        for (var i = 0; i < 40; i++) {
+            for (var j = 0; j < 40; j++) {
+                var vector = new THREE.Vector2(i, j);
+                var isLand = identifyObject(vector, landObjects);
+                if (isLand === 1) {
+                    grid.setEnvSquare(i, j, componentType.land);
+                }
+            }
+        }
+
         var vector = new THREE.Vector2(1, 2);
         var isLand = identifyObject(vector, landObjects);
     }
@@ -256,15 +267,20 @@ function assetGen(scene) {
 
         var origin = new THREE.Mesh(geometry, material);
         origin.position.set(y, 20, x)
+        origin.name = "rayOrigin";
         scene.add(origin);
 
         var destination = new THREE.Mesh(geometry, material);
         destination.position.set(y, -20, x)
+        destination.name = "rayDestination";
         scene.add(destination);
 
         raycaster.set(origin.position, direction.subVectors(destination.position, origin.position).normalize());
         raycaster.far = far.subVectors(destination.position, origin.position).length();
         console.log("FAR: " + raycaster.far);
+
+        remove(destination.name);
+        remove(origin.name);
 
         for (var x = 0; x < landObjects.length; x++) {
             landObjects[x].updateMatrixWorld();
@@ -279,6 +295,12 @@ function assetGen(scene) {
         }
 
     }
+
+
+    function remove(name) {
+        scene.remove(scene.getObjectByName(name));
+    }
+
 
     //creates 1x1 - 3x3 obstacles on land, continuous
     function generateLandObstacles(count) {

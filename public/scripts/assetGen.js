@@ -12,10 +12,9 @@ function assetGen(scene) {
     this.buildEnv = function () {
         createWater();
         var landObjects = generateLand();
-        console.log("****LAND: " + landObjects.length);
         recordLandInGrid(landObjects);
-        grid.printGrid(0, 8, 0, 8);
-        generateLandObstacles();
+        //grid.printGrid(0, 8, 0, 8);
+        generateLandObstacles(20, 30);
         generateGrassObstacles();
     }
 
@@ -86,12 +85,8 @@ function assetGen(scene) {
         }
 
         function addTop() {
-            console.log("ADD TOP");
             //if top corners not level, add 2 vertices
-            console.log("topRight x: " + corners[corner.topRight][1]);
-            console.log("topLeft x: " + corners[corner.topLeft][1]);
             if (corners[corner.topRight][1] - corners[corner.topLeft][1] != 0) {
-                console.log("NOT EVEN")
                 //pick random point in z, between the two corners
                 var z = getRandomInt(corners[corner.topRight][0] - corners[corner.topLeft][0] - 2);
                 z += corners[corner.topLeft][0];
@@ -103,10 +98,8 @@ function assetGen(scene) {
         }
 
         function addBottom() {
-            console.log("ADD BOTTOM");
             //if top corners not level, add 2 vertices
             if (corners[corner.bottomLeft][1] - corners[corner.bottomRight][1] != 0) {
-                console.log("NOT EVEN");
                 //pick random point in z, between the two corners
                 var z = getRandomInt(corners[corner.bottomRight][0] - corners[corner.bottomLeft][0] - 2);
                 z += corners[corner.bottomLeft][0];
@@ -124,15 +117,11 @@ function assetGen(scene) {
         }
 
         function addRight() {
-            console.log("ADD RIGHT");
             //if top corners not level, add 2 vertices
             if (corners[corner.bottomRight][0] - corners[corner.topRight][0] != 0) {
-                console.log("NOT EVEN");
                 //pick random point in z, between the two corners
                 var x = getRandomInt(corners[corner.bottomRight][1] - corners[corner.topRight][1] - 2);
-                console.log("X: " + x);
                 x += corners[corner.topRight][1];
-                console.log("X AFTER: " + x);
 
                 //add vertices to make right angle
                 if (corner.bottomRight[0] > corner.topRight[0]) {
@@ -147,15 +136,11 @@ function assetGen(scene) {
         }
 
         function addLeft() {
-            console.log("ADD RIGHT");
             //if top corners not level, add 2 vertices
             if (corners[corner.bottomLeft][0] - corners[corner.topLeft][0] != 0) {
-                console.log("NOT EVEN");
                 //pick random point in z, between the two corners
                 var x = getRandomInt(corners[corner.bottomLeft][1] - corners[corner.topLeft][1] - 2);
-                console.log("X: " + x);
                 x += corners[corner.topLeft][1];
-                console.log("X AFTER: " + x);
 
                 //add vertices to make right angle
                 if (corner.bottomLeft[0] > corner.topLeft[0]) {
@@ -176,7 +161,7 @@ function assetGen(scene) {
         var mat = new THREE.MeshLambertMaterial({ color: 0x0033ff, side: THREE.SingleSide });
         var water = new THREE.Mesh(geo, mat);
         water.rotation.x = Math.PI / 2 * 3;
-        water.position.y -= 4;
+        water.position.y -= 3;
         water.receiveShadow = true;
         water.shadowMaterial = shadowMat;
         scene.add(water);
@@ -193,7 +178,7 @@ function assetGen(scene) {
         mesh.rotation.z = Math.PI / 2 * 3;
         mesh.position.z += 10;
         mesh.position.x -= 10;
-        mesh.position.y -= 1;
+        mesh.position.y -= 0.1;
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         mesh.shadowMaterial = shadowMat;
@@ -277,7 +262,6 @@ function assetGen(scene) {
 
         raycaster.set(origin.position, direction.subVectors(destination.position, origin.position).normalize());
         raycaster.far = far.subVectors(destination.position, origin.position).length();
-        console.log("FAR: " + raycaster.far);
 
         remove(destination.name);
         remove(origin.name);
@@ -303,11 +287,43 @@ function assetGen(scene) {
 
 
     //creates 1x1 - 3x3 obstacles on land, continuous
-    function generateLandObstacles(count) {
+    function generateLandObstacles(minimum, random) {
+        var numOfObstacles = getRandomInt(random) + minimum;
+
+        var cube = new THREE.CubeGeometry(1, 1, 1);
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
+        var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+
+        numOfObstacles = 1;
+
+        for (var i = 0; i < numOfObstacles; i++) {
+            obstacle = new THREE.Mesh(cube.clone(), material.clone());
+            obstacle.scale.set(10, 8, 10);
+            obstacle.position.y -= 0.1;
+            obstacle.castShadow = true;
+            obstacle.receiveShadow = true;
+            obstacle.shadowMaterial = shadowMat;
+            scene.add(obstacle);
+
+            var originY = -200;
+            var originX = 200;
+
+            randomX = getRandomInt(40);
+            randomY = getRandomInt(40);
+
+            //var y = originY + (randomY * 10);
+            //var x = originX - (randomX * 10);
+
+            var y = originY + (4 * 10) - 10;
+            var x = originX - (2 * 10) + 10;
+
+            obstacle.position.z = x;
+            obstacle.position.x = y;
+        }
 
     }
 
-    //creates 1x1 - 4x4 obstacles on land, not continous, doesn't grow on land obstacles
+    //creates 1x1 - 4x4 grass on land, not continous, doesn't grow on land obstacles
     function generateGrassObstacles(count) {
 
     }

@@ -25,7 +25,7 @@ Object.freeze(foxState);
 
 var componentType = {
     "land": 1, "water": 2, "obstacle": 3, "fox": 4, "hawk": 5, "croq": 6,
-    "duck": 7, "duckling": 7, "egg": 8
+    "duck": 7, "duckling": 7, "egg": 8, "grass": 9
 };
 Object.freeze(componentType);
 

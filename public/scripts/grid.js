@@ -37,7 +37,7 @@ function board() {
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
     getNormalizedSquareInfo = function (x, y) {
         //check for invalid requests
-        if (x > 40 || y > 40) {
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
             return 0;
         }
         return grid[x - 1][y - 1];
@@ -90,6 +90,7 @@ function board() {
     }
 
     this.blockIsComponent = function (size, location, component) {
+        console.log("XXXX" + location.x);
         for (var i = location.x; i < location.x + size.x; i++) {
             for (var j = location.y; j < location.y + size.y; j++) {
                 var squareComponent = getNormalizedSquareInfo(i, j);

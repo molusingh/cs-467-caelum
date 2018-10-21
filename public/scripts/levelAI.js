@@ -39,7 +39,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     function initAssets() {
 
-        //need to set up referencing
+        placeAsset();
+
         var duck = scene.getObjectByName("duck");
         duck.position.x += 5;
         duck.position.z += 5;
@@ -60,44 +61,49 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     }
 
 
-    function placeAsset(asset, component, location) {
-        grid.placeAsset(asset, component, location);
+    //function placeAsset(asset, component, location) {
+    function placeAsset() {
 
-        var cube = new THREE.CubeGeometry(1, 1, 1);
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
-        var material = new THREE.MeshLambertMaterial({ color: 0xff0000, wireframe: false });
+        var location = new THREE.Vector2(1, 1);
+        var size = new THREE.Vector2(1, 1);
 
-        //is space under future obstacle all land
-        var isLegal = false;
-        //add cut off for 100 attempts
-        var attempts = 0;
+        console.log("BEFORE: ");
+        var isValidLocation = grid.blockIsComponent(size, location, componentType.land);
+        console.log("isVALIDLOC: " + isValidLocation);
+        var validLocation = new THREE.Vector2(1, 1);
 
-        while (isLegal === false) {
+        if (!isValidLocation) {
+            for (var i = location.x - 2; i < location.x + 3; i++) {
+                for (var j = location.y - 2; j < location.y + 3; j++) {
+                    validLocation.x = i;
+                    validLocation.y = j;
 
-            attempts++;
-            var location = new THREE.Vector2(randomLocationX, randomLocationY);
-            isLegal = checkForLegalLocation(size, location);
-
-            console.log("attempts: " + attempts);
-            randomLocationX = getRandomInt(40 - randomSizeX);
-            randomLocationY = getRandomInt(40 - randomSizeY);
-
-            var location = new THREE.Vector2(randomLocationX, randomLocationY);
-
-
-            if (attempts > 100) {
-                console.log("attempts: DONE");
-                continue;
+                    isValidLocation = grid.blockIsComponent(size, validLocation, componentType.land);
+                    if (isValidLocation) {
+                        i = 4;
+                        j = 4;
+                    }
+                }
             }
         }
 
-        var y = originY + (randomLocationY * 10) - 10;
-        var x = originX - (randomLocationX * 10) + 10;
+        var cube = new THREE.CubeGeometry(10, 10, 10);
+        var material = new THREE.MeshLambertMaterial({ color: 0xff0000, wireframe: false });
+        asset = new THREE.Mesh(cube, material);
+        scene.add(asset);
 
-        obstacle.position.z = x;
-        obstacle.position.x = y;
+        var originY = -200;
+        var originX = 200;
 
-        registerInGrid(size, location, componentType.obstacle);
+        var y = originY + (validLocation.y * 10) - 10;
+        var x = originX - (validLocation.x * 10) + 10;
+
+        asset.position.z = x;
+        asset.position.x = y;
+
+        console.log("validLocation: " + validLocation.x);
+
+        grid.setEnvSquare(validLocation.x - 1, validLocation.y - 1, componentType.grass);
     }
 
     function setState(state) {

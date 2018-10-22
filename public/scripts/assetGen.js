@@ -76,9 +76,9 @@ function assetGen(scene) {
 
         function createShape() {
 
-            console.log("VERTICES:");
+            //console.log("VERTICES:");
             for (var i = 0; i < vertices.length; i++) {
-                console.log(i + ": " + vertices[i].x + " " + vertices[i].y);
+                //console.log(i + ": " + vertices[i].x + " " + vertices[i].y);
             }
 
             var shape = new THREE.Shape(vertices);
@@ -171,7 +171,7 @@ function assetGen(scene) {
 
     //extrudes 2d shape in Y to form 3d shape
     function create3DGeo(shape) {
-        var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, amount: 3 });
+        var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, depth: 3 });
         var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
         var mesh = new THREE.Mesh(geo, material);
         mesh.scale.set(10, 10, 1);
@@ -322,7 +322,7 @@ function assetGen(scene) {
             while (isLegal === false) {
 
                 attempts++;
-                console.log("attempts: " + attempts);
+                //console.log("attempts: " + attempts);
                 randomLocationX = getRandomInt(40 - randomSizeX);
                 randomLocationY = getRandomInt(40 - randomSizeY);
                 //randomLocationX = getRandomInt(7);

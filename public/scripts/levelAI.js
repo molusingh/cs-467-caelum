@@ -62,51 +62,52 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
 
     function placeAsset(asset, assetComponent, location, locationComponent) {
-        //function placeAsset() {
 
-        var location = new THREE.Vector2(1, 1);
-        var size = new THREE.Vector2(1, 1);
+        var findValidSquare = function (testLocation) {
+            var radius = 0;
+            if (findLocation(testLocation, radius, locationComponent).x == - 1) {
+                return findValidSquare(findLocation(testLocation, radius + 1, locationComponent));
+            } else {
+                return findLocation(testLocation, radius, locationComponent);
+            }
+        };
 
-        var isValidLocation = grid.blockIsComponent(size, location, locationComponent);
-        //var isValidLocation = grid.blockIsComponent(size, location, componentType.land);
-        var validLocation = new THREE.Vector2(1, 1);
+        function findLocation(location, radius, locationComponent) {
+            var size = new THREE.Vector2(1, 1);
+            var testLocation = new THREE.Vector2(1, 1);
 
-        //convert into recursive function, wider and wider net
-        if (!isValidLocation) {
-            for (var i = location.x - 2; i < location.x + 3; i++) {
-                for (var j = location.y - 2; j < location.y + 3; j++) {
-                    validLocation.x = i;
-                    validLocation.y = j;
+            for (var i = location.x - radius; i <= location.x + radius; i++) {
+                for (var j = location.y - radius; j <= location.y + radius; j++) {
+                    testLocation.x = i;
+                    testLocation.y = j;
 
-                    //isValidLocation = grid.blockIsComponent(size, validLocation, componentType.land);
-                    isValidLocation = grid.blockIsComponent(size, validLocation, locationComponent);
+                    isValidLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (isValidLocation) {
-                        i = 4;
-                        j = 4;
+                        return testLocation;
                     }
                 }
             }
+
+            var fail = new THREE.Vector2(-1, -1);
+            return fail;
         }
 
-        //var cube = new THREE.CubeGeometry(10, 10, 10);
-        //var material = new THREE.MeshLambertMaterial({ color: 0xff0000, wireframe: false });
-        //asset = new THREE.Mesh(cube, material);
+        var validLocation = findValidSquare(location);
+
         scene.add(asset);
 
         var originY = -200;
         var originX = 200;
 
-        //var y = originY + (validLocation.y * 10) - 10;
-        //var x = originX - (validLocation.x * 10) + 10;
         var y = originY + (validLocation.y * 10) - 5;
         var x = originX - (validLocation.x * 10) + 5;
 
         asset.position.z = x;
         asset.position.x = y;
 
-        //grid.setEnvSquare(validLocation.x - 1, validLocation.y - 1, componentType.grass);
         grid.setEnvSquare(validLocation.x - 1, validLocation.y - 1, assetComponent);
-        grid.printGrid(0, 8, 0, 8);
+        //grid.printGrid(0, 8, 0, 8);
+
     }
 
     function setState(state) {

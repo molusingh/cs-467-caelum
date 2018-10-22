@@ -90,11 +90,9 @@ function board() {
     }
 
     this.blockIsComponent = function (size, location, component) {
-        console.log("XXXX" + location.x);
         for (var i = location.x; i < location.x + size.x; i++) {
             for (var j = location.y; j < location.y + size.y; j++) {
                 var squareComponent = getNormalizedSquareInfo(i, j);
-                console.log("squareInfo x: " + i + " j: " + j + " component: " + squareComponent);
                 if (squareComponent !== component) {
                     return false;
                 }

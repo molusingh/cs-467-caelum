@@ -33,3 +33,7 @@ Object.freeze(componentType);
 
 var motionUnit = 1.0;
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max) + 1);
+}
+

@@ -18,6 +18,9 @@ function assetLoader(scene) {
     var hawk = new THREE.Object3D();
     hawk.name = "hawk";
 
+    var grass = new THREE.Object3D();
+    grass.name = "grass";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -44,8 +47,8 @@ function assetLoader(scene) {
     var manager = new THREE.LoadingManager();
 
     manager.onLoad = function () {
-        console.log("finished loading: " + duck);
-        console.log(duck.name);
+        console.log("finished loading: " + grass);
+        console.log(grass.name);
         allAssetsLoaded = true;
     }
 
@@ -216,6 +219,29 @@ function assetLoader(scene) {
 
         hawk.add(object);
         scene.add(hawk);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load grass 
+    var grassLoader = new THREE.FBXLoader(manager);
+    grassLoader.load('./geo/grass.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        grass.add(object);
+        scene.add(grass);
 
     }, undefined, function (e) {
         console.error(e);

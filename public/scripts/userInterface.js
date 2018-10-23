@@ -22,7 +22,7 @@ function UserInterface()
 	$("#movementControls").click(getPublishFunction("playerMove"));
 	$("#skillButtons").click(getPublishFunction("skillButtonClicked"));
 	$("#actionButtons").click(getPublishFunction("actionButtonClicked"));
-	$("#howToPlayButton").click("openHowToPlay");
+	$("#howToPlayButton").click(getPublishFunction("openHowToPlay"));
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
 	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
 	$("#quackButton").click(getPublishFunction("quackSkillRequested"));

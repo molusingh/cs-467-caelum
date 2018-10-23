@@ -11,11 +11,15 @@ function UserInterface()
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("closeMenu", getToggleDisplayFunction("menu"));
-	bus.subscribe("openHowToPlay", getToggleDisplayFunction("menu"));
+	// bus.subscribe("openHowToPlay", getToggleDisplayFunction("howToPlayScreen"));
 
 	// interface event callbacks
 	$(document).keydown(onKeyDown);
-	$("#restartButton").click(location.reload);
+	$("#leftButton").click(getPublishFunction("moveLeft"));
+	$("#rightButton").click(getPublishFunction("moveRight"));
+	$("#downButton").click(getPublishFunction("moveDown"));
+	$("#upButton").click(getPublishFunction("moveUp"));
+	$("#restartButton").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
 	$("#closeMenuButton").click(getPublishFunction("closeMenu"));
@@ -95,6 +99,14 @@ function UserInterface()
 			case 68: // D
 				bus.publish("moveRight");
 				break;
+				
+			case 82: // R TODO:
+				null;
+				break;
+				
+            case 70: // F TODO:
+            	null;
+            	break;
 		}
 	}
 }

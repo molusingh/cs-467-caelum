@@ -99,14 +99,14 @@ function UserInterface()
 			case 68: // D
 				bus.publish("moveRight");
 				break;
-				
+
 			case 82: // R TODO:
 				null;
 				break;
-				
-            case 70: // F TODO:
-            	null;
-            	break;
+
+			case 70: // F TODO:
+				null;
+				break;
 		}
 	}
 }

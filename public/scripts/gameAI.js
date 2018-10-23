@@ -51,7 +51,7 @@ function gameAI(scene, clock)
         var elapsedTime = clock.getElapsedTime();
 
         //temp, needs to be inside conditionals
-        // level.update();
+        level.update();
 
         if (currentState === gameState.level)
         {

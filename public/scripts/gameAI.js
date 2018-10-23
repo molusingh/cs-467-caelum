@@ -1,4 +1,6 @@
 /* global UserInterface*/
+/* global gameState*/
+/* global levelAI*/
 
 /*
  * Constructor for a gameAI object
@@ -27,7 +29,7 @@ function gameAI(scene, clock)
 
     function setState(state)
     {
-        currentState = state;
+        this.state = state;
     }
 
     function finishLevel() {}
@@ -49,7 +51,7 @@ function gameAI(scene, clock)
         var elapsedTime = clock.getElapsedTime();
 
         //temp, needs to be inside conditionals
-        level.update();
+        // level.update();
 
         if (currentState === gameState.level)
         {

@@ -7,19 +7,58 @@
  */
 function UserInterface()
 {
-	// document.addEventListener('keydown', onKeyDown);
-	$("#menuButton").click(flipMenuDisplay);
-	$("#closeMenuButton").click(flipMenuDisplay);
-	$("#restartButton").click(restart);
-	$("#startButton").click(start);
+	// interface event subscriptions
+	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
+	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
+	bus.subscribe("closeMenu", getToggleDisplayFunction("menu"));
+	bus.subscribe("openHowToPlay", getToggleDisplayFunction("menu"));
+
+	// interface event callbacks
+	$(document).keydown(onKeyDown);
+	$("#restartButton").click(location.reload);
+	$("#startButton").click(getPublishFunction("start"));
+	$("#menuButton").click(getPublishFunction("openMenu"));
+	$("#closeMenuButton").click(getPublishFunction("closeMenu"));
+	$("#movementControls").click(getPublishFunction("playerMove"));
+	$("#skillButtons").click(getPublishFunction("skillButtonClicked"));
+	$("#actionButtons").click(getPublishFunction("actionButtonClicked"));
+	$("#howToPlayButton").click("openHowToPlay");
+	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
+	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
+	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
+	$("#flyButton").click(getPublishFunction("fly"));
+	$("#jumpButton").click(getPublishFunction("jump"));
+	$("#callButton").click(getPublishFunction("call"));
+	$("#nestButton").click(getPublishFunction("next"));
 
 	/*
-	 * Starts a new game
+	 * returns a function that publishes the specified event
 	 */
-	function start()
+	function getPublishFunction(eventType)
 	{
-		bus.publish("start");
-		$("#startScreen").hide();
+		return function()
+		{
+			bus.publish(eventType);
+		};
+	}
+
+	/*
+	 * Returns a function that toggles the display for the specified ID
+	 */
+	function getToggleDisplayFunction(elementID)
+	{
+		var id = '#' + elementID;
+		return function()
+		{
+			if ($(id).css("display") == "none")
+			{
+				$(id).show();
+			}
+			else
+			{
+				$(id).hide();
+			}
+		};
 	}
 
 	/*
@@ -31,27 +70,12 @@ function UserInterface()
 	}
 
 	/*
-	 * flips the display of the menu
+	 * Called when a key is pressed
 	 */
-	function flipMenuDisplay(event)
-	{
-		bus.publish("menu");
-		if ($("#menu").css("display") == "none")
-		{
-			$("#menu").show();
-		}
-		else
-		{
-			$("#menu").hide();
-		}
-	}
-
 	function onKeyDown(event)
 	{
-
 		switch (event.keyCode)
 		{
-
 			case 38: // up
 			case 87: // W
 				bus.publish("moveUp");
@@ -70,14 +94,6 @@ function UserInterface()
 			case 39: // right
 			case 68: // D
 				bus.publish("moveRight");
-				break;
-
-			case 82: // R
-				moveUp = true;
-				break;
-				
-			case 70: // F
-				moveDown = true;
 				break;
 		}
 	}

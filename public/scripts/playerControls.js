@@ -32,10 +32,10 @@ function playerControls(scene, clock, duck) {
     var duckMover = new ObjectMover(duck);
     
     // subscriptions
-    bus.subcribe("moveLeft", duckMover.left);
-    bus.subcribe("moveRight", duckMover.right);
-    bus.subcribe("moveDown", duckMover.down);
-    bus.subcribe("moveUp", duckMover.up);
+    bus.subscribe("moveLeft", duckMover.left);
+    bus.subscribe("moveRight", duckMover.right);
+    bus.subscribe("moveDown", duckMover.down);
+    bus.subscribe("moveUp", duckMover.up);
 
 
     // sounds for interface buttons

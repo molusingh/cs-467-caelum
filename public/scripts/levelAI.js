@@ -40,7 +40,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     function initAssets() {
 
         var duck = scene.getObjectByName("duck");
-        var location = new THREE.Vector2(1, 1);
+        var location = new THREE.Vector2(20, 20);
         placeAsset(duck, componentType.duck, location, componentType.land);
         //duck.position.x += 5;
         //duck.position.z += 5;

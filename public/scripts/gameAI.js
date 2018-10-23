@@ -1,4 +1,6 @@
 /* global UserInterface*/
+/* global gameState*/
+/* global levelAI*/
 
 /*
  * Constructor for a gameAI object

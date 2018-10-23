@@ -1,3 +1,6 @@
+/* global ObjectMover*/
+/* global playerState*/
+/* global bus*/
 function playerControls(scene, clock, duck) {
 
     /*

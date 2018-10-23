@@ -1,5 +1,5 @@
-// ENUMS
 /* global EventBus*/
+// ENUMS
 
 //Note: these are 'external states', internal representations can have more
 

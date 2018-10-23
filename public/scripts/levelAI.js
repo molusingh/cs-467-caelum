@@ -42,17 +42,21 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var duck = scene.getObjectByName("duck");
         var location = new THREE.Vector2(20, 20);
         placeAsset(duck, componentType.duck, location, componentType.land);
-        //duck.position.x += 5;
-        //duck.position.z += 5;
         player = new playerControls(scene, clock, duck);
 
         var fox = scene.getObjectByName("fox");
+        location = new THREE.Vector2(25, 25);
+        placeAsset(fox, componentType.fox, location, componentType.land);
         fox = new foxAI(scene, clock, 0, fox);
 
         var croq = scene.getObjectByName("croq");
+        location = new THREE.Vector2(22, 22);
+        placeAsset(croq, componentType.croq, location, componentType.water);
         croq = new croqAI(scene, clock, 0, croq);
 
         var duckling = scene.getObjectByName("duckling");
+        location = new THREE.Vector2(27, 22);
+        placeAsset(duckling, componentType.duckling, location, componentType.water);
         duckling = new ducklingAI(scene, clock, 0, duckling);
 
         var hawk = scene.getObjectByName("hawk");
@@ -63,38 +67,71 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     function placeAsset(asset, assetComponent, location, locationComponent) {
 
-        var findValidSquare = function (testLocation) {
-            var radius = 0;
-            if (findLocation(testLocation, radius, locationComponent).x == - 1) {
-                return findValidSquare(findLocation(testLocation, radius + 1, locationComponent));
-            } else {
-                return findLocation(testLocation, radius, locationComponent);
+        var searchFailed = false;
+        var testLocation = new THREE.Vector2(1, 1);
+        var validLocation = false;
+        var size = new THREE.Vector2(1, 1);
+        var assetLocation;
+
+
+        function findValidSquare() {
+            validLocation = grid.blockIsComponent(size, location, locationComponent);
+            if (validLocation === true) {
+                return location;
             }
-        };
 
-        function findLocation(location, radius, locationComponent) {
-            var size = new THREE.Vector2(1, 1);
-            var testLocation = new THREE.Vector2(1, 1);
+            var radius = 1;
 
-            for (var i = location.x - radius; i <= location.x + radius; i++) {
-                for (var j = location.y - radius; j <= location.y + radius; j++) {
+            while (validLocation === false) {
+                for (var i = location.x - radius; i < location.x + radius; i++) {
                     testLocation.x = i;
-                    testLocation.y = j;
-
-                    isValidLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (isValidLocation) {
+                    testLocation.y = location.y + radius;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
                         return testLocation;
                     }
                 }
+
+                for (var i = location.x - radius; i < location.x + radius; i++) {
+                    testLocation.x = i;
+                    testLocation.y = location.y - radius;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                for (var i = location.y - radius; i < location.y + radius; i++) {
+                    testLocation.x = location.x + radius;
+                    testLocation.y = y;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                for (var i = location.y - radius; i < location.y + radius; i++) {
+                    testLocation.x = location.x - radius;
+                    testLocation.y = y;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                radius++;
+                if (radius > 40) {
+                    console.log("got this far");
+                    break;
+                }
             }
 
-            var fail = new THREE.Vector2(-1, -1);
-            return fail;
         }
 
-        var validLocation = findValidSquare(location);
+        var assetLocation = findValidSquare();
+        console.log(assetLocation.x, assetLocation.y);
 
-        scene.add(asset);
+        if (validLocation === false) {
+            console.log("failed: " + asset);
+            return;
+        }
 
         var originY = -200;
         var originX = 200;
@@ -105,7 +142,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         asset.position.z = x;
         asset.position.x = y;
 
-        grid.setEnvSquare(validLocation.x - 1, validLocation.y - 1, assetComponent);
+        grid.setEnvSquare(assetLocation.x - 1, assetLocation.y - 1, assetComponent);
         //grid.printGrid(0, 8, 0, 8);
 
     }

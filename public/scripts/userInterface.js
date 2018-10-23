@@ -11,29 +11,49 @@ function UserInterface()
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("closeMenu", getToggleDisplayFunction("menu"));
-	// bus.subscribe("openHowToPlay", getToggleDisplayFunction("howToPlayScreen"));
+	bus.subscribe("openHowToPlay", flipBetweenStartAndHowToPlay);
+	bus.subscribe("closeHowToPlay", flipBetweenStartAndHowToPlay);
+	// bus.subscribe("pickBoosts", getToggleDisplayFunction("boostsScreen"));
+	// bus.subscribe("endPickBoosts", getToggleDisplayFunction("boostsScreen"));
+	bus.subscribe("playerWins", getToggleDisplayFunction("winScreen"));
+	bus.subscribe("playerLoses", getToggleDisplayFunction("loseScreen"));
+
 
 	// interface event callbacks
+
+	// movement buttons
 	$(document).keydown(onKeyDown);
 	$("#leftButton").click(getPublishFunction("moveLeft"));
 	$("#rightButton").click(getPublishFunction("moveRight"));
 	$("#downButton").click(getPublishFunction("moveDown"));
 	$("#upButton").click(getPublishFunction("moveUp"));
+
+	// game state buttons
 	$("#restartButton").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
 	$("#closeMenuButton").click(getPublishFunction("closeMenu"));
+	$("#howToPlayButton").click(getPublishFunction("openHowToPlay"));
+	$("#closeHowToPlayButton").click(getPublishFunction("closeHowToPlay"));
+	$("#soundButton").click(getPublishFunction("toggleSound"));
+	$("#musicButton").click(getPublishFunction("toggleMusic"));
+
+	// player control Buttons
 	$("#movementControls").click(getPublishFunction("playerMove"));
 	$("#skillButtons").click(getPublishFunction("skillButtonClicked"));
 	$("#actionButtons").click(getPublishFunction("actionButtonClicked"));
-	$("#howToPlayButton").click(getPublishFunction("openHowToPlay"));
-	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
-	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
-	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
+
 	$("#flyButton").click(getPublishFunction("fly"));
 	$("#jumpButton").click(getPublishFunction("jump"));
 	$("#callButton").click(getPublishFunction("call"));
 	$("#nestButton").click(getPublishFunction("next"));
+
+	// skill request buttons
+	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
+	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
+	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
+
+
 
 	/*
 	 * returns a function that publishes the specified event
@@ -71,6 +91,15 @@ function UserInterface()
 	function restart()
 	{
 		location.reload();
+	}
+
+	/*
+	 * toggles the displays for the how to play and start screen
+	 */
+	function flipBetweenStartAndHowToPlay(event)
+	{
+		getToggleDisplayFunction("startScreen")();
+		getToggleDisplayFunction("howToPlayScreen")();
 	}
 
 	/*

@@ -19,8 +19,6 @@ function foxAI(scene, clock, grid, fox) {
 
     var currentState = foxState.init;
 
-    fox.position.x -= 20;
-
     //must report all enum states
     this.getState = function () {
 

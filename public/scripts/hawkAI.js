@@ -18,16 +18,19 @@ function hawkAI(scene, clock, grid, hawk) {
     */
 
     var currentState = hawkState.init;
+    hawk.position.y += 35;
+    hawk.position.z -= 35;
 
     //must report all enum states
     this.getState = function () {
 
         return currentState;
-    }
 
-    this.update = function () {
 
-        var elapsedTime = clock.getElapsedTime();
+        this.update = function () {
 
+            var elapsedTime = clock.getElapsedTime();
+
+        }
     }
 }

@@ -71,10 +71,10 @@
     light.shadowCameraVisible = true;
     scene.add(light);
 
-    light.shadow.camera.top = 250;
-    light.shadow.camera.bottom = -250;
-    light.shadow.camera.left = -250;
-    light.shadow.camera.right = 250;
+    light.shadow.camera.top = 275;
+    light.shadow.camera.bottom = -275;
+    light.shadow.camera.left = -275;
+    light.shadow.camera.right = 275;
 
     light.shadow.mapSize.width = 2048;
     light.shadow.mapSize.height = 2048;
@@ -223,6 +223,7 @@
   }
 
   function resizeCanvas() {
+    console.log("container: " + container.clientWidth + " " + container.clientHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);

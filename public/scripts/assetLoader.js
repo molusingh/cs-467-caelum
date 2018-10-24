@@ -9,6 +9,18 @@ function assetLoader(scene) {
     var croq = new THREE.Object3D();
     croq.name = "croq";
 
+    var duckling = new THREE.Object3D();
+    duckling.name = "duckling";
+
+    var egg = new THREE.Object3D();
+    egg.name = "egg";
+
+    var hawk = new THREE.Object3D();
+    hawk.name = "hawk";
+
+    var grass = new THREE.Object3D();
+    grass.name = "grass";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -35,12 +47,13 @@ function assetLoader(scene) {
     var manager = new THREE.LoadingManager();
 
     manager.onLoad = function () {
-        console.log("finished loading: " + duck);
-        console.log(duck.name);
+        console.log("finished loading: " + grass);
+        console.log(grass.name);
         allAssetsLoaded = true;
     }
 
     //load FPO env
+    /*
     var loader = new THREE.FBXLoader(manager);
     loader.load('./geo/envFPO.fbx', function (object) {
         object.traverse(function (child) {
@@ -61,6 +74,7 @@ function assetLoader(scene) {
         scene.add(object);
 
     });
+    */
 
     //load Mama Duck
     var duckLoader = new THREE.FBXLoader(manager);
@@ -126,6 +140,108 @@ function assetLoader(scene) {
 
         croq.add(object);
         scene.add(croq);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load duckling 
+    var ducklingLoader = new THREE.FBXLoader(manager);
+    ducklingLoader.load('./geo/duckling.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        duckling.add(object);
+        scene.add(duckling);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load egg 
+    var eggLoader = new THREE.FBXLoader(manager);
+    eggLoader.load('./geo/eggUncracked.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        egg.add(object);
+        scene.add(egg);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+
+    this.checkAssetsLoaded = function () {
+        if (allAssetsLoaded === true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    //load egg 
+    var hawkLoader = new THREE.FBXLoader(manager);
+    hawkLoader.load('./geo/hawk.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        hawk.add(object);
+        scene.add(hawk);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load grass 
+    var grassLoader = new THREE.FBXLoader(manager);
+    grassLoader.load('./geo/grass.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        grass.add(object);
+        scene.add(grass);
 
     }, undefined, function (e) {
         console.error(e);

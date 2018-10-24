@@ -20,7 +20,6 @@ function croqAI(scene, clock, grid, croq) {
     var currentState = croqState.init;
 
     console.log("croq: " + croq);
-    croq.position.x += 20;
 
     //must report all enum states
     this.getState = function () {

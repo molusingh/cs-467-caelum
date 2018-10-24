@@ -18,8 +18,6 @@ function ducklingAI(scene, clock, grid, duckling) {
     var currentState = ducklingState.init;
 
     console.log("duckling: " + duckling);
-    duckling.position.x += 20;
-    duckling.position.z -= 20;
 
     //must report all enum states
     this.getState = function () {

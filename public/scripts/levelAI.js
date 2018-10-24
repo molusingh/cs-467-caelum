@@ -70,11 +70,12 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var searchFailed = false;
         var testLocation = new THREE.Vector2(1, 1);
         var validLocation = false;
-        var size = new THREE.Vector2(1, 1);
         var assetLocation;
 
 
         function findValidSquare() {
+
+            var size = new THREE.Vector2(1, 1);
             validLocation = grid.blockIsComponent(size, location, locationComponent);
             if (validLocation === true) {
                 return location;
@@ -83,42 +84,45 @@ function levelAI(scene, clock, currentLevel, difficulty) {
             var radius = 1;
 
             while (validLocation === false) {
-                for (var i = location.x - radius; i < location.x + radius; i++) {
+                for (var i = location.x - radius; i <= location.x + radius; i++) {
                     testLocation.x = i;
                     testLocation.y = location.y + radius;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
+                        console.log("true 92");
                         return testLocation;
                     }
                 }
 
-                for (var i = location.x - radius; i < location.x + radius; i++) {
+                for (var i = location.x - radius; i <= location.x + radius; i++) {
                     testLocation.x = i;
                     testLocation.y = location.y - radius;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
+                        console.log("true 102");
                         return testLocation;
                     }
                 }
-                for (var i = location.y - radius; i < location.y + radius; i++) {
+                for (var i = location.y - radius; i <= location.y + radius; i++) {
                     testLocation.x = location.x + radius;
-                    testLocation.y = y;
+                    testLocation.y = i;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
+                        console.log("true 111");
                         return testLocation;
                     }
                 }
-                for (var i = location.y - radius; i < location.y + radius; i++) {
+                for (var i = location.y - radius; i <= location.y + radius; i++) {
                     testLocation.x = location.x - radius;
-                    testLocation.y = y;
+                    testLocation.y = i;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
+                        console.log("true 120");
                         return testLocation;
                     }
                 }
                 radius++;
                 if (radius > 40) {
-                    console.log("got this far");
                     break;
                 }
             }
@@ -127,6 +131,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var assetLocation = findValidSquare();
         console.log(assetLocation.x, assetLocation.y);
+        console.log("asset: " + asset.name);
 
         if (validLocation === false) {
             console.log("failed: " + asset);
@@ -136,8 +141,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var originY = -200;
         var originX = 200;
 
-        var y = originY + (validLocation.y * 10) - 5;
-        var x = originX - (validLocation.x * 10) + 5;
+        var y = originY + (assetLocation.y * 10) - 5;
+        var x = originX - (assetLocation.x * 10) + 5;
 
         asset.position.z = x;
         asset.position.x = y;

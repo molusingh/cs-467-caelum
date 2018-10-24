@@ -1,6 +1,4 @@
 function levelAI(scene, clock, currentLevel, difficulty) {
-    
-    this.getState = getState;
 
     /*
     publish: level scores
@@ -114,11 +112,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     function setState(state) {
         currentState = state;
-    }
-    
-    function getState()
-    {
-        return currentState;
     }
 
     function endLevel() {

@@ -51,7 +51,7 @@ function gameAI(scene, clock)
     function startLevel()
     {
         gameOn = true;
-        // currentState = gameState.level;
+        currentState = gameState.level;
         level = new levelAI(scene, clock, currentLevel, currentLevelDifficulty);
     }
 
@@ -104,6 +104,7 @@ function gameAI(scene, clock)
         {
             switch (level.getState())
             {
+                case levelState.init:
                 case levelState.play:
                     level.update();
                     break;

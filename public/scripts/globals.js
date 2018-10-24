@@ -1,3 +1,4 @@
+/* global EventBus*/
 // ENUMS
 
 //Note: these are 'external states', internal representations can have more
@@ -36,4 +37,6 @@ var motionUnit = 1.0;
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max) + 1);
 }
+
+var bus = new EventBus();
 

@@ -1,3 +1,7 @@
+/* global ObjectMover*/
+/* global playerState*/
+/* global bus*/
+/* global soundLoader*/
 function playerControls(scene, clock, duck) {
 
     /*
@@ -26,10 +30,13 @@ function playerControls(scene, clock, duck) {
     var maxPos = 185;
 
     var duckMover = new ObjectMover(duck);
-    $("#leftButton").click(duckMover.left);
-    $("#rightButton").click(duckMover.right);
-    $("#downButton").click(duckMover.down);
-    $("#upButton").click(duckMover.up);
+    
+    // subscriptions
+    bus.subscribe("moveLeft", duckMover.left);
+    bus.subscribe("moveRight", duckMover.right);
+    bus.subscribe("moveDown", duckMover.down);
+    bus.subscribe("moveUp", duckMover.up);
+
 
     // sounds for interface buttons
     var playSound = new soundLoader();

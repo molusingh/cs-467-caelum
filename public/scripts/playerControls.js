@@ -31,15 +31,19 @@ function playerControls(scene, clock, duck) {
 
     var duckMover = new ObjectMover(duck);
     
+    var playSound = new soundLoader();
+    
     // subscriptions
     bus.subscribe("moveLeft", duckMover.left);
     bus.subscribe("moveRight", duckMover.right);
     bus.subscribe("moveDown", duckMover.down);
     bus.subscribe("moveUp", duckMover.up);
+    
+    bus.subscribe("playerMove", playSound.move);
+    
 
 
     // sounds for interface buttons
-    var playSound = new soundLoader();
     $("#movementControls").click(playSound.click);
     $("#movementControls").click(playSound.move);
     $("#skillButtons").click(playSound.click);

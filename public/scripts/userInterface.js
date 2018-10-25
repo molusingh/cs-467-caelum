@@ -112,21 +112,25 @@ function UserInterface()
 			case 38: // up
 			case 87: // W
 				bus.publish("moveUp");
+				bus.publish("playerMove");
 				break;
 
 			case 37: // left
 			case 65: // A
 				bus.publish("moveLeft");
+				bus.publish("playerMove");
 				break;
 
 			case 40: // down
 			case 83: // S
 				bus.publish("moveDown");
+				bus.publish("playerMove");
 				break;
 
 			case 39: // right
 			case 68: // D
 				bus.publish("moveRight");
+				bus.publish("playerMove");
 				break;
 
 			case 82: // R TODO:

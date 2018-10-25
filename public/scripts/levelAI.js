@@ -30,16 +30,14 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     }
 
     function loadAssets() {
-
-        envGenerator = new assetGen(scene);
-        envGenerator.buildEnv();
-
         loader = new assetLoader(scene);
-        //load env here
     }
 
 
     function initAssets() {
+
+        envGenerator = new assetGen(scene);
+        envGenerator.buildEnv();
 
         var duck = scene.getObjectByName("duck");
         var location = new THREE.Vector2(20, 20);
@@ -64,20 +62,19 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var hawk = scene.getObjectByName("hawk");
         hawk = new hawkAI(scene, clock, 0, hawk);
 
-        var grass = scene.getObjectByName("grass");
-        location = new THREE.Vector2(23, 24);
-        placeAsset(grass, componentType.grass, location, componentType.land);
-
-        growGrass(grass);
+        //var grass = scene.getObjectByName("grass");
+        //location = new THREE.Vector2(23, 24);
+        //placeAsset(grass, componentType.grass, location, componentType.land);
 
     }
 
+    /*
     function growGrass(grass) {
         for (i = 0; i < 50; i++) {
             gra
         }
     }
-
+    */
 
     function placeAsset(asset, assetComponent, location, locationComponent) {
 

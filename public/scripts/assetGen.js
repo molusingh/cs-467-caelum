@@ -16,7 +16,7 @@ function assetGen(scene) {
         recordLandInGrid();
         //grid.printGrid(0, 8, 0, 8);
         generateLandObstacles(40, 20);
-        generateGrassObstacles();
+        generateGrassObstacles(60, 20);
     }
 
     //creates 4 points determining corners of 8x8 tile
@@ -283,6 +283,54 @@ function assetGen(scene) {
 
 
     //creates 1x1 - 3x3 obstacles on land, continuous
+    function generateGrassObstacles(minimum, random) {
+        var numOfGrassPatches = getRandomInt(random) + minimum;
+
+        var grass = scene.getObjectByName("grass");
+        console.log("GRASS: " + grass);
+        var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
+
+
+        var cube = new THREE.CubeGeometry(1, 1, 1);
+        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
+        //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+
+
+        //numOfObstacles = 1;
+
+        for (var i = 0; i < numOfGrassPatches; i++) {
+
+            var randomRotationY;
+
+            var size = new THREE.Vector2(1, 1);
+
+            //patch = new THREE.Mesh(grass.clone(), material);
+            patch = grass.clone();
+            patch.position.y -= 0.1;
+            patch.castShadow = true;
+            patch.receiveShadow = true;
+            patch.shadowMaterial = shadowMat;
+            scene.add(patch);
+
+            var offset = new THREE.Vector2(5, 5);
+
+            var object = {
+                'geo': patch,
+                'size': size,
+                'offset': offset,
+                'objectComponent': componentType.grass,
+                'placementComponent': componentType.land
+            };
+
+            placeRandom(object);
+
+        }
+
+    }
+
+
+
+    //creates 1x1 - 3x3 obstacles on land, continuous
     function generateLandObstacles(minimum, random) {
         var numOfObstacles = getRandomInt(random) + minimum;
 
@@ -299,11 +347,10 @@ function assetGen(scene) {
 
             randomSizeX = getRandomInt(3);
             randomSizeY = getRandomInt(3);
-            //randomSizeX = 3;
-            //randomSizeY = 1;
+
             var size = new THREE.Vector2(randomSizeX, randomSizeY);
 
-            obstacle = new THREE.Mesh(cube.clone(), material.clone());
+            obstacle = new THREE.Mesh(cube.clone(), material);
             obstacle.scale.set(10 * randomSizeY, 8, 10 * randomSizeX);
             obstacle.position.y -= 0.1;
             obstacle.castShadow = true;
@@ -311,59 +358,63 @@ function assetGen(scene) {
             obstacle.shadowMaterial = shadowMat;
             scene.add(obstacle);
 
-            var originY = -200;
-            var originX = 200;
+            var offset = new THREE.Vector2(10, 10);
 
-            //is space under future obstacle all land
-            var isLegal = false;
-            //add cut off for 100 attempts
-            var attempts = 0;
+            var object = {
+                'geo': obstacle,
+                'size': size,
+                'offset': offset,
+                'objectComponent': componentType.obstacle,
+                'placementComponent': componentType.land
+            };
 
-            while (isLegal === false) {
+            placeRandom(object);
 
-                attempts++;
-                //console.log("attempts: " + attempts);
-                randomLocationX = getRandomInt(40 - randomSizeX);
-                randomLocationY = getRandomInt(40 - randomSizeY);
-                //randomLocationX = getRandomInt(7);
-                //randomLocationY = getRandomInt(7);
-
-                var location = new THREE.Vector2(randomLocationX, randomLocationY);
-
-                isLegal = grid.blockIsComponent(size, location, componentType.land);
-
-                if (attempts > 100) {
-                    console.log("attempts: DONE");
-                    continue;
-                }
-            }
-
-            var y = originY + (randomLocationY * 10) - 10;
-            var x = originX - (randomLocationX * 10) + 10;
-
-            obstacle.position.z = x;
-            obstacle.position.x = y;
-
-            registerInGrid(size, location, componentType.obstacle);
         }
 
     }
 
-    /*
-    function checkForLegalLocation(size, location, component) {
-        grid.printGrid(0, 8, 0, 8);
-        for (var i = location.x; i < location.x + size.x; i++) {
-            for (var j = location.y; j < location.y + size.y; j++) {
-                var squareComponent = grid.getNormalizedSquareInfo(i, j);
-                console.log("squareInfo x: " + i + " j: " + j + " component: " + squareComponent);
-                if (squareComponent !== component) {
-                    return false;
-                }
+    function placeRandom(object) {
+
+
+        var originY = -200;
+        var originX = 200;
+
+        //is space under future obstacle all land
+        var isLegal = false;
+        //add cut off for 100 attempts
+        var attempts = 0;
+
+        while (isLegal === false) {
+
+            attempts++;
+
+            randomLocationX = getRandomInt(40 - object.size.x);
+            randomLocationY = getRandomInt(40 - object.size.y);
+
+            var location = new THREE.Vector2(randomLocationX, randomLocationY);
+
+            isLegal = grid.blockIsComponent(object.size, location, object.placementComponent);
+
+            if (attempts > 100) {
+                break;
             }
         }
-        return true;
+
+        //next obstacle
+        if (attempts > 100)
+            return;
+
+        var y = originY + (randomLocationY * 10) - object.offset.y;
+        var x = originX - (randomLocationX * 10) + object.offset.x;
+
+        object.geo.position.z = x;
+        object.geo.position.x = y;
+
+        registerInGrid(object.size, location, object.objectComponent);
+
     }
-    */
+
 
     function registerInGrid(size, location, component) {
         for (var i = location.x; i < location.x + size.x; i++) {
@@ -373,10 +424,6 @@ function assetGen(scene) {
         }
     }
 
-    //creates 1x1 - 4x4 grass on land, not continous, doesn't grow on land obstacles
-    function generateGrassObstacles(count) {
-
-    }
 
 
 }

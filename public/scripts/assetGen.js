@@ -282,6 +282,8 @@ function assetGen(scene) {
     }
 
 
+
+
     //creates 1x1 - 3x3 obstacles on land, continuous
     function generateLandObstacles(minimum, random) {
         var numOfObstacles = getRandomInt(random) + minimum;
@@ -299,8 +301,7 @@ function assetGen(scene) {
 
             randomSizeX = getRandomInt(3);
             randomSizeY = getRandomInt(3);
-            //randomSizeX = 3;
-            //randomSizeY = 1;
+
             var size = new THREE.Vector2(randomSizeX, randomSizeY);
 
             obstacle = new THREE.Mesh(cube.clone(), material.clone());
@@ -322,18 +323,15 @@ function assetGen(scene) {
             while (isLegal === false) {
 
                 attempts++;
-                //console.log("attempts: " + attempts);
+
                 randomLocationX = getRandomInt(40 - randomSizeX);
                 randomLocationY = getRandomInt(40 - randomSizeY);
-                //randomLocationX = getRandomInt(7);
-                //randomLocationY = getRandomInt(7);
 
                 var location = new THREE.Vector2(randomLocationX, randomLocationY);
 
                 isLegal = grid.blockIsComponent(size, location, componentType.land);
 
                 if (attempts > 100) {
-                    console.log("attempts: DONE");
                     continue;
                 }
             }
@@ -349,21 +347,6 @@ function assetGen(scene) {
 
     }
 
-    /*
-    function checkForLegalLocation(size, location, component) {
-        grid.printGrid(0, 8, 0, 8);
-        for (var i = location.x; i < location.x + size.x; i++) {
-            for (var j = location.y; j < location.y + size.y; j++) {
-                var squareComponent = grid.getNormalizedSquareInfo(i, j);
-                console.log("squareInfo x: " + i + " j: " + j + " component: " + squareComponent);
-                if (squareComponent !== component) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    */
 
     function registerInGrid(size, location, component) {
         for (var i = location.x; i < location.x + size.x; i++) {
@@ -374,7 +357,7 @@ function assetGen(scene) {
     }
 
     //creates 1x1 - 4x4 grass on land, not continous, doesn't grow on land obstacles
-    function generateGrassObstacles(count) {
+    function generateGrassObstacles(minimum, random) {
 
     }
 

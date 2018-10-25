@@ -1,5 +1,5 @@
 function levelAI(scene, clock, currentLevel, difficulty) {
-    
+
     this.getState = getState;
 
     /*
@@ -64,6 +64,18 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var hawk = scene.getObjectByName("hawk");
         hawk = new hawkAI(scene, clock, 0, hawk);
 
+        var grass = scene.getObjectByName("grass");
+        location = new THREE.Vector2(23, 24);
+        placeAsset(grass, componentType.grass, location, componentType.land);
+
+        growGrass(grass);
+
+    }
+
+    function growGrass(grass) {
+        for (i = 0; i < 50; i++) {
+            gra
+        }
     }
 
 
@@ -91,7 +103,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
                     testLocation.y = location.y + radius;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
-                        console.log("true 92");
                         return testLocation;
                     }
                 }
@@ -101,7 +112,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
                     testLocation.y = location.y - radius;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
-                        console.log("true 102");
                         return testLocation;
                     }
                 }
@@ -110,7 +120,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
                     testLocation.y = i;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
-                        console.log("true 111");
                         return testLocation;
                     }
                 }
@@ -119,7 +128,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
                     testLocation.y = i;
                     validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
                     if (validLocation === true) {
-                        console.log("true 120");
                         return testLocation;
                     }
                 }
@@ -133,7 +141,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var assetLocation = findValidSquare();
         console.log(assetLocation.x, assetLocation.y);
-        console.log("asset: " + asset.name);
 
         if (validLocation === false) {
             console.log("failed: " + asset);
@@ -157,9 +164,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     function setState(state) {
         currentState = state;
     }
-    
-    function getState()
-    {
+
+    function getState() {
         return currentState;
     }
 

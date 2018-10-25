@@ -63,7 +63,7 @@ function playerControls(scene, clock, duck) {
 
 
 
-    document.addEventListener('keydown', onKeyDown);
+    // document.addEventListener('keydown', onKeyDown);
 
     this.getState = function () {
 

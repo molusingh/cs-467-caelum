@@ -21,6 +21,9 @@ function assetLoader(scene) {
     var grass = new THREE.Object3D();
     grass.name = "grass";
 
+    var stick = new THREE.Object3D();
+    stick.name = "stick";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -242,6 +245,29 @@ function assetLoader(scene) {
 
         grass.add(object);
         scene.add(grass);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load stick 
+    var stickLoader = new THREE.FBXLoader(manager);
+    stickLoader.load('./geo/stick.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        stick.add(object);
+        scene.add(stick);
 
     }, undefined, function (e) {
         console.error(e);

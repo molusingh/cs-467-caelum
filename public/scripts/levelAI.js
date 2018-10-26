@@ -62,9 +62,13 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var hawk = scene.getObjectByName("hawk");
         hawk = new hawkAI(scene, clock, 0, hawk);
 
-        //var grass = scene.getObjectByName("grass");
-        //location = new THREE.Vector2(23, 24);
-        //placeAsset(grass, componentType.grass, location, componentType.land);
+        var grass = scene.getObjectByName("grass");
+        location = new THREE.Vector2(23, 24);
+        placeAsset(grass, componentType.grass, location, componentType.land);
+
+        var stick = scene.getObjectByName("stick");
+        location = new THREE.Vector2(23, 24);
+        placeAsset(stick, componentType.stick, location, componentType.land);
 
     }
 

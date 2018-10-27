@@ -37,6 +37,14 @@ function board() {
         }
     }
 
+    function normalizeX(x) {
+        return ((x - originY + 5) / 10);
+    }
+
+    function normalizeZ(z) {
+        return ((originX - z + 5) / 10);
+    }
+
     //reports what's in the queried location. 
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, stick
     getNormalizedSquareInfo = function (x, y) {
@@ -74,11 +82,24 @@ function board() {
 
     }
 
-    //reports value of queried square. 
-    //takes center point coordiantes, componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    this.getActorsInRadius = function ({ x, z }, componentType) {
+    //reports location and distance to targets 
+    //takes origin point, radius and componentType of target: water, land, duckling, duck, fox, croq, hawk, obstacle
+    //returns array of location and distance pairs 
+    this.getActorsInRadius = function (location, radius, searchTarget) {
 
+        var x = normalizeZ(location.z);
+        var y = normalizeX(location.x);
+        var hits = [];
+
+        for (var i = x - radius; i < x + radius + 1; i++) {
+            for (var i = y - radius; i < y + radius + 1; i++) {
+                var squareValue = getNormalizedSquareInfo(x, y);
+                if (squareValue === searchTarget) {
+                    //return actual coordinates + actual distance
+                    //hits.push(targetLocation, targetDistance);
+                }
+            }
+        }
         console.log("getActorInRadius: not implemented");
         return 0;
     }

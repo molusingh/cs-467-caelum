@@ -73,7 +73,6 @@ function assetGen(scene) {
         return createShape();
 
 
-
         function createShape() {
 
             //console.log("VERTICES:");
@@ -188,6 +187,7 @@ function assetGen(scene) {
         return mesh;
     }
 
+
     //creates (25) 8x8 tiles to fill 40x40 grid
     function generateLand() {
 
@@ -229,6 +229,7 @@ function assetGen(scene) {
             }
         }
     }
+
 
     function identifyObject(gridLocation) {
 
@@ -287,16 +288,12 @@ function assetGen(scene) {
         var numOfGrassPatches = getRandomInt(random) + minimum;
 
         var grass = scene.getObjectByName("grass");
-        console.log("GRASS: " + grass);
         var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
-
 
         var cube = new THREE.CubeGeometry(1, 1, 1);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
         //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
 
-
-        //numOfObstacles = 1;
 
         for (var i = 0; i < numOfGrassPatches; i++) {
 
@@ -329,7 +326,6 @@ function assetGen(scene) {
     }
 
 
-
     //creates 1x1 - 3x3 obstacles on land, continuous
     function generateLandObstacles(minimum, random) {
         var numOfObstacles = getRandomInt(random) + minimum;
@@ -337,8 +333,6 @@ function assetGen(scene) {
         var cube = new THREE.CubeGeometry(1, 1, 1);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
         var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
-
-        //numOfObstacles = 1;
 
         for (var i = 0; i < numOfObstacles; i++) {
 
@@ -374,8 +368,8 @@ function assetGen(scene) {
 
     }
 
-    function placeRandom(object) {
 
+    function placeRandom(object) {
 
         var originY = -200;
         var originX = 200;
@@ -423,7 +417,5 @@ function assetGen(scene) {
             }
         }
     }
-
-
 
 }

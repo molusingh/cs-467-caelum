@@ -12,6 +12,10 @@ function board() {
     var grid;
     var scene;
 
+    //top left corner of board
+    var originX = 200;
+    var originY = -200;
+
     var isInitialized = false;
 
     initializeGrid(40, 40);
@@ -28,28 +32,46 @@ function board() {
         for (var i = 0; i < z; i++) {
             for (var j = 0; j < x; j++) {
                 grid[i][j] = componentType.water;
-                console.log(grid[i][j]);
+                //console.log(grid[i][j]);
             }
         }
     }
 
     //reports what's in the queried location. 
-    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, stick
     getNormalizedSquareInfo = function (x, y) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
             return 0;
         }
         return grid[x - 1][y - 1];
     }
 
+
+    this.getOrigin = function () {
+        return new THREE.Vector2(originX, originY);
+    }
+
     //reports what's in the queried location. 
-    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    //normalize input, then run above function
+    // ex. pass object's location + offset in z and x, each square is 10 x 10 
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, illegal 
     this.getSquareInfo = function (z, x) {
 
-        console.log("getSquareInfo: not implemented");
-        return 0;
+        var normalizedX = ((originX - z + 5) / 10);
+        var normalizedY = ((x - originY + 5) / 10);
+
+        return getNormalizedSquareInfo(normalizedX, normalizedY);
+
+    }
+
+    this.testSquareInfo = function (z, x) {
+
+        console.log("above: " + this.getSquareInfo(z, x - 10));
+        console.log("below: " + this.getSquareInfo(z, x + 10));
+        console.log("right: " + this.getSquareInfo(z - 10, x));
+        console.log("left: " + this.getSquareInfo(z + 10, x));
+
     }
 
     //reports value of queried square. 

@@ -72,17 +72,9 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     }
 
-    /*
-    function growGrass(grass) {
-        for (i = 0; i < 50; i++) {
-            gra
-        }
-    }
-    */
 
     function placeAsset(asset, assetComponent, location, locationComponent) {
 
-        var searchFailed = false;
         var testLocation = new THREE.Vector2(1, 1);
         var validLocation = false;
         var assetLocation;

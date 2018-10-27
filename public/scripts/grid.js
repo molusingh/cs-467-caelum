@@ -12,60 +12,96 @@ function board() {
     var grid;
     var scene;
 
+    //top left corner of board
+    var originX = 200;
+    var originY = -200;
+
     var isInitialized = false;
 
-    initializeGrid(8, 8);
+    initializeGrid(40, 40);
 
     //sets up empty board, ready to receive info
     //board values default to water;
-    function initializeGrid(x, y) {
-        console.log("here!")
-        grid = new Array(x);
+    function initializeGrid(z, x) {
+        grid = new Array(z);
 
-        for (var i = 0; i < x; i++) {
-            grid[i] = new Array(y);
+        for (var i = 0; i < z; i++) {
+            grid[i] = new Array(x);
         }
 
-        for (var i = 0; i < x; i++) {
-            for (var j = 0; j < y; j++) {
+        for (var i = 0; i < z; i++) {
+            for (var j = 0; j < x; j++) {
                 grid[i][j] = componentType.water;
-                console.log(grid[i][j]);
+                //console.log(grid[i][j]);
             }
         }
     }
 
-    //this sets the scene
-    function setScene(currentScene) {
-        scene = currentScene;
+    //reports what's in the queried location. 
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, stick
+    getNormalizedSquareInfo = function (x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return 0;
+        }
+        return grid[x - 1][y - 1];
+    }
+
+
+    this.getOrigin = function () {
+        return new THREE.Vector2(originX, originY);
     }
 
     //reports what's in the queried location. 
-    //returns actorType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    this.getSquareInfo = function (x, z) {
+    // ex. pass object's location + offset in z and x, each square is 10 x 10 
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, illegal 
+    this.getSquareInfo = function (z, x) {
 
-        console.log("getSquareInfo: not implemented");
-        return 0;
+        var normalizedX = ((originX - z + 5) / 10);
+        var normalizedY = ((x - originY + 5) / 10);
+
+        return getNormalizedSquareInfo(normalizedX, normalizedY);
+
+    }
+
+    this.testSquareInfo = function (z, x) {
+
+        console.log("above: " + this.getSquareInfo(z, x - 10));
+        console.log("below: " + this.getSquareInfo(z, x + 10));
+        console.log("right: " + this.getSquareInfo(z - 10, x));
+        console.log("left: " + this.getSquareInfo(z + 10, x));
+
     }
 
     //reports value of queried square. 
-    //takes center pointe coordiantes, actorType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    //returns actorType: water, land, duckling, duck, fox, croq, hawk, obstacle
-    this.getActorsInRadius = function ({ x, z }, actorType) {
+    //takes center point coordiantes, componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle
+    this.getActorsInRadius = function ({ x, z }, componentType) {
 
         console.log("getActorInRadius: not implemented");
         return 0;
     }
 
     //receives actor ID and updates the grid info, internally checks position
-    this.updateActorInGrid = function (actorID, componentType) {
+    this.updateActor = function (actorID, componentType) {
 
         console.log("updateActorInGrid: not implemented");
         return 0;
     }
 
     this.setEnvSquare = function (x, y, componentType) {
+        grid[x][y] = componentType;
+    }
 
-        console.log("setEnvSquare");
+    this.printGrid = function (start_x, end_x, start_y, end_y) {
+        for (var j = 0; j < end_y + 1; j++) {
+            var line = "";
+            for (var i = start_x; i < end_x + 1; i++) {
+                line += String(grid[i][j]);
+            }
+            console.log(line);
+        }
     }
 
     //checks if duckling is within duck's calling radius
@@ -75,4 +111,15 @@ function board() {
         return 0;
     }
 
+    this.blockIsComponent = function (size, location, component) {
+        for (var i = location.x; i < location.x + size.x; i++) {
+            for (var j = location.y; j < location.y + size.y; j++) {
+                var squareComponent = getNormalizedSquareInfo(i, j);
+                if (squareComponent !== component) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

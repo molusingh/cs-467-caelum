@@ -22,7 +22,7 @@ function EventBus()
         event = findEvent(eventType);
         if (!event)
         {
-            console.log("Event '" + eventType + "' doesn't exist!");
+            console.log("Event '" + eventType + "' has no subscribers!");
             return;
         }
         event.callbacks.forEach(executeCallback);

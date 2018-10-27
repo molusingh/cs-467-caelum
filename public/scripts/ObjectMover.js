@@ -1,5 +1,6 @@
 function ObjectMover(object)
 {
+	var maxPosition = 185;
 	ObjectMover.prototype.up = up;
 	ObjectMover.prototype.down = down;
 	ObjectMover.prototype.left = left;
@@ -7,7 +8,10 @@ function ObjectMover(object)
 
 	function up()
 	{
-		object.position.x -= 10;
+		if (object.position.x >= -maxPosition) // if within bounds
+		{
+			object.position.x -= 10;
+		}
 		switch (object.userData.currentDirection)
 		{
 			case 'left':
@@ -25,7 +29,11 @@ function ObjectMover(object)
 
 	function left()
 	{
-		object.position.z += 10;
+		if (object.position.z <= maxPosition) // if within bounds
+		{
+			object.position.z += 10;
+		}
+
 		switch (object.userData.currentDirection)
 		{
 			case 'down':
@@ -43,7 +51,11 @@ function ObjectMover(object)
 
 	function down()
 	{
-		object.position.x += 10;
+		if (object.position.x <= maxPosition) // if within bounds
+		{
+			object.position.x += 10;
+		}
+
 		switch (object.userData.currentDirection)
 		{
 			case 'right':
@@ -61,7 +73,11 @@ function ObjectMover(object)
 
 	function right()
 	{
-		object.position.z -= 10;
+		if (object.position.z >= -maxPosition) // if within bounds
+		{
+			object.position.z -= 10;
+		}
+
 		switch (object.userData.currentDirection)
 		{
 			case 'up':

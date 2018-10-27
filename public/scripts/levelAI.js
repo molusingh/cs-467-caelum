@@ -67,7 +67,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         placeAsset(grass, componentType.grass, location, componentType.land);
 
         var stick = scene.getObjectByName("stick");
-        location = new THREE.Vector2(23, 24);
+        location = new THREE.Vector2(25, 22);
         placeAsset(stick, componentType.stick, location, componentType.land);
 
     }

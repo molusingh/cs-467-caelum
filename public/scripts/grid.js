@@ -9,7 +9,7 @@ function board() {
 
     var invisibility = false;
     var superquack = false;
-    var grid;
+    var envTable, actorTable;
     var scene;
 
     //top left corner of board
@@ -18,23 +18,30 @@ function board() {
 
     var isInitialized = false;
 
-    initializeGrid(40, 40);
+    initializeEnvTable(40, 40);
+    initializeActorTable(20);
 
     //sets up empty board, ready to receive info
     //board values default to water;
-    function initializeGrid(z, x) {
-        grid = new Array(z);
+    function initializeEnvTable(z, x) {
+        envTable = new Array(z);
 
         for (var i = 0; i < z; i++) {
-            grid[i] = new Array(x);
+            envTable[i] = new Array(x);
         }
 
         for (var i = 0; i < z; i++) {
             for (var j = 0; j < x; j++) {
-                grid[i][j] = componentType.water;
-                //console.log(grid[i][j]);
+                envTable[i][j] = componentType.water;
             }
         }
+    }
+
+
+    //sets up empty board, ready to receive info
+    //board values default to water;
+    function initializeActorTable(size) {
+        actorTable = new Array(size);
     }
 
     function normalizeX(x) {
@@ -45,17 +52,30 @@ function board() {
         return ((originX - z + 5) / 10);
     }
 
-    //reports what's in the queried location. 
-    //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, stick
-    getNormalizedSquareInfo = function (x, y) {
+    function getNormalizedSquareInfo(x, y) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return 0;
         }
-        return grid[x - 1][y - 1];
+        return envTable[x - 1][y - 1];
     }
 
+    function getActorSquareInfo(x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return null;
+        }
+        for (var i = 0; i < actorTable.length; i++) {
+            var posX = actorTable[i][position].x;
+            if (actorTable[i].position.x === x && actorTable[i].position.y === y) {
+                var objectID = actorTable[i].actor.id;
+                var object = scene.getObjectByID(objectID);
+                return object.userData.componentType;
+            }
+        }
+    }
 
     this.getOrigin = function () {
         return new THREE.Vector2(originX, originY);
@@ -69,6 +89,13 @@ function board() {
         var normalizedX = ((originX - z + 5) / 10);
         var normalizedY = ((x - originY + 5) / 10);
 
+        var actorType = getActorSquareInfo(normalizedX, normalizedY);
+        //TO DO: Add invisibility and flying restrictions
+        if (actorType !== null) {
+            return actorType;
+        }
+
+        //return env info instead
         return getNormalizedSquareInfo(normalizedX, normalizedY);
 
     }
@@ -100,21 +127,37 @@ function board() {
                 }
             }
         }
-        console.log("getActorInRadius: not implemented");
-        return 0;
     }
 
-    //receives actor ID and updates the grid info, internally checks position
-    this.updateActor = function (actorID, componentType) {
+    //Receives actorObject, updates its location in grid. Submit after move complete or periodically.  
+    this.updateActor = function (actor) {
 
-        console.log("updateActorInGrid: not implemented");
-        return 0;
+        for (var i = 0; i < actorTable.length; i++) {
+            if (actorTable[i].id === actor.id) {
+
+                var x = normalizeZ(actor.position.z);
+                var y = normalizeX(actor.position.x);
+
+                actorTable[i].position = new THREE.Vector2(x, y);
+
+            }
+        }
+
+    }
+
+    this.addActor = function (actor) {
+        var x = normalizeZ(actor.position.z);
+        var y = normalizeX(actor.position.x);
+        var position = new THREE.Vector2(x, y);
+        var actorInfo = { id: actor.id, location: position }
+        actorTable.push(actorInfo);
     }
 
     this.setEnvSquare = function (x, y, componentType) {
-        grid[x][y] = componentType;
+        envTable[x][y] = componentType;
     }
 
+    //testing function
     this.printGrid = function (start_x, end_x, start_y, end_y) {
         for (var j = 0; j < end_y + 1; j++) {
             var line = "";
@@ -132,6 +175,8 @@ function board() {
         return 0;
     }
 
+    //returns boolean reporting if area is a certain component
+    //used for placing obstacle blocks on land
     this.blockIsComponent = function (size, location, component) {
         for (var i = location.x; i < location.x + size.x; i++) {
             for (var j = location.y; j < location.y + size.y; j++) {

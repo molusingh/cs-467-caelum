@@ -26,21 +26,20 @@ function playerControls(scene, clock, duck) {
     */
 
     var currentState = playerState.init;
-    duck.userData = { currentDirection: "down" };
     var maxPos = 185;
 
     var duckMover = new ObjectMover(duck);
-    
+
     var playSound = new soundLoader();
-    
+
     // subscriptions
     bus.subscribe("moveLeft", duckMover.left);
     bus.subscribe("moveRight", duckMover.right);
     bus.subscribe("moveDown", duckMover.down);
     bus.subscribe("moveUp", duckMover.up);
-    
+
     bus.subscribe("playerMove", playSound.move);
-    
+
 
 
     // sounds for interface buttons
@@ -67,7 +66,7 @@ function playerControls(scene, clock, duck) {
 
 
 
-    // document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
 
     this.getState = function () {
 
@@ -118,6 +117,7 @@ function playerControls(scene, clock, duck) {
 
             case 82: /*R*/ moveUp = true; break;
             case 70: /*F*/ moveDown = true; break;
+            case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
 
         }
 

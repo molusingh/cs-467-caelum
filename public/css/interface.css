@@ -33,18 +33,11 @@ body {
     text-align: center;
     position: fixed;
     z-index: 25;
+    display: none;
 }
 
 #startScreen {
-    width: 100vw;
-    height: 100vh;
-    text-align: center;
-    position: fixed;
-    z-index: 25;
-}
-
-#menu {
-    display: none;
+    display: initial;
 }
 
 #menu>button {

@@ -26,10 +26,12 @@ function playerControls(scene, clock, duck) {
     */
 
     var currentState = playerState.init;
-<<<<<<< HEAD
-    duck.userData = { currentDirection: 'down', inAir: false, inWater: false };
-=======
->>>>>>> refs/remotes/origin/development
+
+    duck.userData.currentDirection = 'down';
+    console.log(duck.userData.currentDirection);
+    duck.userData.inAir = false;
+    duck.userData.inWater = false;
+
     var maxPos = 185;
 
     var duckMover = new ObjectMover(duck);
@@ -39,10 +41,17 @@ function playerControls(scene, clock, duck) {
     // subscriptions
         // action subscribers
     bus.subscribe("moveLeft", duckMover.left);
+    bus.subscribe("rotateLeft", duckMover.rotateLeft);
+    bus.subscribe("duckLeft", duckLeft);
     bus.subscribe("moveRight", duckMover.right);
+    bus.subscribe("rotateRight", duckMover.rotateRight);
+    bus.subscribe("duckRight", duckRight);
     bus.subscribe("moveDown", duckMover.down);
+    bus.subscribe("rotateDown", duckMover.rotateDown);
+    bus.subscribe("duckDown", duckDown);
     bus.subscribe("moveUp", duckMover.up);
-<<<<<<< HEAD
+    bus.subscribe("rotateUp", duckMover.rotateUp);
+    bus.subscribe("duckUp", duckUp);
     bus.subscribe("flyToggle", duckMover.flyToggle);
     bus.subscribe("jump", jumpSkill);
     bus.subscribe("call", callSkill);
@@ -58,62 +67,6 @@ function playerControls(scene, clock, duck) {
     bus.subscribe("invisibilitySound", playSound.invisiblity);
     bus.subscribe("speedBoostSound", playSound.speedBoost);
     bus.subscribe("superQuackSound", playSound.superQuack);
-
-    function jumpSkill(object)
-    {
-        var nextSquare;
-        var facing = duck.userData.currentDirection;
-        if(duck.userData.inAir === true)
-        {
-            return;
-        }
-        
-        // get type of square duck is facing
-        if (facing ==='up')
-        {
-            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
-        }
-        else if (facing === 'left')
-        {
-            nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
-        }
-        else if (facing === 'down')
-        {
-            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
-        }
-        else if (facing === 'right')
-        {
-            nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
-        }
-console.log("nextSquare: " + nextSquare);
-console.log("inWater: " + duck.userData.inWater);
-        if (duck.userData.inWater === false && nextSquare === 2)
-        {
-            bus.publish("jumpSound");
-            duck.userData.inWater = true;
-
-            if (facing ==='up')
-            {
-                bus.publish("moveUp");
-            }
-            else if (facing === 'left')
-            {
-                bus.publish("moveLeft");
-            }
-            else if (facing === 'down')
-            {
-                bus.publish("moveDown");
-            }
-            else if (facing === 'right')
-            {
-                bus.publish("moveRight");
-            }
-        }
-=======
-
-    bus.subscribe("playerMove", playSound.move);
-
-
 
     // sounds for interface buttons
     $("#movementControls").click(playSound.click);
@@ -135,9 +88,110 @@ console.log("inWater: " + duck.userData.inWater);
     $("#jumpButton").click(playSound.jump);
     $("#callButton").click(playSound.call);
     $("#nestButton").click(playSound.nest);
->>>>>>> refs/remotes/origin/development
 
-        if (duck.userData.inWater === true && (nextSquare === 1 || nextSquare === 9 || nextSquare === 10)
+    function duckUp(object)
+    {
+        bus.publish("rotateUp");
+        var isLegal;
+        isLegal = isLegalMove(duck);
+console.log("current location: " + duck.position.z + " " + duck.position.x);
+        if(isLegal)
+        {
+            bus.publish("moveUp");
+            bus.publish("playerMove");
+        }
+console.log("new location: " + duck.position.z + " " + duck.position.x);
+    }
+
+    function duckDown(object)
+    {
+        bus.publish("rotateDown");
+        var isLegal;
+        isLegal = isLegalMove(duck);
+        if(isLegal)
+        {
+            bus.publish("moveDown");
+            bus.publish("playerMove");
+        }
+    }
+
+    function duckLeft(object)
+    {
+        bus.publish("rotateLeft");
+        var isLegal
+        isLegal = isLegalMove(duck);
+        if(isLegal)
+        {
+            bus.publish("moveLeft");
+            bus.publish("playerMove");
+        }
+    }
+
+    function duckRight(object)
+    {
+        bus.publish("rotateRight");
+        var isLegal
+        isLegal = isLegalMove(duck);
+        if(isLegal)
+        {
+            bus.publish("moveRight");
+            bus.publish("playerMove");
+        }
+    }
+
+    function jumpSkill(object)
+    {
+        var nextSquare;
+        var facing = duck.userData.currentDirection;
+        if(duck.userData.inAir === true)
+        {
+            return;
+        }
+        
+        // get type of square duck is facing
+        if (facing === 'up')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
+        }
+        else if (facing === 'left')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
+        }
+        else if (facing === 'down')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
+        }
+        else if (facing === 'right')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
+        }
+
+        // if duck isn't in water and the square it is facing is water, go ahead
+        if (duck.userData.inWater === false && nextSquare == 2)
+        {
+            bus.publish("jumpSound");
+            duck.userData.inWater = true;
+
+            if (facing ==='up')
+            {
+                bus.publish("moveUp");
+            }
+            else if (facing === 'left')
+            {
+                bus.publish("moveLeft");
+            }
+            else if (facing === 'down')
+            {
+                bus.publish("moveDown");
+            }
+            else if (facing === 'right')
+            {
+                bus.publish("moveRight");
+            }
+        }
+
+        // if duck is in water and the square it is facing is land, duckling, grass, or stick, go ahead
+        if (duck.userData.inWater === true && (nextSquare == 1 || nextSquare == 8 || nextSquare == 9 || nextSquare == 10))
         {
             bus.publish("jumpSound");
             duck.userData.inWater = false;
@@ -173,6 +227,54 @@ console.log("inWater: " + duck.userData.inWater);
 
     //document.addEventListener('keydown', onKeyDown);
 
+    function isLegalMove(object)
+    {
+        var nextSquare;
+        var facing = duck.userData.currentDirection;
+        
+        // all in-air moves are legal since they are over all tiles
+        if (duck.userData.inAir === true)
+        {
+            return true;
+        }
+      
+        // get type of square duck is facing
+        if (facing ==='up')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
+        }
+        else if (facing === 'left')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
+        }
+        else if (facing === 'down')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
+        }
+        else if (facing === 'right')
+        {
+            nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
+        }
+
+        // moving from land to land (1), duckling (8), grass (10), or stick (11)
+        if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11))
+        {
+            console.log("true, nextSquare is " + nextSquare);
+            return true;
+        }
+
+        // moving from water to water (2), requires jumpSkill to move to land
+        if (duck.userData.inWater === true && nextSquare == 2)
+        {
+            console.log("true, nextSquare is " + nextSquare);
+            return true;
+        }
+
+        // all other moves are illegal
+        console.log("false, nextSquare is " + nextSquare);
+        return false;
+    }
+
     this.getState = function () {
 
         return currentState;
@@ -183,52 +285,4 @@ console.log("inWater: " + duck.userData.inWater);
         var elapsedTime = clock.getElapsedTime();
 
     };
-
-<<<<<<< HEAD
-=======
-    function onKeyDown(event) {
-
-        switch (event.keyCode) {
-
-            case 38: /*up*/
-            case 87: /*W*/
-                if (duck.position.x >= -maxPos) {
-                    duckMover.up();
-                    playSound.move();
-                }
-                break;
-
-            case 37: /*left*/
-            case 65: /*A*/
-                if (duck.position.z <= maxPos) {
-                    duckMover.left();
-                    playSound.move();
-                }
-                break;
-
-            case 40: /*down*/
-            case 83: /*S*/
-                if (duck.position.x <= maxPos) {
-                    duckMover.down();
-                    playSound.move();
-                }
-                break;
-
-            case 39: /*right*/
-            case 68: /*D*/
-                if (duck.position.z >= -maxPos) {
-                    duckMover.right();
-                    playSound.move();
-                }
-                break;
-
-            case 82: /*R*/ moveUp = true; break;
-            case 70: /*F*/ moveDown = true; break;
-            case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
-
-        }
-
-    }
-
->>>>>>> refs/remotes/origin/development
 }

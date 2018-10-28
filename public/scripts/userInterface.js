@@ -23,10 +23,10 @@ function UserInterface()
 
 	// movement buttons
 	$(document).keydown(onKeyDown);
-	$("#leftButton").click(getPublishFunction("moveLeft"));
-	$("#rightButton").click(getPublishFunction("moveRight"));
-	$("#downButton").click(getPublishFunction("moveDown"));
-	$("#upButton").click(getPublishFunction("moveUp"));
+	$("#leftButton").click(getPublishFunction("duckLeft"));
+	$("#rightButton").click(getPublishFunction("duckRight"));
+	$("#downButton").click(getPublishFunction("duckDown"));
+	$("#upButton").click(getPublishFunction("duckUp"));
 
 	// game state buttons
 	$("#restartButton").click(restart);
@@ -46,15 +46,12 @@ function UserInterface()
 	$("#flyButton").click(getPublishFunction("flyToggle"));
 	$("#jumpButton").click(getPublishFunction("jump"));
 	$("#callButton").click(getPublishFunction("call"));
-<<<<<<< HEAD
 	$("#nestButton").click(getPublishFunction("nest"));
 
 	// skill request buttons
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
 	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
 	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
-=======
-	$("#nestButton").click(getPublishFunction("next"));
 	
 	// skill purchase buttons
 	$("#upgradeInvisibilityButton").click(getPublishFunction("invisiblityUpgrade"));
@@ -65,8 +62,6 @@ function UserInterface()
 	$("#invisibilityButton").click(getPublishFunction("makeInvisible"));
 	$("#speedButton").click(getPublishFunction("increaseSpeed"));
 	$("#quackButton").click(getPublishFunction("quack"));
-	
->>>>>>> refs/remotes/origin/development
 
 	// mouse click sound publishers
 		// includes skillButtons, movementControls, and actionButtons
@@ -137,6 +132,8 @@ function UserInterface()
 		getToggleDisplayFunction("howToPlayScreen")();
 	}
 
+
+
 	/*
 	 * Called when a key is pressed
 	 */
@@ -146,27 +143,31 @@ function UserInterface()
 		{
 			case 38: // up
 			case 87: // W
-				bus.publish("moveUp");
-				bus.publish("playerMove");
+					//bus.publish("moveUp");
+					//bus.publish("playerMove");
+					bus.publish("duckUp");
+					break;
 
-				break;
 
 			case 37: // left
 			case 65: // A
-				bus.publish("moveLeft");
-				bus.publish("playerMove");
+				//bus.publish("moveLeft");
+				//bus.publish("playerMove");
+				bus.publish("duckLeft");
 				break;
 
 			case 40: // down
 			case 83: // S
-				bus.publish("moveDown");
-				bus.publish("playerMove");
+				//bus.publish("moveDown");
+				//bus.publish("playerMove");
+				bus.publish("duckDown");
 				break;
 
 			case 39: // right
 			case 68: // D
-				bus.publish("moveRight");
-				bus.publish("playerMove");
+				//bus.publish("moveRight");
+				//bus.publish("playerMove");
+				bus.publish("duckRight");
 				break;
 
 			case 49: // 1 

@@ -36,8 +36,6 @@ function playerControls(scene, clock, duck) {
 
     var duckMover = new ObjectMover(duck);
 
-    var playSound = new soundLoader();
-
     // subscriptions
         // action subscribers
     bus.subscribe("moveLeft", duckMover.left);

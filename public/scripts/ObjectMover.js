@@ -1,10 +1,13 @@
 function ObjectMover(object)
 {
 	var maxPosition = 185;
+	var duckFlightHeight = 20;
+	var hawkFlightHeight = 35;
 	ObjectMover.prototype.up = up;
 	ObjectMover.prototype.down = down;
 	ObjectMover.prototype.left = left;
 	ObjectMover.prototype.right = right;
+	ObjectMover.prototype.flyToggle = flyToggle;
 
 	function up()
 	{
@@ -91,5 +94,47 @@ function ObjectMover(object)
 				break;
 		}
 		object.userData.currentDirection = 'right';
+	}
+
+	function flyToggle()
+	{
+		if (object.userData.inAir == true)
+		{
+			if (object.name == "duck")
+			{
+				object.position.y -= duckFlightHeight;
+			}
+			else if (object.name == "hawk")
+			{
+				object.position.y -= hawkFlightHeight;
+			}
+
+			object.userData.inAir = false;
+		}
+		else
+		{
+			if (object.name == "duck")
+			{
+				object.position.y += duckFlightHeight;
+			}
+			else if (object.name == "hawk")
+			{
+				object.position.y += hawkFlightHeight;
+			}
+
+			object.userData.inAir = true;
+		}
+	}
+
+	function isLegalMove(object)
+	{
+		var inWater = object.userData.inWater;
+		var inAir = object.userData.inAir;
+		var objectType = object.name;
+
+		if (inAir)
+		{
+			return true;
+		}
 	}
 }

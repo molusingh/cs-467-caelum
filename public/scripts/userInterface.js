@@ -39,21 +39,40 @@ function UserInterface()
 	$("#musicButton").click(getPublishFunction("toggleMusic"));
 
 	// player control Buttons
-	$("#movementControls").click(getPublishFunction("playerMove"));
 	$("#skillButtons").click(getPublishFunction("skillButtonClicked"));
 	$("#actionButtons").click(getPublishFunction("actionButtonClicked"));
 
-	$("#flyButton").click(getPublishFunction("fly"));
+	$("#flyButton").click(getPublishFunction("flyToggle"));
 	$("#jumpButton").click(getPublishFunction("jump"));
 	$("#callButton").click(getPublishFunction("call"));
-	$("#nestButton").click(getPublishFunction("next"));
+	$("#nestButton").click(getPublishFunction("nest"));
 
 	// skill request buttons
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
 	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
 	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
 
+	// mouse click sound publishers
+		// includes skillButtons, movementControls, and actionButtons
+	$("#gameControls").click(getPublishFunction("clickSound"));
+		// start button at title
+	$("#startButton").click(getPublishFunction("clickSound"));
+		// how to play button at title
+	$("#howToPlayButton").click(getPublishFunction("clickSound"));
+	$("#closeHowToPlayButton").click(getPublishFunction("clickSound"));
+		// menu button
+	$("#menuButton").click(getPublishFunction("clickSound"));
+		// all buttons in menu
+	$("#menu").click(getPublishFunction("clickSound"));
 
+	// skill sounds
+	$("#flyButton").click(getPublishFunction("flySound"));
+	// jump sound published in playercontrols.jumpSkill
+	$("#callButton").click(getPublishFunction("callSound"));
+	$("#nestButton").click(getPublishFunction("nestSound"));
+	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
+	$("#speedButton").click(getPublishFunction("speedBoostSound"));
+	$("#quackButton").click(getPublishFunction("superQuackSound"));
 
 	/*
 	 * returns a function that publishes the specified event
@@ -113,6 +132,7 @@ function UserInterface()
 			case 87: // W
 				bus.publish("moveUp");
 				bus.publish("playerMove");
+
 				break;
 
 			case 37: // left
@@ -133,13 +153,39 @@ function UserInterface()
 				bus.publish("playerMove");
 				break;
 
-			case 82: // R TODO:
-				null;
+			case 49: // 1 
+				bus.publish("flyToggle");
+				bus.publish("flySound");
 				break;
 
-			case 70: // F TODO:
-				null;
+			case 50: // 2
+				bus.publish("jump");
+				// sound published in playerControls.jumpSkill
 				break;
+
+			case 51: // 3
+				bus.publish("call");
+				bus.publish("callSound");
+				break;
+
+			case 52: // 4
+				bus.publish("nest");
+				bus.publish("nestSound");
+				break;
+
+			case 81: // Q 
+				bus.publish("invisibilitySkillRequested");
+				bus.publish("invisibilitySound");
+				break;
+
+			case 69: // E
+				bus.publish("quackSkillRequested");
+				bus.publish("superQuackSound");
+				break;
+
+			case 82: // R
+				bus.publish("speedSkillRequested");
+				bus.publish("speedBoostSound");
 		}
 	}
 }

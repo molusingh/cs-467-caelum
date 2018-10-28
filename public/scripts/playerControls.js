@@ -257,19 +257,16 @@ function playerControls(scene, clock, duck) {
         // moving from land to land (1), duckling (8), grass (10), or stick (11)
         if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11))
         {
-            console.log("true, nextSquare is " + nextSquare);
             return true;
         }
 
         // moving from water to water (2), requires jumpSkill to move to land
         if (duck.userData.inWater === true && nextSquare == 2)
         {
-            console.log("true, nextSquare is " + nextSquare);
             return true;
         }
 
         // all other moves are illegal
-        console.log("false, nextSquare is " + nextSquare);
         return false;
     }
 

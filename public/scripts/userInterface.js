@@ -7,6 +7,8 @@
  */
 function UserInterface()
 {
+
+	var keyDown = false;
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
@@ -23,6 +25,7 @@ function UserInterface()
 
 	// movement buttons
 	$(document).keydown(onKeyDown);
+	$(document).keyup(onKeyUp);
 	$("#leftButton").click(getPublishFunction("duckLeft"));
 	$("#rightButton").click(getPublishFunction("duckRight"));
 	$("#downButton").click(getPublishFunction("duckDown"));
@@ -143,22 +146,38 @@ function UserInterface()
 		{
 			case 38: // up
 			case 87: // W
+				if (keyDown === false)
+				{
 					bus.publish("duckUp");
-					break;
+					keyDown = true;
+				}
+				break;
 					
 			case 37: // left
 			case 65: // A
-				bus.publish("duckLeft");
+				if (keyDown === false)
+				{
+					bus.publish("duckLeft");
+					keyDown = true;
+				}
 				break;
 
 			case 40: // down
 			case 83: // S
-				bus.publish("duckDown");
+				if (keyDown === false)
+				{
+					bus.publish("duckDown");
+					keyDown = true;
+				}
 				break;
 
 			case 39: // right
 			case 68: // D
-				bus.publish("duckRight");
+				if (keyDown === false)
+				{
+					bus.publish("duckRight");
+					keyDown = true;
+				}
 				break;
 
 			case 49: // 1 
@@ -197,6 +216,32 @@ function UserInterface()
 				break;
 
 			case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
+		}
+	}
+
+	function onKeyUp(event)
+	{
+		switch (event.keyCode)
+		{
+			case 38: // up
+			case 87: // W
+			keyDown = false;
+				break;
+					
+			case 37: // left
+			case 65: // A
+				keyDown = false;
+				break;
+
+			case 40: // down
+			case 83: // S
+				keyDown = false;
+				break;
+
+			case 39: // right
+			case 68: // D
+				keyDown = false;
+				break;
 		}
 	}
 }

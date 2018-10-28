@@ -14,7 +14,6 @@ function assetGen(scene) {
         createWater();
         generateLand();
         recordLandInGrid();
-        //grid.printGrid(0, 8, 0, 8);
         generateLandObstacles(40, 20);
         generateGrassObstacles(60, 20);
     }
@@ -289,11 +288,6 @@ function assetGen(scene) {
 
         var grass = scene.getObjectByName("grass");
         var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
-
-        var cube = new THREE.CubeGeometry(1, 1, 1);
-        cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
-        //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
-
 
         for (var i = 0; i < numOfGrassPatches; i++) {
 

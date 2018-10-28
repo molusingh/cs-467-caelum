@@ -4,22 +4,19 @@ var grid = new board();
 function board() {
 
     /*
-    subscribe: invisibility, superquack
+    grid knows NOTHING about game rules
     */
 
     var invisibility = false;
     var superquack = false;
-    var envTable, actorTable;
-    var scene;
+    var envTable;
 
     //top left corner of board
     var originX = 200;
     var originY = -200;
 
-    var isInitialized = false;
-
     initializeEnvTable(40, 40);
-    initializeActorTable(20);
+    var actorTable = [];
 
     //sets up empty board, ready to receive info
     //board values default to water;
@@ -35,13 +32,6 @@ function board() {
                 envTable[i][j] = componentType.water;
             }
         }
-    }
-
-
-    //sets up empty board, ready to receive info
-    //board values default to water;
-    function initializeActorTable(size) {
-        actorTable = new Array(size);
     }
 
     function normalizeX(x) {
@@ -68,13 +58,41 @@ function board() {
             return null;
         }
         for (var i = 0; i < actorTable.length; i++) {
-            var posX = actorTable[i][position].x;
-            if (actorTable[i].position.x === x && actorTable[i].position.y === y) {
-                var objectID = actorTable[i].actor.id;
-                var object = scene.getObjectByID(objectID);
-                return object.userData.componentType;
+            var location = actorTable[i].location;
+
+            if (location.x === x && location.y === y) {
+                return actorTable[i].actor.userData.componentType;
             }
         }
+
+        return null;
+    }
+
+    function getActorInfo(x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return null;
+        }
+        for (var i = 0; i < actorTable.length; i++) {
+            var location = actorTable[i].location;
+
+            if (location.x === x && location.y === y) {
+                console.log("got here");
+                return actorTable[i].actor;
+            }
+        }
+
+        return null;
+    }
+
+
+    this.setInvisibility = function (value) {
+        invisibility = value;
+    }
+
+    this.setSuperquack = function (value) {
+        superquack = value;
     }
 
     this.getOrigin = function () {
@@ -89,9 +107,11 @@ function board() {
         var normalizedX = ((originX - z + 5) / 10);
         var normalizedY = ((x - originY + 5) / 10);
 
+        //get actor if found in location
         var actorType = getActorSquareInfo(normalizedX, normalizedY);
         //TO DO: Add invisibility and flying restrictions
         if (actorType !== null) {
+            console.log("found actor: " + actorType);
             return actorType;
         }
 
@@ -100,46 +120,61 @@ function board() {
 
     }
 
+    //use as a secondary check when hawk searches for duck or ducklings
+    //ex.a square with duckling could also be grass, i.e. now access for hawk
+    this.getEnvInfo = function (z, x) {
+
+        var normalizedX = ((originX - z + 5) / 10);
+        var normalizedY = ((x - originY + 5) / 10);
+
+        return getNormalizedSquareInfo(normalizedX, normalizedY);
+
+    }
+
     this.testSquareInfo = function (z, x) {
 
+        console.log("*************************************");
         console.log("above: " + this.getSquareInfo(z, x - 10));
         console.log("below: " + this.getSquareInfo(z, x + 10));
         console.log("right: " + this.getSquareInfo(z - 10, x));
         console.log("left: " + this.getSquareInfo(z + 10, x));
+        console.log("duck: " + this.getSquareInfo(z, x));
 
     }
 
-    //reports location and distance to targets 
-    //takes origin point, radius and componentType of target: water, land, duckling, duck, fox, croq, hawk, obstacle
-    //returns array of location and distance pairs 
-    this.getActorsInRadius = function (location, radius, searchTarget) {
+    //returns array of actors within specific distance away from origin 
+    //takes origin point, radius and componentType of target: water, land, duckling, duck, fox, croq, hawk, obstacle, etc
+    //returns array of THREE.Object3D objects, check position to locate on grid, calculte distance, etc.
+    this.getActorsInRadius = function (origin, radius, searchTarget) {
 
-        var x = normalizeZ(location.z);
-        var y = normalizeX(location.x);
+        var x = normalizeZ(origin.z);
+        var y = normalizeX(origin.x);
+
         var hits = [];
 
         for (var i = x - radius; i < x + radius + 1; i++) {
-            for (var i = y - radius; i < y + radius + 1; i++) {
-                var squareValue = getNormalizedSquareInfo(x, y);
-                if (squareValue === searchTarget) {
-                    //return actual coordinates + actual distance
-                    //hits.push(targetLocation, targetDistance);
+            for (var j = y - radius; j < y + radius + 1; j++) {
+                var actor = getActorInfo(i, j);
+                if (actor !== null) {
+                    if (actor.userData.componentType == searchTarget) {
+                        hits[hits.length] = actor;
+                    }
                 }
             }
         }
+        return hits;
     }
 
     //Receives actorObject, updates its location in grid. Submit after move complete or periodically.  
     this.updateActor = function (actor) {
 
         for (var i = 0; i < actorTable.length; i++) {
-            if (actorTable[i].id === actor.id) {
+            if (actorTable[i].actor === actor) {
 
                 var x = normalizeZ(actor.position.z);
                 var y = normalizeX(actor.position.x);
 
-                actorTable[i].position = new THREE.Vector2(x, y);
-
+                actorTable[i].location = new THREE.Vector2(x, y);
             }
         }
 
@@ -149,8 +184,9 @@ function board() {
         var x = normalizeZ(actor.position.z);
         var y = normalizeX(actor.position.x);
         var position = new THREE.Vector2(x, y);
-        var actorInfo = { id: actor.id, location: position }
-        actorTable.push(actorInfo);
+        var actorInfo = { actor: actor, location: position }
+        //push worked before as well
+        actorTable[actorTable.length] = actorInfo;
     }
 
     this.setEnvSquare = function (x, y, componentType) {
@@ -169,10 +205,15 @@ function board() {
     }
 
     //checks if duckling is within duck's calling radius
-    this.isInCallRadius = function (actorID) {
-
-        console.log("isInCallRadius: not implemented");
-        return 0;
+    //takes duckling actor, returns bool 
+    //reset every cycle by levelAI
+    this.updateDucklingsInRadius = function (duck) {
+        console.log("updateDucklings");
+        superquack ? callRadius + callRadiusOffset : callRadius;
+        var ducklingsInRadius = this.getActorsInRadius(duck.position, callRadius, componentType.duckling);
+        for (i = 0; i < ducklingsInRadius.length; i++) {
+            ducklingsInRadius[i].userData.callable = true;
+        }
     }
 
     //returns boolean reporting if area is a certain component

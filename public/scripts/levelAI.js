@@ -15,12 +15,17 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     var player;
     var loader;
 
+
+    var duck;
+
     setupSubscriptions();
     setupPublications();
     determineAssets();
     loadAssets();
 
     function setupSubscriptions() {
+        bus.subscribe("invisibilitySkillRequested", processInvisibility());
+        bus.subscribe("quackSkillRequested", processSuperquack());
     }
 
     function setupPublications() {
@@ -33,13 +38,24 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         loader = new assetLoader(scene);
     }
 
+    function processInvisibility() {
+        //if invisibility available
+        grid.setInvisibility(true);
+    }
+
+    function processSuperquack() {
+        //if quack available
+        grid.setSuperquack(true);
+    }
+
 
     function initAssets() {
 
         envGenerator = new assetGen(scene);
         envGenerator.buildEnv();
 
-        var duck = scene.getObjectByName("duck");
+        duck = scene.getObjectByName("duck");
+        //var duck = scene.getObjectByName("duck");
         duck.userData = { currentDirection: "down", componentType: componentType.duck };
         var location = new THREE.Vector2(20, 20);
         placeAsset(duck, componentType.duck, location, componentType.land);
@@ -58,7 +74,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         croq = new croqAI(scene, clock, 0, croq);
 
         var duckling = scene.getObjectByName("duckling");
-        duckling.userData = { currentDirection: "down", componentType: componentType.duckling };
+        duckling.userData = { currentDirection: "down", componentType: componentType.duckling, callable: false };
         location = new THREE.Vector2(27, 22);
         placeAsset(duckling, componentType.duckling, location, componentType.water);
         duckling = new ducklingAI(scene, clock, 0, duckling);
@@ -69,9 +85,10 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var grass = scene.getObjectByName("grass");
         location = new THREE.Vector2(23, 24);
-        placeAsset(grass, componentType.grass, location, componentType.land);
+        //placeAsset(grass, componentType.grass, location, componentType.land);
 
         var stick = scene.getObjectByName("stick");
+        stick.userData = { componentType: componentType.stick };
         location = new THREE.Vector2(25, 22);
         placeAsset(stick, componentType.stick, location, componentType.land);
 
@@ -175,6 +192,9 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var elapsedTime = clock.getElapsedTime();
 
+        if (duck)
+            grid.updateDucklingsInRadius(duck);
+
         if (currentState === levelState.init) {
             if (typeof loader != 'undefined') {
                 if (loader.checkAssetsLoaded() === true) {
@@ -196,6 +216,11 @@ function levelAI(scene, clock, currentLevel, difficulty) {
                     break;
             }
             playerControler.update();
+
+            //set all duckling.userData.callable = false (need to setup a pool)
+            if (duck)
+                grid.updateDucklingsInRadius(duck);
+
         }
         else {
 

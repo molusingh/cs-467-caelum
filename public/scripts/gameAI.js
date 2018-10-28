@@ -3,6 +3,7 @@
 /* global levelState*/
 /* global levelAI*/
 /* global bus*/
+/* global $*/
 
 /*
  * Constructor for a gameAI object
@@ -14,15 +15,26 @@ function gameAI(scene, clock)
     this.getState = getState;
     this.update = update;
 
-    // private
+    // private variables
     var totalLevels = 10; // # of levels in the game
     var currentState = gameState.start;
     var currentLevelDifficulty = 1; // not sure what determines this
     var currentLevel = 1;
-    var gameScore = 0; // user score 
+    var score = 0; // user score 
     var gameOn = false; // whether game is currently running
-    var interface = new UserInterface(); // acivate user interface
-    var level = null; // AI for the level, created when game starts
+    var points = score; // points to spend on skills
+    var maxSkillLevel = 3;
+    var quackLevel = 0;
+    var speedLevel = 0;
+    var invisibilityLevel = 0;
+    var quackCost = 10;
+    var speedCost = 10;
+    var invisibilityCost = 10;
+    var gameLoading = false; // TODO: switch to true initially when loading functionality ready
+
+    // activate levelAI, userinterface, setupSubscriptions
+    new UserInterface(); // acivate user interface
+    var level = new levelAI(scene, clock, currentLevel, currentLevelDifficulty); // AI for the level, created when game starts
     setupSubscriptions();
 
     /*
@@ -34,8 +46,54 @@ function gameAI(scene, clock)
         bus.subscribe("openMenu", toggleGame);
         bus.subscribe("closeMenu", toggleGame);
         bus.subscribe("playerLoses", toggleGame); // player loses in the levelAI, so levelAI will publish loss
+        bus.subscribe("pickBoosts", updateBoostsScreen);
         bus.subscribe("endPickBoosts", startLevel); // starts next level after done picking boosts
+
+        bus.subscribe("invisiblityUpgrade", upgradeInvisibility);
+        bus.subscribe("speedUpgrade", upgradeSpeed);
+        bus.subscribe("quackUpgrade", upgradeQuack);
     }
+
+    /*
+     * Upgrades quack level
+     */
+    function upgradeQuack()
+    {
+        if (points < quackCost || quackLevel >= maxSkillLevel)
+        {
+            return;
+        }
+        points -= quackCost;
+        ++quackLevel;
+    }
+
+    /*
+     * Upgrades speed level
+     */
+    function upgradeSpeed()
+    {
+        if (points < speedCost || speedLevel >= maxSkillLevel)
+        {
+            return;
+        }
+        points -= speedCost;
+        ++speedLevel;
+    }
+
+    /*
+     * Upgrade invisibility level
+     */
+    function upgradeInvisibility()
+    {
+        if (points < invisibilityCost || invisibilityLevel >= maxSkillLevel)
+        {
+            return;
+        }
+        points -= invisibilityCost;
+        ++invisibilityLevel;
+    }
+
+
 
     /*
      * flips the gameOn flag
@@ -52,7 +110,6 @@ function gameAI(scene, clock)
     {
         gameOn = true;
         currentState = gameState.level;
-        level = new levelAI(scene, clock, currentLevel, currentLevelDifficulty);
     }
 
     /*
@@ -67,14 +124,29 @@ function gameAI(scene, clock)
         ++currentLevelDifficulty; // TODO:
         if (currentLevel > totalLevels) // if completed last level, player wins
         {
-            bus.publish("playerWins", gameScore);
+            bus.publish("playerWins", score);
             currentState = gameState.win;
         }
         else // move to boosts
         {
             currentState = gameState.boosts;
-            bus.publish("pickBoosts", gameScore);
+            bus.publish("pickBoosts");
+
         }
+    }
+
+    /*
+     * Upgrades boosts screen with current data
+     */
+    function updateBoostsScreen()
+    {
+        $('#pointsOutput').text(points);
+        $('#quackLevelOutput').text(quackLevel);
+        $('#speedLevelOutput').text(speedLevel);
+        $('#invisibilityLevelOutput').text(invisibilityLevel);
+        $('#quackCostOutput').text(quackCost);
+        $('#speedCostOutput').text(speedCost);
+        $('#invisibilityCostOutput').text(invisibilityCost);
     }
 
     /*
@@ -90,7 +162,13 @@ function gameAI(scene, clock)
      */
     function update()
     {
+        if (gameLoading)
+        {
+            return;
+        }
         var elapsedTime = clock.getElapsedTime();
+        $('#scoreOutput').text(score);
+        $('#levelOutput').text(currentLevel);
 
         if (!gameOn)
         {
@@ -115,6 +193,5 @@ function gameAI(scene, clock)
                     break;
             }
         }
-        else if (currentState === gameState.boosts) {} // TODO: Anmol: what should be here? Doesn't userinterface handle this?
     }
 }

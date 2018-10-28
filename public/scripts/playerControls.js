@@ -94,13 +94,11 @@ function playerControls(scene, clock, duck) {
         bus.publish("rotateUp");
         var isLegal;
         isLegal = isLegalMove(duck);
-console.log("current location: " + duck.position.z + " " + duck.position.x);
         if(isLegal)
         {
             bus.publish("moveUp");
             bus.publish("playerMove");
         }
-console.log("new location: " + duck.position.z + " " + duck.position.x);
     }
 
     function duckDown(object)

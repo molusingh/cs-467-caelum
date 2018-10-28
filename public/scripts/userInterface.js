@@ -143,36 +143,27 @@ function UserInterface()
 		{
 			case 38: // up
 			case 87: // W
-					//bus.publish("moveUp");
-					//bus.publish("playerMove");
 					bus.publish("duckUp");
 					break;
-
-
+					
 			case 37: // left
 			case 65: // A
-				//bus.publish("moveLeft");
-				//bus.publish("playerMove");
 				bus.publish("duckLeft");
 				break;
 
 			case 40: // down
 			case 83: // S
-				//bus.publish("moveDown");
-				//bus.publish("playerMove");
 				bus.publish("duckDown");
 				break;
 
 			case 39: // right
 			case 68: // D
-				//bus.publish("moveRight");
-				//bus.publish("playerMove");
 				bus.publish("duckRight");
 				break;
 
 			case 49: // 1 
 				bus.publish("flyToggle");
-				bus.publish("flySound");
+				
 				break;
 
 			case 50: // 2
@@ -203,6 +194,9 @@ function UserInterface()
 			case 82: // R
 				bus.publish("speedSkillRequested");
 				bus.publish("speedBoostSound");
+				break;
+
+			case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
 		}
 	}
 }

@@ -124,6 +124,7 @@ function ObjectMover(object) {
 					{
 						object.userData.inWater = true;
 					} 
+					bus.publish("flySound");
 					object.userData.inAir = false;
 				}
 
@@ -138,12 +139,13 @@ function ObjectMover(object) {
 		{
 			if (object.name == "duck")
 			{
-				object.position.y += duckFlightHeight;1
+				object.position.y += duckFlightHeight;
 				// if we take off from water, toggle flag
 				if (currentSquareInfo == 2)
 				{
 					object.userData.inWater = false;
 				}
+				bus.publish("flySound");
 			}
 			else if (object.name == "hawk")
 			{

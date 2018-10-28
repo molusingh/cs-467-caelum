@@ -86,6 +86,9 @@ function board() {
         return null;
     }
 
+    this.reset = function () {
+        console.log("NOT implemented")
+    }
 
     this.setInvisibility = function (value) {
         invisibility = value;

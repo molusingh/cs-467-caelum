@@ -10,18 +10,19 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     setState(levelState.init);
 
     var score;
-    var levelAI, userInterface;
-    var assetArray;
+    var assets = {};
+    var originals = {};
     var player;
     var loader;
 
-
-    var duck;
+    var envGenerator;
+    var levelAssetsLoaded = false;
 
     setupSubscriptions();
     setupPublications();
     determineAssets();
     loadAssets();
+    //rest takes place in update()
 
     function setupSubscriptions() {
         bus.subscribe("invisibilitySkillRequested", processInvisibility());
@@ -29,6 +30,9 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     }
 
     function setupPublications() {
+    }
+
+    function setupSubscriptions() {
     }
 
     function determineAssets() {
@@ -49,48 +53,66 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     }
 
 
-    function initAssets() {
+    function initAssetOriginals() {
 
-        envGenerator = new assetGen(scene);
-        envGenerator.buildEnv();
-
-        duck = scene.getObjectByName("duck");
-        //var duck = scene.getObjectByName("duck");
-        duck.userData = { currentDirection: "down", componentType: componentType.duck };
-        var location = new THREE.Vector2(20, 20);
-        placeAsset(duck, componentType.duck, location, componentType.land);
-        player = new playerControls(scene, clock, duck);
+        var duck = scene.getObjectByName("duck");
+        console.log("duck: " + duck);
+        duck.userData.componentType = componentType.duck;
+        originals.duck = duck;
 
         var fox = scene.getObjectByName("fox");
-        fox.userData = { currentDirection: "down", componentType: componentType.fox };
-        location = new THREE.Vector2(25, 25);
-        placeAsset(fox, componentType.fox, location, componentType.land);
-        fox = new foxAI(scene, clock, 0, fox);
+        fox.userData.componentType = componentType.fox;
+        originals.fox = fox;
 
         var croq = scene.getObjectByName("croq");
-        croq.userData = { currentDirection: "down", componentType: componentType.croq };
-        location = new THREE.Vector2(22, 22);
-        placeAsset(croq, componentType.croq, location, componentType.water);
-        croq = new croqAI(scene, clock, 0, croq);
+        croq.userData.componentType = componentType.croq;
+        originals.croq = croq
 
         var duckling = scene.getObjectByName("duckling");
-        duckling.userData = { currentDirection: "down", componentType: componentType.duckling, callable: false };
-        location = new THREE.Vector2(27, 22);
-        placeAsset(duckling, componentType.duckling, location, componentType.water);
-        duckling = new ducklingAI(scene, clock, 0, duckling);
+        duckling.userData.componentType = componentType.duckling;
+        duckling.userData.callable = false;
+        originals.duckling = duckling;
 
         var hawk = scene.getObjectByName("hawk");
-        hawk.userData = { currentDirection: "down", componentType: componentType.hawk };
+        hawk.userData.componentType = componentType.hawk;
         hawk = new hawkAI(scene, clock, 0, hawk);
+        originals.hawk = hawk;
 
-        var grass = scene.getObjectByName("grass");
-        location = new THREE.Vector2(23, 24);
-        //placeAsset(grass, componentType.grass, location, componentType.land);
+        originals.grass = scene.getObjectByName("grass");
 
         var stick = scene.getObjectByName("stick");
-        stick.userData = { componentType: componentType.stick };
+        stick.userData.componentType = componentType.stick;
+        originals.stick = stick;
+    }
+
+    //init prototypes, initLevelAssets
+    function initLevelAssets() {
+        envGenerator.buildEnv();
+        grid.reset();
+
+        //used for global updates
+        var location = new THREE.Vector2(20, 20);
+        placeAsset(originals.duck, componentType.duck, location, componentType.land);
+        var playerCtrls = new playerControls(scene, clock, originals.duck);
+
+        location = new THREE.Vector2(25, 25);
+        placeAsset(originals.fox, componentType.fox, location, componentType.land);
+        var fox_AI = new foxAI(scene, clock, 0, originals.fox);
+
+        location = new THREE.Vector2(22, 22);
+        placeAsset(originals.croq, componentType.croq, location, componentType.water);
+        var croq_AI = new croqAI(scene, clock, 0, originals.croq);
+
+        location = new THREE.Vector2(27, 22);
+        placeAsset(originals.duckling, componentType.duckling, location, componentType.water);
+        var duckling_AI = new ducklingAI(scene, clock, 0, originals.duckling);
+
+        //placeAsset(grass, componentType.grass, location, componentType.land);
+
         location = new THREE.Vector2(25, 22);
-        placeAsset(stick, componentType.stick, location, componentType.land);
+        placeAsset(originals.stick, componentType.stick, location, componentType.land);
+
+        levelAssetsLoaded = true;
 
     }
 
@@ -155,7 +177,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         }
 
         var assetLocation = findValidSquare();
-        //console.log(assetLocation.x, assetLocation.y);
 
         if (validLocation === false) {
             console.log("failed: " + asset);
@@ -171,7 +192,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         asset.position.z = x;
         asset.position.x = y;
 
-        //grid.setEnvSquare(assetLocation.x - 1, assetLocation.y - 1, assetComponent);
         grid.addActor(asset);
         //grid.printGrid(0, 8, 0, 8);
 
@@ -192,15 +212,23 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var elapsedTime = clock.getElapsedTime();
 
-        if (duck)
-            grid.updateDucklingsInRadius(duck);
-
         if (currentState === levelState.init) {
             if (typeof loader != 'undefined') {
                 if (loader.checkAssetsLoaded() === true) {
-                    initAssets();
-                    setState(levelState.ready);
+                    envGenerator = new assetGen(scene);
+                    initAssetOriginals();
+                    setState(levelState.new);
                 }
+            }
+        }
+
+        if (currentState === levelState.new) {
+            if (!levelAssetsLoaded) {
+                initLevelAssets();
+            }
+            else {
+                levelAssetsLoaded = false;
+                setState(levelState.ready)
             }
         }
 

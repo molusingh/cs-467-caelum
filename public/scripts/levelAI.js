@@ -15,12 +15,17 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     var player;
     var loader;
 
+
+    var duck;
+
     setupSubscriptions();
     setupPublications();
     determineAssets();
     loadAssets();
 
     function setupSubscriptions() {
+        bus.subscribe("invisibilitySkillRequested", processInvisibility());
+        bus.subscribe("quackSkillRequested", processSuperquack());
     }
 
     function setupPublications() {
@@ -33,40 +38,57 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         loader = new assetLoader(scene);
     }
 
+    function processInvisibility() {
+        //if invisibility available
+        grid.setInvisibility(true);
+    }
+
+    function processSuperquack() {
+        //if quack available
+        grid.setSuperquack(true);
+    }
+
 
     function initAssets() {
 
         envGenerator = new assetGen(scene);
         envGenerator.buildEnv();
 
-        var duck = scene.getObjectByName("duck");
+        duck = scene.getObjectByName("duck");
+        //var duck = scene.getObjectByName("duck");
+        duck.userData = { currentDirection: "down", componentType: componentType.duck };
         var location = new THREE.Vector2(20, 20);
         placeAsset(duck, componentType.duck, location, componentType.land);
         player = new playerControls(scene, clock, duck);
 
         var fox = scene.getObjectByName("fox");
+        fox.userData = { currentDirection: "down", componentType: componentType.fox };
         location = new THREE.Vector2(25, 25);
         placeAsset(fox, componentType.fox, location, componentType.land);
         fox = new foxAI(scene, clock, 0, fox);
 
         var croq = scene.getObjectByName("croq");
+        croq.userData = { currentDirection: "down", componentType: componentType.croq };
         location = new THREE.Vector2(22, 22);
         placeAsset(croq, componentType.croq, location, componentType.water);
         croq = new croqAI(scene, clock, 0, croq);
 
         var duckling = scene.getObjectByName("duckling");
+        duckling.userData = { currentDirection: "down", componentType: componentType.duckling, callable: false };
         location = new THREE.Vector2(27, 22);
         placeAsset(duckling, componentType.duckling, location, componentType.water);
         duckling = new ducklingAI(scene, clock, 0, duckling);
 
         var hawk = scene.getObjectByName("hawk");
+        hawk.userData = { currentDirection: "down", componentType: componentType.hawk };
         hawk = new hawkAI(scene, clock, 0, hawk);
 
         var grass = scene.getObjectByName("grass");
         location = new THREE.Vector2(23, 24);
-        placeAsset(grass, componentType.grass, location, componentType.land);
+        //placeAsset(grass, componentType.grass, location, componentType.land);
 
         var stick = scene.getObjectByName("stick");
+        stick.userData = { componentType: componentType.stick };
         location = new THREE.Vector2(25, 22);
         placeAsset(stick, componentType.stick, location, componentType.land);
 
@@ -133,7 +155,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         }
 
         var assetLocation = findValidSquare();
-        console.log(assetLocation.x, assetLocation.y);
+        //console.log(assetLocation.x, assetLocation.y);
 
         if (validLocation === false) {
             console.log("failed: " + asset);
@@ -149,7 +171,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         asset.position.z = x;
         asset.position.x = y;
 
-        grid.setEnvSquare(assetLocation.x - 1, assetLocation.y - 1, assetComponent);
+        //grid.setEnvSquare(assetLocation.x - 1, assetLocation.y - 1, assetComponent);
+        grid.addActor(asset);
         //grid.printGrid(0, 8, 0, 8);
 
     }
@@ -168,6 +191,9 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     this.update = function () {
 
         var elapsedTime = clock.getElapsedTime();
+
+        if (duck)
+            grid.updateDucklingsInRadius(duck);
 
         if (currentState === levelState.init) {
             if (typeof loader != 'undefined') {
@@ -190,6 +216,11 @@ function levelAI(scene, clock, currentLevel, difficulty) {
                     break;
             }
             playerControler.update();
+
+            //set all duckling.userData.callable = false (need to setup a pool)
+            if (duck)
+                grid.updateDucklingsInRadius(duck);
+
         }
         else {
 

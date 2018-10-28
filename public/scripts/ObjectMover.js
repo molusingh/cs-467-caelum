@@ -1,5 +1,4 @@
-function ObjectMover(object)
-{
+function ObjectMover(object) {
 	var maxPosition = 185;
 	var duckFlightHeight = 20;
 	var hawkFlightHeight = 35;
@@ -9,14 +8,13 @@ function ObjectMover(object)
 	ObjectMover.prototype.right = right;
 	ObjectMover.prototype.flyToggle = flyToggle;
 
-	function up()
-	{
+	function up() {
 		if (object.position.x >= -maxPosition) // if within bounds
 		{
 			object.position.x -= 10;
+			grid.updateActor(object);
 		}
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'left':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -30,15 +28,14 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'up';
 	}
 
-	function left()
-	{
+	function left() {
 		if (object.position.z <= maxPosition) // if within bounds
 		{
 			object.position.z += 10;
+			grid.updateActor(object);
 		}
 
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'down':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -52,15 +49,14 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'left';
 	}
 
-	function down()
-	{
+	function down() {
 		if (object.position.x <= maxPosition) // if within bounds
 		{
 			object.position.x += 10;
+			grid.updateActor(object);
 		}
 
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'right':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -74,15 +70,14 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'down';
 	}
 
-	function right()
-	{
+	function right() {
 		if (object.position.z >= -maxPosition) // if within bounds
 		{
 			object.position.z -= 10;
+			grid.updateActor(object);
 		}
 
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'up':
 				object.rotateY(-(Math.PI / 2));
 				break;

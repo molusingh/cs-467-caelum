@@ -13,8 +13,8 @@ function UserInterface()
 	bus.subscribe("closeMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("openHowToPlay", flipBetweenStartAndHowToPlay);
 	bus.subscribe("closeHowToPlay", flipBetweenStartAndHowToPlay);
-	// bus.subscribe("pickBoosts", getToggleDisplayFunction("boostsScreen"));
-	// bus.subscribe("endPickBoosts", getToggleDisplayFunction("boostsScreen"));
+	bus.subscribe("pickBoosts", getToggleDisplayFunction("boostsScreen"));
+	bus.subscribe("endPickBoosts", getToggleDisplayFunction("boostsScreen"));
 	bus.subscribe("playerWins", getToggleDisplayFunction("winScreen"));
 	bus.subscribe("playerLoses", getToggleDisplayFunction("loseScreen"));
 
@@ -37,6 +37,7 @@ function UserInterface()
 	$("#closeHowToPlayButton").click(getPublishFunction("closeHowToPlay"));
 	$("#soundButton").click(getPublishFunction("toggleSound"));
 	$("#musicButton").click(getPublishFunction("toggleMusic"));
+	$("#nextLevelButton").click(getPublishFunction("endPickBoosts"));
 
 	// player control Buttons
 	$("#skillButtons").click(getPublishFunction("skillButtonClicked"));
@@ -45,12 +46,27 @@ function UserInterface()
 	$("#flyButton").click(getPublishFunction("flyToggle"));
 	$("#jumpButton").click(getPublishFunction("jump"));
 	$("#callButton").click(getPublishFunction("call"));
+<<<<<<< HEAD
 	$("#nestButton").click(getPublishFunction("nest"));
 
 	// skill request buttons
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
 	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
 	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
+=======
+	$("#nestButton").click(getPublishFunction("next"));
+	
+	// skill purchase buttons
+	$("#upgradeInvisibilityButton").click(getPublishFunction("invisiblityUpgrade"));
+	$("#upgradeSpeedButton").click(getPublishFunction("speedUpgrade"));
+	$("#upgradeQuackButton").click(getPublishFunction("quackUpgrade"));
+
+	// skill buttons
+	$("#invisibilityButton").click(getPublishFunction("makeInvisible"));
+	$("#speedButton").click(getPublishFunction("increaseSpeed"));
+	$("#quackButton").click(getPublishFunction("quack"));
+	
+>>>>>>> refs/remotes/origin/development
 
 	// mouse click sound publishers
 		// includes skillButtons, movementControls, and actionButtons

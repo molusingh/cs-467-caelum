@@ -26,19 +26,23 @@ function playerControls(scene, clock, duck) {
     */
 
     var currentState = playerState.init;
+<<<<<<< HEAD
     duck.userData = { currentDirection: 'down', inAir: false, inWater: false };
+=======
+>>>>>>> refs/remotes/origin/development
     var maxPos = 185;
 
     var duckMover = new ObjectMover(duck);
 
     var playSound = new soundLoader();
-    
+
     // subscriptions
         // action subscribers
     bus.subscribe("moveLeft", duckMover.left);
     bus.subscribe("moveRight", duckMover.right);
     bus.subscribe("moveDown", duckMover.down);
     bus.subscribe("moveUp", duckMover.up);
+<<<<<<< HEAD
     bus.subscribe("flyToggle", duckMover.flyToggle);
     bus.subscribe("jump", jumpSkill);
     bus.subscribe("call", callSkill);
@@ -105,6 +109,33 @@ console.log("inWater: " + duck.userData.inWater);
                 bus.publish("moveRight");
             }
         }
+=======
+
+    bus.subscribe("playerMove", playSound.move);
+
+
+
+    // sounds for interface buttons
+    $("#movementControls").click(playSound.click);
+    $("#movementControls").click(playSound.move);
+    $("#skillButtons").click(playSound.click);
+    $("#actionButtons").click(playSound.click);
+    $("#startButton").click(playSound.click);
+    $("#howToPlayButton").click(playSound.click);
+    $("#menu").click(playSound.click);
+    $("#menuButton").click(playSound.click);
+
+    // skill sounds
+    $("#invisibilityButton").click(playSound.invisiblity);
+    $("#speedButton").click(playSound.speedBoost);
+    $("#quackButton").click(playSound.superQuack);
+
+    // action sounds
+    $("#flyButton").click(playSound.fly);
+    $("#jumpButton").click(playSound.jump);
+    $("#callButton").click(playSound.call);
+    $("#nestButton").click(playSound.nest);
+>>>>>>> refs/remotes/origin/development
 
         if (duck.userData.inWater === true && (nextSquare === 1 || nextSquare === 9 || nextSquare === 10)
         {
@@ -140,7 +171,7 @@ console.log("inWater: " + duck.userData.inWater);
         console.log("nestSkill not yet implemented");
     }
 
-    // document.addEventListener('keydown', onKeyDown);
+    //document.addEventListener('keydown', onKeyDown);
 
     this.getState = function () {
 
@@ -153,4 +184,51 @@ console.log("inWater: " + duck.userData.inWater);
 
     };
 
+<<<<<<< HEAD
+=======
+    function onKeyDown(event) {
+
+        switch (event.keyCode) {
+
+            case 38: /*up*/
+            case 87: /*W*/
+                if (duck.position.x >= -maxPos) {
+                    duckMover.up();
+                    playSound.move();
+                }
+                break;
+
+            case 37: /*left*/
+            case 65: /*A*/
+                if (duck.position.z <= maxPos) {
+                    duckMover.left();
+                    playSound.move();
+                }
+                break;
+
+            case 40: /*down*/
+            case 83: /*S*/
+                if (duck.position.x <= maxPos) {
+                    duckMover.down();
+                    playSound.move();
+                }
+                break;
+
+            case 39: /*right*/
+            case 68: /*D*/
+                if (duck.position.z >= -maxPos) {
+                    duckMover.right();
+                    playSound.move();
+                }
+                break;
+
+            case 82: /*R*/ moveUp = true; break;
+            case 70: /*F*/ moveDown = true; break;
+            case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
+
+        }
+
+    }
+
+>>>>>>> refs/remotes/origin/development
 }

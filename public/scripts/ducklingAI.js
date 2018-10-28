@@ -27,4 +27,16 @@ function ducklingAI(scene, clock, grid, duckling) {
         var elapsedTime = clock.getElapsedTime();
 
     }
+
+    /***********TESTING ONLY ********/
+    document.addEventListener('keydown', onKeyDown);
+
+    function onKeyDown(event) {
+
+        switch (event.keyCode) {
+            case 32:
+            /*SPACEBAR*/ console.log("duckling is callable: " + duckling.userData.callable);
+        }
+
+    }
 }

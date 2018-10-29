@@ -11,7 +11,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     var score;
     var assets = {};
-    var originals = [];
+    var originals = {};
     var player;
     var loader;
 
@@ -58,48 +58,43 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var duck = scene.getObjectByName("duck");
         console.log("duck: " + duck.position);
         duck.userData.componentType = componentType.duck;
-        originals[originals.length] = duck;
+        originals.duck = duck;
 
         var fox = scene.getObjectByName("fox");
         fox.userData.componentType = componentType.fox;
-        originals[originals.length] = fox;
+        originals.fox = fox;
 
         var croq = scene.getObjectByName("croq");
         //console.log("cp: " + croq.position);
         croq.userData.componentType = componentType.croq;
-        originals[originals.length] = croq
+        originals.croq = croq
         //console.log("cp2: " + originals.croq.position);
 
         var duckling = scene.getObjectByName("duckling");
         duckling.userData.componentType = componentType.duckling;
         duckling.userData.callable = false;
-        originals[originals.length] = duckling;
+        originals.duckling = duckling;
 
         var hawk = scene.getObjectByName("hawk");
         hawk.userData.componentType = componentType.hawk;
-        originals[originals.length] = hawk;
+        originals.hawk = hawk;
 
-        originals[originals.length] = scene.getObjectByName("grass");
+        var grass = scene.getObjectByName("grass");
+        grass.userData.componentType = componentType.grass;
+        originals.grass = grass;
 
         var stick = scene.getObjectByName("stick");
         stick.userData.componentType = componentType.stick;
-        originals[originals.length] = stick;
+        originals.stick = stick;
     }
 
     //init prototypes, initLevelAssets
     function initLevelAssets() {
 
-        for (var i = 0; i < originals.length; i++) {
-            var test = originals[i];
-            console.log(test.position);
-            /*
-            for (var key in originals[i]) {
-                console.log(i + " " + key);
-            }
-            */
-            //console.log("x: " + originals[i]);
-            //asset.visible = false;
+        for (var asset in originals) {
+            console.log(originals[asset].userData.componentType);
         }
+
 
         envGenerator.buildEnv();
         grid.reset();
@@ -122,7 +117,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var duckling_AI = new ducklingAI(scene, clock, 0, originals.duckling);
 
         location = new THREE.Vector2(27, 22);
-        var hawk_AI = new hawkAI(scene, clock, 0, hawk);
+        var hawk_AI = new hawkAI(scene, clock, 0, originals.hawk);
         placeAsset(originals.hawk, componentType.hawk, location, componentType.air);
 
         //placeAsset(grass, componentType.grass, location, componentType.land);
@@ -131,6 +126,10 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         placeAsset(originals.stick, componentType.stick, location, componentType.land);
 
         levelAssetsLoaded = true;
+
+        for (var asset in originals) {
+            console.log(originals[asset].position);
+        }
 
     }
 

@@ -41,4 +41,3 @@ function getRandomInt(max) {
 }
 
 var bus = new EventBus();
-

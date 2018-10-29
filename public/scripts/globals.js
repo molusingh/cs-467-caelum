@@ -25,8 +25,8 @@ var foxState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
 Object.freeze(foxState);
 
 var componentType = {
-    "land": 1, "water": 2, "obstacle": 3, "fox": 4, "hawk": 5, "croq": 6,
-    "duck": 7, "duckling": 8, "egg": 9, "grass": 10, "stick": 11, "none": 12
+	"land": 1, "water": 2, "obstacle": 3, "fox": 4, "hawk": 5, "croq": 6,
+	"duck": 7, "duckling": 8, "egg": 9, "grass": 10, "stick": 11, "air": 12, "none": 13
 };
 Object.freeze(componentType);
 
@@ -37,7 +37,7 @@ var callRadius = 5.0;
 var callRadiusOffset = 5.0;
 
 function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max) + 1);
+	return Math.floor(Math.random() * Math.floor(max) + 1);
 }
 
 var bus = new EventBus();

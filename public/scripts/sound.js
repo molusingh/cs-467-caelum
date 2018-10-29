@@ -1,3 +1,5 @@
+ var playSound = new soundLoader();
+
 function soundLoader() {
 
 	var sound;
@@ -134,5 +136,4 @@ function soundLoader() {
 		sound = new Audio("./sound/levelEnd.mp3");
 		sound.play();
 	}
-
 }

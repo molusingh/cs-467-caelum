@@ -10,7 +10,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     setState(levelState.init);
 
     var score;
-    var assets = {};
+    var assets = [];
+    var assetInstances = [];
     var originals = {};
     var player;
     var loader;
@@ -20,7 +21,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
     setupSubscriptions();
     setupPublications();
-    determineAssets();
     loadAssets();
     //rest takes place in update()
 
@@ -35,8 +35,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     function setupSubscriptions() {
     }
 
-    function determineAssets() {
-    }
 
     function loadAssets() {
         loader = new assetLoader(scene);
@@ -65,10 +63,13 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         originals.fox = fox;
 
         var croq = scene.getObjectByName("croq");
-        //console.log("cp: " + croq.position);
         croq.userData.componentType = componentType.croq;
         originals.croq = croq
-        //console.log("cp2: " + originals.croq.position);
+
+        var egg = scene.getObjectByName("egg");
+        //careful
+        egg.userData.componentType = componentType.egg;
+        originals.egg = egg;
 
         var duckling = scene.getObjectByName("duckling");
         duckling.userData.componentType = componentType.duckling;
@@ -88,36 +89,87 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         originals.stick = stick;
     }
 
+
+    function determineAssets() {
+
+        //fast rest
+        assets.length = 0;
+        var defaultLocation = new THREE.Vector2(20, 20);
+
+        var foxCount = 2;
+        var hawkCount = 1;
+        var croqCount = 5;
+        var ducklingCount = 5;
+        var stickCount = 5;
+        var duckCount = 1;
+
+        for (var i = 0; i < duckCount; i++) {
+            var obj = {};
+            obj.asset = new THREE.Mesh(originals.duck.clone(), originals.duck.material);
+            obj.location = new THREE.Vector2(25, 25);
+            obj.locationComponent = componentType.land;
+            assets.push(obj);
+        }
+
+        return assets;
+    }
+
     //init prototypes, initLevelAssets
     function initLevelAssets() {
 
-        for (var asset in originals) {
-            console.log(originals[asset].userData.componentType);
+        //TO DO: setup struct based on diff from gameAI
+        var settings = 0;
+        envGenerator.buildEnv(settings);
+        grid.reset();
+        assets = determineAssets();
+
+        for (var i = 0; i < assets.length; i++) {
+
+            var obj = assets[i];
+
+            placeAsset(obj);
+
+            switch (obj.asset.userData.componentType) {
+                case componentType.duck:
+                    assetInstances.push(new playerControls(scene, obj.asset))
+                    break;
+                case componentType.duckling:
+                    assetInstances.push(new ducklingAI(scene, obj.asset))
+                    break;
+                case componentType.fox:
+                    assetInstances.push(new foxAI(scene, obj.asset))
+                    break;
+                case componentType.hawk:
+                    assetInstances.push(new hawkAI(scene, obj.asset))
+                    break;
+                case componentType.croq:
+                    assetInstances.push(new croqAI(scene, obj.asset))
+                    break;
+            }
+
         }
 
+        levelAssetsLoaded = true;
 
-        envGenerator.buildEnv();
-        grid.reset();
-
-        //used for global updates
-        var location = new THREE.Vector2(20, 20);
+        /*
+        location = new THREE.Vector2(20, 20);
         placeAsset(originals.duck, componentType.duck, location, componentType.land);
-        var playerCtrls = new playerControls(scene, clock, originals.duck);
+        var playerCtrls = new playerControls(scene, originals.duck);
 
         location = new THREE.Vector2(25, 25);
         placeAsset(originals.fox, componentType.fox, location, componentType.land);
-        var fox_AI = new foxAI(scene, clock, 0, originals.fox);
+        var fox_AI = new foxAI(scene, originals.fox);
 
         location = new THREE.Vector2(22, 22);
         placeAsset(originals.croq, componentType.croq, location, componentType.water);
-        var croq_AI = new croqAI(scene, clock, 0, originals.croq);
+        var croq_AI = new croqAI(scene, originals.croq);
 
         location = new THREE.Vector2(27, 22);
         placeAsset(originals.duckling, componentType.duckling, location, componentType.water);
-        var duckling_AI = new ducklingAI(scene, clock, 0, originals.duckling);
+        var duckling_AI = new ducklingAI(scene, originals.duckling);
 
         location = new THREE.Vector2(27, 22);
-        var hawk_AI = new hawkAI(scene, clock, 0, originals.hawk);
+        var hawk_AI = new hawkAI(scene, originals.hawk);
         placeAsset(originals.hawk, componentType.hawk, location, componentType.air);
 
         //placeAsset(grass, componentType.grass, location, componentType.land);
@@ -126,20 +178,21 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         placeAsset(originals.stick, componentType.stick, location, componentType.land);
 
         levelAssetsLoaded = true;
+        */
 
-        for (var asset in originals) {
-            console.log(originals[asset].position);
-        }
 
     }
 
 
-    function placeAsset(asset, assetComponent, location, locationComponent) {
+    function placeAsset(assetObj) {
+
+        var asset = assetObj.asset;
+        var location = assetObj.location;
+        var locationComponent = assetObj.locationComponent;
 
         var testLocation = new THREE.Vector2(1, 1);
         var validLocation = false;
         var assetLocation;
-
 
         function findValidSquare() {
 

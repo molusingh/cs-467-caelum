@@ -1,4 +1,4 @@
-function hawkAI(scene, clock, grid, hawk) {
+function hawkAI(scene, hawk) {
 
     /*
     -- subscribe

@@ -1,4 +1,4 @@
-function foxAI(scene, clock, grid, fox) {
+function foxAI(scene, fox) {
 
     /*
     -- subscribe

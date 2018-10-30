@@ -41,3 +41,4 @@ function getRandomInt(max) {
 }
 
 var bus = new EventBus();
+var clock = new THREE.Clock();

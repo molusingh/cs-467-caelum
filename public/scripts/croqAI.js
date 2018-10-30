@@ -1,4 +1,4 @@
-function croqAI(scene, clock, grid, croq) {
+function croqAI(scene, croq) {
 
     /*
     -- subscribe

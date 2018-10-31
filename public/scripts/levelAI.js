@@ -56,36 +56,44 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         var duck = scene.getObjectByName("duck");
         console.log("duck: " + duck.position);
         duck.userData.componentType = componentType.duck;
+        duck.position.y = -100;
         originals.duck = duck;
 
         var fox = scene.getObjectByName("fox");
         fox.userData.componentType = componentType.fox;
+        fox.position.y = -100;
         originals.fox = fox;
 
         var croq = scene.getObjectByName("croq");
         croq.userData.componentType = componentType.croq;
+        croq.position.y = -100;
         originals.croq = croq
 
         var egg = scene.getObjectByName("egg");
         //careful
         egg.userData.componentType = componentType.egg;
+        egg.position.y = -100;
         originals.egg = egg;
 
         var duckling = scene.getObjectByName("duckling");
         duckling.userData.componentType = componentType.duckling;
         duckling.userData.callable = false;
+        duckling.position.y = -100;
         originals.duckling = duckling;
 
         var hawk = scene.getObjectByName("hawk");
         hawk.userData.componentType = componentType.hawk;
+        hawk.position.y = -100;
         originals.hawk = hawk;
 
         var grass = scene.getObjectByName("grass");
         grass.userData.componentType = componentType.grass;
+        grass.position.y = -100;
         originals.grass = grass;
 
         var stick = scene.getObjectByName("stick");
         stick.userData.componentType = componentType.stick;
+        stick.position.y = -100;
         originals.stick = stick;
     }
 
@@ -105,9 +113,24 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         for (var i = 0; i < duckCount; i++) {
             var obj = {};
-            obj.asset = new THREE.Mesh(originals.duck.clone(), originals.duck.material);
-            obj.location = new THREE.Vector2(25, 25);
+            obj.asset = new THREE.Object3D();
+
+            originals.duck.traverse(function (child) {
+
+                if (child instanceof THREE.Mesh) {
+                    var childClone = child.clone();
+                    obj.asset.add(childClone);
+                }
+                obj.asset.scale.x = 10;
+                obj.asset.scale.y = 10;
+                obj.asset.scale.z = 10;
+                scene.add(obj.asset);
+
+            });
+
+            obj.location = new THREE.Vector2(20, 20);
             obj.locationComponent = componentType.land;
+            obj.asset.userData.componentType = componentType.duck;
             assets.push(obj);
         }
 
@@ -131,19 +154,21 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
             switch (obj.asset.userData.componentType) {
                 case componentType.duck:
-                    assetInstances.push(new playerControls(scene, obj.asset))
+                    //var playerCtrls = new playerControls(scene, obj.asset);
+                    //console.log("ctrls: " + playerControls);
+                    assetInstances.push(new playerControls(scene, obj.asset));
                     break;
                 case componentType.duckling:
-                    assetInstances.push(new ducklingAI(scene, obj.asset))
+                    assetInstances.push(new ducklingAI(scene, obj.asset));
                     break;
                 case componentType.fox:
-                    assetInstances.push(new foxAI(scene, obj.asset))
+                    assetInstances.push(new foxAI(scene, obj.asset));
                     break;
                 case componentType.hawk:
-                    assetInstances.push(new hawkAI(scene, obj.asset))
+                    assetInstances.push(new hawkAI(scene, obj.asset));
                     break;
                 case componentType.croq:
-                    assetInstances.push(new croqAI(scene, obj.asset))
+                    assetInstances.push(new croqAI(scene, obj.asset));
                     break;
             }
 

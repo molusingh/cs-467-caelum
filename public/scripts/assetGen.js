@@ -295,9 +295,8 @@ function assetGen(scene) {
 
             var size = new THREE.Vector2(1, 1);
 
-            //patch = new THREE.Mesh(grass.clone(), material);
-            patch = grass.clone();
-            patch.position.y -= 0.1;
+            var patch = grass.clone();
+            patch.position.y = 0.1;
             patch.castShadow = true;
             patch.receiveShadow = true;
             patch.shadowMaterial = shadowMat;

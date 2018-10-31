@@ -112,10 +112,17 @@ function board() {
 
         //get actor if found in location
         var actorType = getActorSquareInfo(normalizedX, normalizedY);
-        //TO DO: Add invisibility and flying restrictions
+
         if (actorType !== null) {
-            console.log("found actor: " + actorType);
-            return actorType;
+            //better here than in duck because predators need to query
+            if (invisibility === false) {
+                return actorType;
+            }
+            else {
+                if (actorType !== componentType.duck && actorType !== componentType.duckling) {
+                    return actorType;
+                }
+            }
         }
 
         //return env info instead
@@ -124,7 +131,7 @@ function board() {
     }
 
     //use as a secondary check when hawk searches for duck or ducklings
-    //ex.a square with duckling could also be grass, i.e. now access for hawk
+    //ex.a square with duckling could also be grass, i.e. no access for hawk
     this.getEnvInfo = function (z, x) {
 
         var normalizedX = ((originX - z + 5) / 10);

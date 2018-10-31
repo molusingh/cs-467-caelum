@@ -70,28 +70,28 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var egg = scene.getObjectByName("egg");
         //careful
-        egg.userData.componentType = componentType.egg;
+        egg.userData.componentType = componentType.duckling;
         egg.position.y = -100;
         originals.egg = egg;
 
         var duckling = scene.getObjectByName("duckling");
-        duckling.userData.componentType = componentType.duckling;
+        //duckling.userData.componentType = componentType.duckling;
         duckling.userData.callable = false;
         duckling.position.y = -100;
         originals.duckling = duckling;
 
         var hawk = scene.getObjectByName("hawk");
-        hawk.userData.componentType = componentType.hawk;
+        //hawk.userData.componentType = componentType.hawk;
         hawk.position.y = -100;
         originals.hawk = hawk;
 
         var grass = scene.getObjectByName("grass");
-        grass.userData.componentType = componentType.grass;
+        //grass.userData.componentType = componentType.grass;
         grass.position.y = -100;
         originals.grass = grass;
 
         var stick = scene.getObjectByName("stick");
-        stick.userData.componentType = componentType.stick;
+        //stick.userData.componentType = componentType.stick;
         stick.position.y = -100;
         originals.stick = stick;
     }
@@ -183,7 +183,6 @@ function levelAI(scene, clock, currentLevel, difficulty) {
             scale: 1,
             componentType: componentType.stick,
             locations: stickLocations,
-            //TO DO: land i.e. special case
             locationComponent: componentType.land
         }
 
@@ -219,6 +218,9 @@ function levelAI(scene, clock, currentLevel, difficulty) {
             obj.location = params.locations[i];
             obj.locationComponent = params.locationComponent;
             obj.asset.userData.componentType = params.componentType;
+            if (params.componentType === componentType.duckling) {
+                obj.asset.userData.callable = false;
+            }
             assets.push(obj.asset);
 
             placeAsset(obj);

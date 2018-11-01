@@ -6,7 +6,7 @@
 var gameState = { "start": 1, "level": 2, "boosts": 3, "win": 4, "lose": 5 };
 Object.freeze(gameState);
 
-var levelState = { "init": 1, "ready": 2, "play": 3, "end": 4 };
+var levelState = { "init": 1, "new": 2, "ready": 3, "play": 4, "end": 5, "pause": 6, "continue": 7 };
 Object.freeze(levelState);
 
 var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4 };

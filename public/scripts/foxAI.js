@@ -15,19 +15,27 @@ function foxAI(scene, fox) {
 
     -- must update grid after every move
     grid.updateActor(actorID)
+
+    -- ALL functions MUST be filtered through: if(!active) return;
     */
 
     var currentState = foxState.init;
+    var active = false;
 
     //must report all enum states
     this.getState = function () {
-
         return currentState;
     }
 
+    this.setActive = function (value) {
+        active = value;
+    }
+
     this.update = function () {
+        //game paused
+        if (!active)
+            return;
 
         var elapsedTime = clock.getElapsedTime();
-
     }
 }

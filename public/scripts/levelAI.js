@@ -1,6 +1,8 @@
 function levelAI(scene, clock, currentLevel, difficulty) {
 
     this.getState = getState;
+    this.setState = setState;
+    this.updateSettings;
 
     /*
     publish: level scores
@@ -9,12 +11,18 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     var currentState;
     setState(levelState.init);
 
+    //should come straight from playerControler?
     var score;
     var assets = [];
     var assetInstances = [];
     var originals = {};
     var player;
     var loader;
+
+    var currentLevel = 1;
+    var invisibilityLevel = 0;
+    var speedLevel = 0;
+    var quackLevel = 0;
 
     var envGenerator;
     var levelAssetsLoaded = false;
@@ -23,6 +31,13 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     setupPublications();
     loadAssets();
     //rest takes place in update()
+
+    function updateSettings(settings) {
+        currentLevel = settings.currentLevel;
+        invisibilityLevel = settings.invisibilityLevel;
+        speedLevel = settings.speedLevel;
+        quackLevel = settings.quackLevel;
+    }
 
     function setupSubscriptions() {
         bus.subscribe("invisibilitySkillRequested", processInvisibility());
@@ -248,10 +263,16 @@ function levelAI(scene, clock, currentLevel, difficulty) {
     //init prototypes, initLevelAssets
     function buildLevel() {
 
-        //TO DO: setup struct based on diff from gameAI
-        var settings = 0;
-        envGenerator.buildEnv(settings);
+        //TO DO: load setup struct based on level from config.js
+        //var levelSettings = config(currentLevel);
+        //reset 
+        var levelSettings = 0;
+        envGenerator.buildEnv(levelSettings);
         grid.reset();
+        //assetInstances, delete and set to 0
+        //assets, remove from 3D scene and set to 0
+        //better yet, create all clones at game start and hide outside of frustrum!!!
+        //better still, make those addressable instances
         populateAssets();
 
         levelAssetsLoaded = true;
@@ -350,6 +371,12 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         return currentState;
     }
 
+    function setAIActiveState(state) {
+        for (var i = 0; i < assetInstances.length; i++) {
+            assetInstances[i].setActive(state);
+        }
+    }
+
     function endLevel() {
     }
 
@@ -378,25 +405,25 @@ function levelAI(scene, clock, currentLevel, difficulty) {
         }
 
         if (currentState === levelState.play) {
-            switch (playerState.getState()) {
-                case playerState.ready:
-                    player.start();
-                    break;
-                case playerState.play:
-                    player.update();
-                    break;
-                default:
-                    break;
+
+            for (var i = 0; i < assetInstances.length; i++) {
+                assetInstances[i].update();
             }
-            playerControler.update();
 
             //set all duckling.userData.callable = false (need to setup a pool)
             if (duck)
                 grid.updateDucklingsInRadius(duck);
 
         }
-        else {
 
+        if (currentState === levelState.pause) {
+            setAIActiveState(false);
+            setState(levelState.waiting);
+        }
+
+        if (currentState === levelState.continue) {
+            setAIActiveState(true);
+            setState(levelState.play);
         }
     }
 }

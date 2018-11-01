@@ -23,9 +23,12 @@ function playerControls(scene, duck) {
 
     -- must update grid after every move
     grid.updateActor(actorID)
+
+    -- ALL functions MUST be filtered through: if(!active) return;
     */
 
-
+    //when game is paused
+    var active = false;
     var currentState = playerState.init;
 
     duck.userData.currentDirection = 'down';
@@ -36,6 +39,9 @@ function playerControls(scene, duck) {
     var maxPos = 185;
 
     var duckMover = new ObjectMover(duck);
+
+    //!!! Add if(active) to all core functions
+    //in Mover, 
 
     // subscriptions
     // action subscribers
@@ -240,8 +246,14 @@ function playerControls(scene, duck) {
         return currentState;
     };
 
+    this.setActive = function (value) {
+        active = value;
+    }
+
     this.update = function () {
 
+        if (!active)
+            return;
         var elapsedTime = clock.getElapsedTime();
 
     };

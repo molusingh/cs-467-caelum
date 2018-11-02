@@ -266,14 +266,8 @@ function levelAI(scene) {
 
         //TO DO: load setup struct based on level from config.js
         //var levelSettings = config(currentLevel);
-        //reset 
         var levelSettings = 0;
         envGenerator.buildEnv(levelSettings);
-        grid.reset();
-        //assetInstances, delete and set to 0
-        //assets, remove from 3D scene and set to 0
-        //better yet, create all clones at game start and hide outside of frustrum!!!
-        //better still, make those addressable instances
         populateAssets();
 
         levelAssetsLoaded = true;
@@ -390,6 +384,10 @@ function levelAI(scene) {
             });
         }
         assets.length = 0;
+        grid.reset();
+        //object gets deleted, but scene elements remain otherwise
+        envGenerator.cleanup();
+        delete envGenerator;
     }
 
     this.update = function () {

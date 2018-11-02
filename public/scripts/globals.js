@@ -3,7 +3,7 @@
 
 //Note: these are 'external states', internal representations can have more
 
-var gameState = { "start": 1, "level": 2, "boosts": 3, "win": 4, "lose": 5 };
+var gameState = { "start": 1, "level": 2, "boosts": 3, "win": 4, "loss": 5 };
 Object.freeze(gameState);
 
 var levelState = {

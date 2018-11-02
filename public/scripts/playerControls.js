@@ -207,7 +207,8 @@ function playerControls(scene, duck) {
     function isLegalMove(object) {
 
         if (!active)
-            return;
+            return false;
+
         var nextSquare;
         var facing = duck.userData.currentDirection;
 
@@ -242,13 +243,13 @@ function playerControls(scene, duck) {
 
         // !!!!!temporary death sim, simulator to acutal!!!!
         if (nextSquare == componentType.fox || nextSquare == componentType.croq) {
-            currentState = playerState.dead;
+            //currentState = playerState.dead;
             return true;
         }
 
         // !!!!!temporary win simulation, nothing like actual!!!!!
         if (nextSquare == componentType.egg) {
-            currentState = playerState.won;
+            //currentState = playerState.won;
             return true;
         }
 
@@ -259,6 +260,11 @@ function playerControls(scene, duck) {
     this.getState = function () {
 
         return currentState;
+    };
+
+    this.idSelf = function () {
+
+        return "duck";
     };
 
     this.setActive = function (value) {

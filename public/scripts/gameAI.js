@@ -116,13 +116,14 @@ function gameAI(scene, clock) {
     }
 
     function resetGame() {
+
         currentLevel = 1;
         score = 0; // user score 
         points = 0; // points to spend on skills
         quackLevel = 0;
         speedLevel = 0;
         invisibilityLevel = 0;
-        //bus.publish("loss");
+        bus.publish("playerLoses");
         currentState = gameState.loss;
     }
 

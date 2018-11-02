@@ -420,18 +420,19 @@ function levelAI(scene) {
         if (currentState === levelState.play) {
 
             //get duck's state
-            if (assetInstances[0].getState() === playerState.dead);
+            console.log(assetInstances[0].idSelf());
+            console.log(assetInstances[0].getState());
+            if (assetInstances[0].getState() == playerState.dead);
             {
+                console.log("setting level to LOSS");
                 setState(levelState.loss);
                 cleanup();
-                return;
             }
 
-            if (assetInstances[0].getState() === playerState.win);
+            if (assetInstances[0].getState() == playerState.win);
             {
                 setState(levelState.end);
                 cleanup();
-                return;
             }
 
             for (var i = 0; i < assetInstances.length; i++) {

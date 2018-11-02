@@ -6,7 +6,10 @@
 var gameState = { "start": 1, "level": 2, "boosts": 3, "win": 4, "lose": 5 };
 Object.freeze(gameState);
 
-var levelState = { "init": 1, "new": 2, "ready": 3, "play": 4, "end": 5, "pause": 6, "continue": 7 };
+var levelState = {
+	"init": 1, "preGame": 2, "build": 3, "ready": 4, "play": 5,
+	"end": 6, "loss": 7, "pause": 8, "waiting": 9, "continue": 10
+};
 Object.freeze(levelState);
 
 var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4 };
@@ -42,3 +45,4 @@ function getRandomInt(max) {
 
 var bus = new EventBus();
 var clock = new THREE.Clock();
+console.log("clock: " + clock);

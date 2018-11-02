@@ -1,8 +1,8 @@
-function levelAI(scene, clock, currentLevel, difficulty) {
+function levelAI(scene) {
 
     this.getState = getState;
     this.setState = setState;
-    this.updateSettings;
+    this.updateSettings = updateSettings;
 
     /*
     publish: level scores
@@ -52,6 +52,7 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
 
     function loadAssets() {
+        console.log("got to loader");
         loader = new assetLoader(scene);
     }
 
@@ -384,17 +385,20 @@ function levelAI(scene, clock, currentLevel, difficulty) {
 
         var elapsedTime = clock.getElapsedTime();
 
+        console.log("levelAI state: " + getState());
         if (currentState === levelState.init) {
+            console.log("loader: " + loader);
             if (typeof loader != 'undefined') {
                 if (loader.checkAssetsLoaded() === true) {
                     envGenerator = new assetGen(scene);
                     initAssetOriginals();
-                    setState(levelState.new);
+                    console.log("got this FAR");
+                    setState(levelState.preGame);
                 }
             }
         }
 
-        if (currentState === levelState.new) {
+        if (currentState === levelState.build) {
             if (!levelAssetsLoaded) {
                 buildLevel();
             }
@@ -411,8 +415,8 @@ function levelAI(scene, clock, currentLevel, difficulty) {
             }
 
             //set all duckling.userData.callable = false (need to setup a pool)
-            if (duck)
-                grid.updateDucklingsInRadius(duck);
+            //if (duck)
+            //   grid.updateDucklingsInRadius(duck);
 
         }
 

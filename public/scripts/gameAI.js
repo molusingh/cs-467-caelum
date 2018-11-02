@@ -20,7 +20,6 @@ function gameAI(scene, clock) {
     var currentLevelDifficulty = 1; // not sure what determines this
     var currentLevel = 1;
     var score = 0; // user score 
-    var gameOn = false; // whether game is currently running
     var points = score; // points to spend on skills
     var maxSkillLevel = 3;
     var quackLevel = 0;
@@ -29,6 +28,8 @@ function gameAI(scene, clock) {
     var quackCost = 10;
     var speedCost = 10;
     var invisibilityCost = 10;
+
+
 
     // activate levelAI, userinterface, setupSubscriptions
     new UserInterface(); // acivate user interface
@@ -42,8 +43,6 @@ function gameAI(scene, clock) {
         bus.subscribe("start", startLevel);
         bus.subscribe("openMenu", pauseGame);
         bus.subscribe("closeMenu", continueGame);
-        bus.subscribe("playerLoses", resetGame); // player loses in the levelAI, so levelAI will publish loss
-        bus.subscribe("levelEnd", finishLevel); // player completes level, levelAI publishes end
         bus.subscribe("pickBoosts", updateBoostsScreen);
         bus.subscribe("endPickBoosts", startLevel); // starts next level after done picking boosts
 
@@ -90,6 +89,13 @@ function gameAI(scene, clock) {
      * starts a new level
      */
     function startLevel() {
+        if (level.getState() !== levelState.ready) {
+            //show loading screen
+        }
+        currentState = gameState.level;
+    }
+
+    function sendSettings() {
         level.updateSettings(
             {
                 level: currentLevel,
@@ -98,8 +104,6 @@ function gameAI(scene, clock) {
                 quackLevel: quackLevel
             }
         );
-        level.setState(levelState.new);
-        currentState = gameState.level;
     }
 
 
@@ -111,11 +115,22 @@ function gameAI(scene, clock) {
         level.setState(levelState.pause);
     }
 
+    function resetGame() {
+        currentLevel = 1;
+        score = 0; // user score 
+        points = 0; // points to spend on skills
+        quackLevel = 0;
+        speedLevel = 0;
+        invisibilityLevel = 0;
+        //bus.publish("loss");
+        currentState = gameState.loss;
+    }
+
     /*
      * Ends the current level and enters boost screen
      */
     function finishLevel() {
-
+        console.log("got to FINISH");
         ++currentLevel;
         if (currentLevel > totalLevels) // if completed last level, player wins
         {
@@ -157,16 +172,27 @@ function gameAI(scene, clock) {
         $('#scoreOutput').text(score);
         $('#levelOutput').text(currentLevel);
 
+        console.log("gameState:" + currentState);
+
         if (currentState === gameState.level) {
+            level.update();
             switch (level.getState()) {
+                case levelState.preGame:
+                    sendSettings();
+                    console.log("before BUILD");
+                    level.setState(levelState.build);
+                    break;
                 case levelState.ready:
-                    gameOn = true;
-                    level.setState(play);
-                case levelState.play:
-                    level.update();
+                    //hide loading screen
+                    level.setState(levelState.play);
                     break;
                 case levelState.end:
                     finishLevel();
+                    level.setState(levelState.preGame);
+                    break;
+                case levelState.loss:
+                    resetGame();
+                    level.setState(levelState.preGame);
                     break;
                 default:
                     break;

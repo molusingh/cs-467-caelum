@@ -17,6 +17,7 @@ function ducklingAI(scene, duckling) {
     var currentState = ducklingState.init;
 
     duckling.position.y = -0.1;
+    var active = false;
 
     //must report all enum states
     this.getState = function () {

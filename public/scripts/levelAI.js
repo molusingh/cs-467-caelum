@@ -378,7 +378,18 @@ function levelAI(scene) {
         }
     }
 
-    function endLevel() {
+    function cleanup() {
+        assetInstances = 0;
+        for (var i = 0; i < assets.length; i++) {
+            assets[i].traverse(function (child) {
+
+                if (child instanceof THREE.Mesh) {
+                    scene.remove(assets[i]);
+                    assets[i] = 'undefined';
+                }
+            });
+        }
+        assets.length = 0;
     }
 
     this.update = function () {
@@ -409,6 +420,21 @@ function levelAI(scene) {
         }
 
         if (currentState === levelState.play) {
+
+            //get duck's state
+            if (assetInstances[0].getState() === playerState.dead);
+            {
+                setState(levelState.loss);
+                cleanup();
+                return;
+            }
+
+            if (assetInstances[0].getState() === playerState.win);
+            {
+                setState(levelState.end);
+                cleanup();
+                return;
+            }
 
             for (var i = 0; i < assetInstances.length; i++) {
                 assetInstances[i].update();

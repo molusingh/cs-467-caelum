@@ -12,7 +12,7 @@ var levelState = {
 };
 Object.freeze(levelState);
 
-var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4 };
+var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4, "won": 5 };
 Object.freeze(playerState);
 
 var ducklingState = { "init": 1, "ready": 2, "egg": 3, "duckling": 4, "dead": 5 };

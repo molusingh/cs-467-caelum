@@ -205,6 +205,9 @@ function playerControls(scene, duck) {
     //document.addEventListener('keydown', onKeyDown);
 
     function isLegalMove(object) {
+
+        if (!active)
+            return;
         var nextSquare;
         var facing = duck.userData.currentDirection;
 
@@ -234,6 +237,18 @@ function playerControls(scene, duck) {
 
         // moving from water to water (2), requires jumpSkill to move to land
         if (duck.userData.inWater === true && nextSquare == 2) {
+            return true;
+        }
+
+        // !!!!!temporary death sim, simulator to acutal!!!!
+        if (nextSquare == componentType.fox || nextSquare == componentType.croq) {
+            currentState = playerState.dead;
+            return true;
+        }
+
+        // !!!!!temporary win simulation, nothing like actual!!!!!
+        if (nextSquare == componentType.egg) {
+            currentState = playerState.won;
             return true;
         }
 

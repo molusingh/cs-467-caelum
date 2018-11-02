@@ -87,7 +87,8 @@ function board() {
     }
 
     this.reset = function () {
-        console.log("NOT implemented")
+        initializeEnvTable(40, 40);
+        actorTable.length = 0;
     }
 
     this.setInvisibility = function (value) {

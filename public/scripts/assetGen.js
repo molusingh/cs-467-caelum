@@ -27,7 +27,7 @@ function assetGen(scene) {
         landObjects.length = 0;
 
         for (var i = 0; i < grassObjects.length; i++) {
-            scene.remove(landObjects[i]);
+            scene.remove(grassObjects[i]);
         }
         grassObjects.length = 0;
 

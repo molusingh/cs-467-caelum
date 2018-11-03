@@ -89,6 +89,7 @@ function board() {
     this.reset = function () {
         initializeEnvTable(40, 40);
         actorTable.length = 0;
+        actorTable = [];
     }
 
     this.setInvisibility = function (value) {

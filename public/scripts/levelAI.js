@@ -372,6 +372,7 @@ function levelAI(scene) {
 
     function cleanup() {
         assetInstances = 0;
+        assetInstances = [];
         for (var i = 0; i < assets.length; i++) {
             assets[i].traverse(function (child) {
 
@@ -382,6 +383,7 @@ function levelAI(scene) {
             });
         }
         assets.length = 0;
+        assets = [];
         grid.reset();
         //object gets deleted, but scene elements remain otherwise
         envGenerator.cleanup();

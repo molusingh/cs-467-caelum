@@ -1,4 +1,4 @@
-function croqAI(scene, clock, grid, croq) {
+function croqAI(scene, croq) {
 
     /*
     -- subscribe
@@ -14,22 +14,29 @@ function croqAI(scene, clock, grid, croq) {
     path.getPath(), could return either an array of points or just the next grid location
 
     -- must update grid after every move
-    grid.updateActor(actorID)
+    grid.updateActor(actor)
+
+    -- ALL functions MUST be filtered through: if(!active) return;
     */
 
     var currentState = croqState.init;
-
-    console.log("croq: " + croq);
+    var active = false;
 
     //must report all enum states
     this.getState = function () {
-
         return currentState;
     }
 
+    this.setActive = function (value) {
+        active = value;
+    }
+
     this.update = function () {
+        //game paused
+        if (!active)
+            return;
 
         var elapsedTime = clock.getElapsedTime();
-
     }
+
 }

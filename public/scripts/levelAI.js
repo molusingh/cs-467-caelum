@@ -425,6 +425,7 @@ function levelAI(scene) {
             if (!AIsActive) {
                 setAIActiveState(true);
                 AIsActive = true;
+                grid.printGrid(0, 8, 0, 8);
             }
 
             //get duck's state

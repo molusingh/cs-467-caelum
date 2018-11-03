@@ -210,7 +210,7 @@ function board() {
         for (var j = 0; j < end_y + 1; j++) {
             var line = "";
             for (var i = start_x; i < end_x + 1; i++) {
-                line += String(grid[i][j]);
+                line += String(envTable[i][j]);
             }
             console.log(line);
         }

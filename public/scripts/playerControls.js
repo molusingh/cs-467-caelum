@@ -37,7 +37,6 @@ function playerControls(scene, clock, duck) {
     var duckMover = new ObjectMover(duck);
 
     // subscriptions
-        // action subscribers
     bus.subscribe("moveLeft", duckMover.left);
     bus.subscribe("rotateLeft", duckMover.rotateLeft);
     bus.subscribe("duckLeft", duckLeft);
@@ -55,16 +54,7 @@ function playerControls(scene, clock, duck) {
     bus.subscribe("call", callSkill);
     bus.subscribe("nest", nestSkill);
     
-        // sound subscribers
-    bus.subscribe("playerMove", playSound.move);
-    bus.subscribe("clickSound", playSound.click);
-    bus.subscribe("flySound", playSound.fly);
-    bus.subscribe("jumpSound", playSound.jump);
-    bus.subscribe("callSound", playSound.call);
-    bus.subscribe("nestSound", playSound.nest);
-    bus.subscribe("invisibilitySound", playSound.invisiblity);
-    bus.subscribe("speedBoostSound", playSound.speedBoost);
-    bus.subscribe("superQuackSound", playSound.superQuack);
+
 
     // sounds for interface buttons
     $("#movementControls").click(playSound.click);

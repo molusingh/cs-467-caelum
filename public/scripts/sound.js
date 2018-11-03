@@ -1,5 +1,16 @@
  var playSound = new soundLoader();
 
+     // sound subscribers
+bus.subscribe("playerMove", playSound.move);
+bus.subscribe("clickSound", playSound.click);
+bus.subscribe("flySound", playSound.fly);
+bus.subscribe("jumpSound", playSound.jump);
+bus.subscribe("callSound", playSound.call);
+bus.subscribe("nestSound", playSound.nest);
+bus.subscribe("invisibilitySound", playSound.invisiblity);
+bus.subscribe("speedBoostSound", playSound.speedBoost);
+bus.subscribe("superQuackSound", playSound.superQuack);
+
 function soundLoader() {
 
 	var sound;

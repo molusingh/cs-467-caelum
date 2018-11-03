@@ -242,14 +242,14 @@ function playerControls(scene, duck) {
         }
 
         // !!!!!temporary death sim, simulator to acutal!!!!
-        if (nextSquare == componentType.fox || nextSquare == componentType.croq) {
-            //currentState = playerState.dead;
+        if (nextSquare == componentType.fox) {
+            currentState = playerState.dead;
             return true;
         }
 
         // !!!!!temporary win simulation, nothing like actual!!!!!
-        if (nextSquare == componentType.egg) {
-            //currentState = playerState.won;
+        if (nextSquare == componentType.croq) {
+            currentState = playerState.won;
             return true;
         }
 

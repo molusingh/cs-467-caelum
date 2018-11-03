@@ -24,6 +24,8 @@ function levelAI(scene) {
     var speedLevel = 0;
     var quackLevel = 0;
 
+    var AIsActive = false;
+
     var envGenerator;
     var levelAssetsLoaded = false;
 
@@ -91,23 +93,19 @@ function levelAI(scene) {
         originals.egg = egg;
 
         var duckling = scene.getObjectByName("duckling");
-        //duckling.userData.componentType = componentType.duckling;
         duckling.userData.callable = false;
         duckling.position.y = -100;
         originals.duckling = duckling;
 
         var hawk = scene.getObjectByName("hawk");
-        //hawk.userData.componentType = componentType.hawk;
         hawk.position.y = -100;
         originals.hawk = hawk;
 
         var grass = scene.getObjectByName("grass");
-        //grass.userData.componentType = componentType.grass;
         grass.position.y = -100;
         originals.grass = grass;
 
         var stick = scene.getObjectByName("stick");
-        //stick.userData.componentType = componentType.stick;
         stick.position.y = -100;
         originals.stick = stick;
     }
@@ -394,14 +392,14 @@ function levelAI(scene) {
 
         var elapsedTime = clock.getElapsedTime();
 
-        console.log("levelAI state: " + getState());
+        //console.log("levelAI state: " + getState());
         if (currentState === levelState.init) {
-            console.log("loader: " + loader);
+            //console.log("loader: " + loader);
             if (typeof loader != 'undefined') {
                 if (loader.checkAssetsLoaded() === true) {
                     envGenerator = new assetGen(scene);
                     initAssetOriginals();
-                    console.log("got this FAR");
+                    //console.log("got this FAR");
                     setState(levelState.preGame);
                 }
             }
@@ -413,30 +411,33 @@ function levelAI(scene) {
             }
             else {
                 levelAssetsLoaded = false;
+                AIsActive = false;
                 setState(levelState.ready)
             }
         }
 
         if (currentState === levelState.play) {
+            //start duck and all AIs
+
+            //TO DO: replace this with better toggle for pause/continue, game start only for now
+            if (!AIsActive) {
+                setAIActiveState(true);
+                AIsActive = true;
+            }
 
             //get duck's state
-            console.log(assetInstances[0].idSelf());
-            console.log(assetInstances[0].getState());
-            if (assetInstances[0].getState() == playerState.dead);
-            {
-                console.log("setting level to LOSS");
+            if (assetInstances[0].getState() === playerState.dead) {
                 setState(levelState.loss);
                 cleanup();
             }
-
-            if (assetInstances[0].getState() == playerState.win);
-            {
+            else if (assetInstances[0].getState() === playerState.won) {
                 setState(levelState.end);
                 cleanup();
             }
-
-            for (var i = 0; i < assetInstances.length; i++) {
-                assetInstances[i].update();
+            else {
+                for (var i = 0; i < assetInstances.length; i++) {
+                    assetInstances[i].update();
+                }
             }
 
             //set all duckling.userData.callable = false (need to setup a pool)

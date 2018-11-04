@@ -107,11 +107,12 @@ function ObjectMover(object) {
 	function flyToggle() {
 		var currentSquareInfo;
 		currentSquareInfo = grid.getEnvInfo(object.position.z, object.position.x);
+		var actorInfo = grid.getSquareInfo(object.position.z, object.position.x);
 
 		// landing
 		if (object.userData.inAir == true) {
 			// duck landing logic
-			if (object.name == "duck") {
+			if (actorInfo == "7") {
 				// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
 				if (currentSquareInfo != 3 && currentSquareInfo != 4 && currentSquareInfo != 5 && currentSquareInfo != 6 && currentSquareInfo != 9) {
 					object.position.y -= duckFlightHeight;
@@ -124,14 +125,16 @@ function ObjectMover(object) {
 				}
 
 			}
-			else if (object.name == "hawk") {
+			// hawk landing logic
+			else if (actorInfo == "5") {
 				object.position.y -= hawkFlightHeight;
 			}
-			updateActor(object);
+			grid.updateActor(object);
 		}
 		// takeoff
 		else {
-			if (object.name == "duck") {
+			// duck takeoff logic
+			if (actorInfo == "7") {
 				object.position.y += duckFlightHeight;
 				// if we take off from water, toggle flag
 				if (currentSquareInfo == 2) {
@@ -139,11 +142,13 @@ function ObjectMover(object) {
 				}
 				bus.publish("flySound");
 			}
-			else if (object.name == "hawk") {
+			// hawk takeoff logic
+			else if (actorInfo == "5") {
 				object.position.y += hawkFlightHeight;
 			}
 
 			object.userData.inAir = true;
+			grid.updateActor(object);
 		}
 	}
 }

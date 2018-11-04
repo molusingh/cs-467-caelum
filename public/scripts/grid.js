@@ -240,4 +240,62 @@ function board() {
         }
         return true;
     }
+
+    // looks for 2x2 space for nest, returns 0 for no valid area, 1 for top right, 
+    // 2 for bottom right, 3 for bottom left, 4 for top left.
+    this.getNestArea = function (z, x) {
+        var topRight = [];
+        var bottomRight = [];
+        var bottomLeft = [];
+        var topLeft = [];
+        var isValidSquare;
+        
+        // top right
+        topRight[0] = this.getSquareInfo(z, x - 10); // up
+        topRight[1] = this.getSquareInfo(z - 10, x - 10); // up + right
+        topRight[2] = this.getSquareInfo(z - 10, x); // right
+
+        if (this.validNestArea(topRight) === true) {
+            return 1;
+        }
+
+        // bottom right
+        bottomRight[0] = this.getSquareInfo(z - 10, x); // right
+        bottomRight[1] = this.getSquareInfo(z - 10, x + 10); // right + down
+        bottomRight[2] = this.getSquareInfo(z, x + 10); // down
+
+        if (this.validNestArea(bottomRight) === true) {
+            return 2;
+        }
+
+        // bottom left
+        bottomLeft[0] = this.getSquareInfo(z, x + 10); // down
+        bottomLeft[1] = this.getSquareInfo(z + 10, x + 10); // down + left
+        bottomLeft[2] = this.getSquareInfo(z + 10, x); // left
+
+        if (this.validNestArea(bottomLeft) === true) {
+            return 3;
+        }
+
+        // top left
+        topLeft[0] = this.getSquareInfo(z + 10, x); // left
+        topLeft[1] = this.getSquareInfo(z + 10, x - 10); // left + up
+        topLeft[2] = this.getSquareInfo(z, x - 10); // up
+
+        if (this.validNestArea(topLeft) === true) {
+            return 4;
+        }
+        return 0;
+
+    }
+
+    // returns true if all squares in array are land (1) or grass (10)
+    this.validNestArea = function(squareArray) {
+        for (i = 0; i < squareArray.length; i++) {
+            if (squareArray[i] != 1 && squareArray[i] != 10) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

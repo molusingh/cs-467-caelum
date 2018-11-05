@@ -230,6 +230,8 @@ function playerControls(scene, duck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
+        console.log("NextSquare: " + nextSquare);
+        console.log(this[0].id);
 
         // moving from land to land (1), duckling (8), grass (10), or stick (11)
         if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11)) {

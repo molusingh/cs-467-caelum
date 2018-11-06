@@ -40,11 +40,17 @@ function playerControls(scene, duck) {
 
     var duckMover = new ObjectMover(duck);
 
+    // superquack variables
+    var localStun = false;
+    var beginStun;
+    var foxes;
+    var hawks;
+    var croqs;
+
     //!!! Add if(active) to all core functions
     //in Mover, 
 
     // subscriptions
-    // action subscribers
     bus.subscribe("moveLeft", duckMover.left);
     bus.subscribe("rotateLeft", duckMover.rotateLeft);
     bus.subscribe("duckLeft", duckLeft);
@@ -61,17 +67,10 @@ function playerControls(scene, duck) {
     bus.subscribe("jump", jumpSkill);
     bus.subscribe("call", callSkill);
     bus.subscribe("nest", nestSkill);
+    bus.subscribe("quackSkillRequested", superQuackSkill);
+    bus.subscribe("speedSkillRequested", speedBoostSkill);
+    bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
 
-    // sound subscribers
-    bus.subscribe("playerMove", playSound.move);
-    bus.subscribe("clickSound", playSound.click);
-    bus.subscribe("flySound", playSound.fly);
-    bus.subscribe("jumpSound", playSound.jump);
-    bus.subscribe("callSound", playSound.call);
-    bus.subscribe("nestSound", playSound.nest);
-    bus.subscribe("invisibilitySound", playSound.invisiblity);
-    bus.subscribe("speedBoostSound", playSound.speedBoost);
-    bus.subscribe("superQuackSound", playSound.superQuack);
 
     // sounds for interface buttons
     $("#movementControls").click(playSound.click);
@@ -194,15 +193,123 @@ function playerControls(scene, duck) {
         }
     }
 
-    function callSkill(object) {
-        console.log("callSkill not yet implemented");
+    function callSkill () {
+        if (grid.updateDucklingsInRadius === true) {
+            console.log("duckling AI follow function here");
+        }
     }
 
     function nestSkill(object) {
-        console.log("nestSkill not yet implemented");
+        // don't check anything if duck is in water or air
+        if (duck.userData.inWater === false && duck.userData.inAir === false) {
+            var validArea = grid.getNestArea(duck.position.z, duck.position.x);
+
+            if (validArea != 0 && duck.userData.inWater === false) {
+                var stick = new THREE.Object3D();
+                stick.name = "stick";
+                var manager = new THREE.LoadingManager();
+                var shadowMat = new THREE.ShadowMaterial({
+                    color: 0xff0000, transparent: true, opacity: 0.5
+                });
+                    //load nest 
+                var stickLoader = new THREE.FBXLoader(manager);
+                stickLoader.load('./geo/stick.fbx', function (object) {
+                    object.traverse(function (child) {
+
+                        if (child instanceof THREE.Mesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            child.shadowMaterial = shadowMat;
+                        }
+
+                    });
+                    object.scale.x = 2;
+                    object.scale.y = 2;
+                    object.scale.z = 2;
+
+                    stick.add(object);
+                    scene.add(stick);
+
+                    // top right
+                    if (validArea == 1) {
+                        stick.position.z = (duck.position.z - 5);
+                        stick.position.x = (duck.position.x - 5);
+                    }
+                    // bottom right
+                    if (validArea == 2) {
+                        stick.position.z = (duck.position.z - 5);
+                        stick.position.x = (duck.position.x + 5);
+                    }
+                    // bottom left
+                    if (validArea == 3) {
+                        stick.position.z = (duck.position.z + 5);
+                        stick.position.x = (duck.position.x + 5);
+                    }
+                    // top left
+                    if (validArea == 4) {
+                        stick.position.z = (duck.position.z + 5);
+                        stick.position.x = (duck.position.x - 5);
+                    }
+
+                }, undefined, function (e) {
+                    console.error(e);
+                });
+            }
+        }
     }
 
-    //document.addEventListener('keydown', onKeyDown);
+
+    function superQuackSkill() {
+
+        foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
+        hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
+        croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
+
+        if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
+            localStun = true;
+            var elapsedTime = clock.getElapsedTime();
+            beginStun = elapsedTime;
+
+            for (i = 0; i < foxes.length; i++) {
+                foxes[i].userData.stunStatus = true;
+            }
+
+            for (i = 0; i < hawks.length; i++) {
+                hawks[i].userData.stunStatus = true;
+            }
+
+            for (i = 0; i < croqs.length; i++) {
+                croqs[i].userData.stunStatus = true;
+            }
+        }
+    }
+
+    // called by update function after (stunLength) seconds has elapsed
+    function resetStunStatus() {
+        localStun = false;
+
+        while (foxes.length > 0) {
+            foxes[0].userData.stunStatus = false;
+            foxes.pop();
+        }
+        while (hawks.length > 0) { 
+            hawks[0].userData.stunStatus = false;
+            hawks.pop();
+        }
+        while (croqs.length > 0) { 
+            croqs[0].userData.stunStatus = false;
+            croqs.pop();
+        }
+
+    }
+
+    function speedBoostSkill() {
+
+    }
+
+    function invisibilitySkill() {
+
+    }
 
     function isLegalMove(object) {
 
@@ -275,7 +382,15 @@ function playerControls(scene, duck) {
 
         if (!active)
             return;
+
         var elapsedTime = clock.getElapsedTime();
+
+        if (localStun === true) {
+            // stunLength is global, modified by superquack level
+            if (elapsedTime - beginStun > stunLength) {
+                resetStunStatus();
+            }
+        }
 
     };
 }

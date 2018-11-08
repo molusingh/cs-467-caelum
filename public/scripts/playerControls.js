@@ -32,7 +32,7 @@ function playerControls(scene, duck) {
     var currentState = playerState.init;
 
     duck.userData.currentDirection = 'down';
-    console.log(duck.userData.currentDirection);
+    // console.log(duck.userData.currentDirection);
     duck.userData.inAir = false;
     duck.userData.inWater = false;
 

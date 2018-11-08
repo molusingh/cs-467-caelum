@@ -1,4 +1,8 @@
-function ObjectMover(object) {
+/* global bus*/
+/* global grid*/
+/* global getRandomInt*/
+function ObjectMover(object)
+{
 	var maxPosition = 185;
 	var duckFlightHeight = 20;
 	var hawkFlightHeight = 35;
@@ -12,7 +16,9 @@ function ObjectMover(object) {
 	ObjectMover.prototype.rotateRight = rotateRight;
 	ObjectMover.prototype.flyToggle = flyToggle;
 
-	function up() {
+	function up()
+	{
+		rotateUp();
 		if (object.position.x >= -maxPosition) // if within bounds
 		{
 			object.position.x -= 10;
@@ -20,8 +26,10 @@ function ObjectMover(object) {
 		}
 	}
 
-	function rotateUp() {
-		switch (object.userData.currentDirection) {
+	function rotateUp()
+	{
+		switch (object.userData.currentDirection)
+		{
 			case 'left':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -35,7 +43,9 @@ function ObjectMover(object) {
 		object.userData.currentDirection = 'up';
 	}
 
-	function left() {
+	function left()
+	{
+		rotateLeft();
 		if (object.position.z <= maxPosition) // if within bounds
 		{
 			object.position.z += 10;
@@ -43,8 +53,10 @@ function ObjectMover(object) {
 		}
 	}
 
-	function rotateLeft() {
-		switch (object.userData.currentDirection) {
+	function rotateLeft()
+	{
+		switch (object.userData.currentDirection)
+		{
 			case 'down':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -58,7 +70,9 @@ function ObjectMover(object) {
 		object.userData.currentDirection = 'left';
 	}
 
-	function down() {
+	function down()
+	{
+		rotateDown();
 		if (object.position.x <= maxPosition) // if within bounds
 		{
 			object.position.x += 10;
@@ -66,8 +80,10 @@ function ObjectMover(object) {
 		}
 	}
 
-	function rotateDown() {
-		switch (object.userData.currentDirection) {
+	function rotateDown()
+	{
+		switch (object.userData.currentDirection)
+		{
 			case 'right':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -81,7 +97,9 @@ function ObjectMover(object) {
 		object.userData.currentDirection = 'down';
 	}
 
-	function right() {
+	function right()
+	{
+		rotateRight();
 		if (object.position.z >= -maxPosition) // if within bounds
 		{
 			object.position.z -= 10;
@@ -89,8 +107,10 @@ function ObjectMover(object) {
 		}
 	}
 
-	function rotateRight() {
-		switch (object.userData.currentDirection) {
+	function rotateRight()
+	{
+		switch (object.userData.currentDirection)
+		{
 			case 'up':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -104,20 +124,25 @@ function ObjectMover(object) {
 		object.userData.currentDirection = 'right';
 	}
 
-	function flyToggle() {
+	function flyToggle()
+	{
 		var currentSquareInfo;
 		currentSquareInfo = grid.getEnvInfo(object.position.z, object.position.x);
 		var actorInfo = grid.getSquareInfo(object.position.z, object.position.x);
 
 		// landing
-		if (object.userData.inAir == true) {
+		if (object.userData.inAir == true)
+		{
 			// duck landing logic
-			if (actorInfo == "7") {
+			if (actorInfo == "7")
+			{
 				// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
-				if (currentSquareInfo != 3 && currentSquareInfo != 4 && currentSquareInfo != 5 && currentSquareInfo != 6 && currentSquareInfo != 9) {
+				if (currentSquareInfo != 3 && currentSquareInfo != 4 && currentSquareInfo != 5 && currentSquareInfo != 6 && currentSquareInfo != 9)
+				{
 					object.position.y -= duckFlightHeight;
 					// if we land in water, toggle flag
-					if (currentSquareInfo == 2) {
+					if (currentSquareInfo == 2)
+					{
 						object.userData.inWater = true;
 					}
 					bus.publish("flySound");
@@ -126,24 +151,29 @@ function ObjectMover(object) {
 
 			}
 			// hawk landing logic
-			else if (actorInfo == "5") {
+			else if (actorInfo == "5")
+			{
 				object.position.y -= hawkFlightHeight;
 			}
 			grid.updateActor(object);
 		}
 		// takeoff
-		else {
+		else
+		{
 			// duck takeoff logic
-			if (actorInfo == "7") {
+			if (actorInfo == "7")
+			{
 				object.position.y += duckFlightHeight;
 				// if we take off from water, toggle flag
-				if (currentSquareInfo == 2) {
+				if (currentSquareInfo == 2)
+				{
 					object.userData.inWater = false;
 				}
 				bus.publish("flySound");
 			}
 			// hawk takeoff logic
-			else if (actorInfo == "5") {
+			else if (actorInfo == "5")
+			{
 				object.position.y += hawkFlightHeight;
 			}
 

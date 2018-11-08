@@ -52,7 +52,7 @@ function foxAI(scene, fox)
         var path = findPath(fox.position, duck.position, isLegalMove);
         if (path == null) // if no path move randomly
         {
-            console.log("no path found, moving randomly");
+            // console.log("no path found, moving randomly");
             var random = getRandomInt(4) - 1;
             var directions = ['up', 'down', 'left', 'right'];
             if (isValid(fox.position, directions[random]))

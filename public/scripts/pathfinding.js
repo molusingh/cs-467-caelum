@@ -153,7 +153,7 @@ function findPath(origin, destination, isLegalMove)
 
     function isValid(point, direction)
     {
-        var target;
+        var target = {};
         switch (direction)
         {
             case 'up':
@@ -176,6 +176,7 @@ function findPath(origin, destination, isLegalMove)
                 console.log('Invalid direction!');
                 return false;
         }
+        target.y = point.y;
         return isLegalMove(target);
     }
 }

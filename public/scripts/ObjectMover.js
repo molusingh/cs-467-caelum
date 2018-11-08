@@ -1,6 +1,5 @@
 /* global bus*/
 /* global grid*/
-/* global getRandomInt*/
 function ObjectMover(object)
 {
 	var maxPosition = 185;

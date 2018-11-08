@@ -4,6 +4,7 @@
 /* global componentType*/
 /* global findPath*/
 /* global bus*/
+/* global getRandomInt */
 function foxAI(scene, fox)
 {
 
@@ -38,16 +39,26 @@ function foxAI(scene, fox)
     // setInterval(move, 1000);
 
     bus.subscribe('moveFox', move);
-    
+
     setInterval(move, 1000);
 
     function move()
     {
+        if (!active)
+        {
+            return;
+        }
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         var path = findPath(fox.position, duck.position, isLegalMove);
-        if (path == null)
+        if (path == null) // if no path move randomly
         {
-            console.log("no path found");
+            console.log("no path found, moving randomly");
+            var random = getRandomInt(4) - 1;
+            var directions = ['up', 'down', 'left', 'right'];
+            if (isValid(fox.position, directions[random]))
+            {
+                foxMover[directions[random]]();
+            }
             return;
         }
         if (path.move == 'stay')
@@ -97,5 +108,34 @@ function foxAI(scene, fox)
                 return true;
         }
         return false;
+    }
+
+    function isValid(point, direction)
+    {
+        var target = {};
+        switch (direction)
+        {
+            case 'up':
+                target.z = point.z;
+                target.x = point.x - 10;
+                break;
+            case 'left':
+                target.z = point.z + 10;
+                target.x = point.x;
+                break;
+            case 'down':
+                target.z = point.z;
+                target.x = point.x + 10;
+                break;
+            case 'right':
+                target.z = point.z - 10;
+                target.x = point.x;
+                break;
+            default:
+                console.log('Invalid direction!');
+                return false;
+        }
+        target.y = point.y;
+        return isLegalMove(target);
     }
 }

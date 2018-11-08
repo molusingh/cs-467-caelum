@@ -1,5 +1,4 @@
 (function () {
-  var clock = new THREE.Clock();
 
   var screenDimensions = {
     width: window.innerWidth,

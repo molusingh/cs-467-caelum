@@ -215,7 +215,7 @@ function UserInterface()
 				bus.publish("speedBoostSound");
 				break;
 
-			case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
+			// case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
 		}
 	}
 

@@ -50,8 +50,7 @@ function assetLoader(scene) {
     var manager = new THREE.LoadingManager();
 
     manager.onLoad = function () {
-        console.log("finished loading: " + grass);
-        console.log(grass.name);
+        console.log("STATIC ASSETS LOADED");
         allAssetsLoaded = true;
     }
 
@@ -274,13 +273,5 @@ function assetLoader(scene) {
     });
 
 
-    this.checkAssetsLoaded = function () {
-        if (allAssetsLoaded === true) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 
 }

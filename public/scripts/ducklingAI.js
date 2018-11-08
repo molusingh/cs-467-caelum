@@ -1,4 +1,4 @@
-function ducklingAI(scene, clock, grid, duckling) {
+function ducklingAI(scene, duckling) {
 
     /*
     -- subscribe
@@ -10,22 +10,30 @@ function ducklingAI(scene, clock, grid, duckling) {
     -- find next location 
     path.getPath(), could return either an array of points or just the next grid location
     -- must update grid after every move
-    grid.updateActor(actorID)
+    grid.updateActor(actor)
+
+    -- ALL functions MUST be filtered through: if(!active) return;
     */
     var currentState = ducklingState.init;
 
-    console.log("duckling: " + duckling);
+    duckling.position.y = -0.1;
+    var active = false;
 
     //must report all enum states
     this.getState = function () {
-
         return currentState;
     }
 
+    this.setActive = function (value) {
+        active = value;
+    }
+
     this.update = function () {
+        //game paused
+        if (!active)
+            return;
 
         var elapsedTime = clock.getElapsedTime();
-
     }
 
     /***********TESTING ONLY ********/

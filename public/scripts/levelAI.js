@@ -54,7 +54,6 @@ function levelAI(scene) {
 
 
     function loadAssets() {
-        console.log("got to loader");
         loader = new assetLoader(scene);
     }
 
@@ -371,14 +370,19 @@ function levelAI(scene) {
     }
 
     function cleanup() {
-        assetInstances = 0;
+        for (var i = 0; i < assetInstances.length; i++) {
+            //temp, really need to delete objects
+            assetInstances[i].setActive(false);
+            assetInstances[i] = null;
+        }
+        assetInstances.length = 0;
         assetInstances = [];
         for (var i = 0; i < assets.length; i++) {
             assets[i].traverse(function (child) {
 
                 if (child instanceof THREE.Mesh) {
                     scene.remove(assets[i]);
-                    assets[i] = 'undefined';
+                    assets[i] = null;
                 }
             });
         }
@@ -425,7 +429,7 @@ function levelAI(scene) {
             if (!AIsActive) {
                 setAIActiveState(true);
                 AIsActive = true;
-                grid.printGrid(0, 8, 0, 8);
+                grid.printGrid(15, 25, 20, 30);
             }
 
             //get duck's state

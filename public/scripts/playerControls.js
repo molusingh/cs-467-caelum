@@ -206,8 +206,10 @@ function playerControls(scene, duck) {
 
     function isLegalMove(object) {
 
-        if (!active)
+        if (!active) {
+            console.log("dead");
             return false;
+        }
 
         var nextSquare;
         var facing = duck.userData.currentDirection;
@@ -215,6 +217,7 @@ function playerControls(scene, duck) {
         // all in-air moves are legal since they are over all tiles
         if (duck.userData.inAir === true) {
             return true;
+
         }
 
         // get type of square duck is facing
@@ -230,8 +233,9 @@ function playerControls(scene, duck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
-        console.log("NextSquare: " + nextSquare);
-        console.log(this[0].id);
+        console.log("NextSquare: " + nextSquare + " pos: " + duck.position.z);
+        //console.log(this[0].id);
+        var test = this;
 
         // moving from land to land (1), duckling (8), grass (10), or stick (11)
         if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11)) {

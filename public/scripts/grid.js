@@ -48,7 +48,14 @@ function board() {
             //TO DO: convert to component.illegal
             return 0;
         }
-        return envTable[x - 1][y - 1];
+        var actorInSquare = getActorSquareInfo(x, y);
+        if (actorInSquare !== null) {
+            console.log("actor: " + actorInSquare);
+            return actorInSquare;
+        }
+        else {
+            return envTable[x - 1][y - 1];
+        }
     }
 
     function getActorSquareInfo(x, y) {
@@ -78,7 +85,6 @@ function board() {
             var location = actorTable[i].location;
 
             if (location.x === x && location.y === y) {
-                console.log("got here");
                 return actorTable[i].actor;
             }
         }
@@ -88,6 +94,9 @@ function board() {
 
     this.reset = function () {
         initializeEnvTable(40, 40);
+        for (var i; i < actorTable.length; i++) {
+            actorTable[i] = undefined;
+        }
         actorTable.length = 0;
         actorTable = [];
     }
@@ -207,10 +216,12 @@ function board() {
 
     //testing function
     this.printGrid = function (start_x, end_x, start_y, end_y) {
-        for (var j = 0; j < end_y + 1; j++) {
+        for (var j = start_y; j < end_y + 1; j++) {
             var line = "";
             for (var i = start_x; i < end_x + 1; i++) {
-                line += String(envTable[i][j]);
+                var squareValue = getNormalizedSquareInfo(i, j);
+                line += String(squareValue + ",");
+                //line += String(envTable[i][j] + ",");
             }
             console.log(line);
         }

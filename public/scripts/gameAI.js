@@ -173,7 +173,7 @@ function gameAI(scene, clock) {
         $('#scoreOutput').text(score);
         $('#levelOutput').text(currentLevel);
 
-        console.log("gameState:" + currentState);
+        // console.log("gameState:" + currentState);
 
         if (currentState === gameState.level) {
             level.update();

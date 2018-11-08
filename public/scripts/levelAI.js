@@ -146,7 +146,7 @@ function levelAI(scene) {
                     break;
             }
 
-            assetPools[params.componentType].push(instance);
+            assetPools[params.componentType].push({ instance: instance, asset: obj.asset });
             //console.log(assetPools[params.componentType][i]);
         }
     }
@@ -254,13 +254,13 @@ function levelAI(scene) {
         for (var i = 0; i < params.count; i++) {
 
             var obj = assetPools[params.componentType][i];
-            console.log("dck length? " + assetPools[params.componentType].length);
+            //console.log("dck length? " + assetPools[params.componentType].length);
             actorsInLevel.push(obj);
-            /*
-            obj.location = params.locations[i];
-            obj.locationComponent = params.locationComponent;
 
-            placeAsset(obj);
+            obj.asset.userData.location = params.locations[i];
+            obj.asset.userData.locationComponent = params.locationComponent;
+
+            placeAsset(obj.asset);
 
             /*
             if (params.componentType === componentType.duckling) {
@@ -273,7 +273,7 @@ function levelAI(scene) {
     function despawn() {
         for (var i = 0; i < assetPools.length; i++) {
             for (var j = 0; j < assetPools[i].length; j++) {
-                //assetPools[i][j].hide();
+                assetPools[i][j].asset.position.y = -100;
             }
         }
     }
@@ -292,11 +292,14 @@ function levelAI(scene) {
     }
 
 
-    function placeAsset(assetObj) {
+    function placeAsset(asset) {
 
-        var asset = assetObj.asset;
-        var location = assetObj.location;
-        var locationComponent = assetObj.locationComponent;
+        //console.log("obj: " + assetObj);
+
+        //var asset = assetObj.asset;
+        console.log("asset: " + asset);
+        var location = asset.userData.location;
+        var locationComponent = asset.userData.locationComponent;
 
         var testLocation = new THREE.Vector2(1, 1);
         var validLocation = false;
@@ -369,6 +372,7 @@ function levelAI(scene) {
 
         asset.position.z = x;
         asset.position.x = y;
+        asset.position.y = .1;
 
         grid.addActor(asset);
         //grid.printGrid(0, 8, 0, 8);
@@ -385,7 +389,7 @@ function levelAI(scene) {
 
     function setAIActiveState(state) {
         for (var i = 0; i < actorsInLevel.length; i++) {
-            actorsInLevel[i].setActive(state);
+            actorsInLevel[i].instance.setActive(state);
         }
     }
 
@@ -435,17 +439,17 @@ function levelAI(scene) {
             }
 
             //get duck's state
-            if (actorsInLevel[0].getState() === playerState.dead) {
+            if (actorsInLevel[0].instance.getState() === playerState.dead) {
                 setState(levelState.loss);
                 cleanup();
             }
-            else if (actorsInLevel[0].getState() === playerState.won) {
+            else if (actorsInLevel[0].instance.getState() === playerState.won) {
                 setState(levelState.end);
                 cleanup();
             }
             else {
                 for (var i = 0; i < actorsInLevel.length; i++) {
-                    actorsInLevel[i].update();
+                    actorsInLevel[i].instance.update();
                 }
             }
 

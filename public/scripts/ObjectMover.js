@@ -13,10 +13,12 @@ function ObjectMover(object) {
 	ObjectMover.prototype.flyToggle = flyToggle;
 
 	function up() {
+		console.log("got to MAX POS");
 		if (object.position.x >= -maxPosition) // if within bounds
 		{
 			object.position.x -= 10;
 			grid.updateActor(object);
+			console.log("got to UP");
 		}
 	}
 

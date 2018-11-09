@@ -435,20 +435,21 @@ function levelAI(scene) {
         grid.reset();
         //object gets deleted, but scene elements remain otherwise
         envGenerator.cleanup();
+        AIsActive = false;
+        playerAI.reset();
     }
+
+    var playerAI = {};
 
     this.update = function () {
 
         var elapsedTime = clock.getElapsedTime();
 
-        //console.log("levelAI state: " + getState());
         if (currentState === levelState.init) {
-            //console.log("loader: " + loader);
             if (typeof loader != 'undefined') {
                 if (loader.checkAssetsLoaded() === true) {
                     envGenerator = new assetGen(scene);
                     initAssetPools();
-                    //console.log("got this FAR");
                     setState(levelState.preGame);
                 }
             }
@@ -457,11 +458,13 @@ function levelAI(scene) {
         if (currentState === levelState.build) {
             if (!levelAssetsLoaded) {
                 buildLevel();
+                console.log("instanCE: " + actorsInLevel[0].instance);
+                playerAI = actorsInLevel[0].instance;
             }
             else {
                 levelAssetsLoaded = false;
-                AIsActive = false;
                 setState(levelState.ready)
+                playerAI.setState(playerState.ready);
             }
         }
 
@@ -476,11 +479,11 @@ function levelAI(scene) {
             }
 
             //get duck's state
-            if (actorsInLevel[0].instance.getState() === playerState.dead) {
+            if (playerAI.getState() === playerState.dead) {
                 setState(levelState.loss);
                 cleanup();
             }
-            else if (actorsInLevel[0].instance.getState() === playerState.won) {
+            else if (playerAI.getState() === playerState.won) {
                 setState(levelState.end);
                 cleanup();
             }

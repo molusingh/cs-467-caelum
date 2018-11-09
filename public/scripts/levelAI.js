@@ -80,9 +80,11 @@ function levelAI(scene) {
 
     function initAssetPools() {
 
+        var params;
+
         var duck = scene.getObjectByName("duck");
         var duckSize = 1;
-        var params = {
+        params = {
             count: duckSize,
             original: duck,
             scale: 10,
@@ -91,18 +93,64 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var fox = scene.getObjectByName("fox");
+        var foxSize = 10;
+        params = {
+            count: foxSize,
+            original: fox,
+            scale: 10,
+            componentType: componentType.fox,
+        }
+        createAssetPool(params);
 
         var croq = scene.getObjectByName("croq");
+        var croqSize = 10;
+        params = {
+            count: croqSize,
+            original: croq,
+            scale: 1,
+            componentType: componentType.croq,
+        }
+        createAssetPool(params);
 
         var egg = scene.getObjectByName("egg");
+        var eggSize = 10;
+        params = {
+            count: eggSize,
+            original: egg,
+            scale: 1,
+            componentType: componentType.egg,
+        }
+        createAssetPool(params);
 
         var duckling = scene.getObjectByName("duckling");
+        var ducklingSize = 10;
+        params = {
+            count: ducklingSize,
+            original: duckling,
+            scale: 1,
+            componentType: componentType.duckling,
+        }
+        createAssetPool(params);
 
         var hawk = scene.getObjectByName("hawk");
-
-        var grass = scene.getObjectByName("grass");
+        var hawkSize = 10;
+        params = {
+            count: hawkSize,
+            original: hawk,
+            scale: 1,
+            componentType: componentType.hawk,
+        }
+        createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
+        var stickSize = 10;
+        params = {
+            count: stickSize,
+            original: stick,
+            scale: 1,
+            componentType: componentType.stick,
+        }
+        createAssetPool(params);
     }
 
     function createAssetPool(params) {
@@ -176,8 +224,6 @@ function levelAI(scene) {
         var foxLocations = [(new THREE.Vector2(25, 25)), (new THREE.Vector2(30, 30))]
         var foxes = {
             count: foxCount,
-            original: originals.fox,
-            scale: 10,
             componentType: componentType.fox,
             locations: foxLocations,
             locationComponent: componentType.land
@@ -186,8 +232,6 @@ function levelAI(scene) {
         var hawkLocations = [(new THREE.Vector2(27, 25))]
         var hawks = {
             count: hawkCount,
-            original: originals.hawk,
-            scale: 1,
             componentType: componentType.hawk,
             locations: hawkLocations,
             //TO DO: air i.e. special case
@@ -202,8 +246,6 @@ function levelAI(scene) {
 
         var croqs = {
             count: croqCount,
-            original: originals.croq,
-            scale: 1,
             componentType: componentType.croq,
             locations: croqLocations,
             locationComponent: componentType.water
@@ -217,8 +259,6 @@ function levelAI(scene) {
 
         var ducklings = {
             count: ducklingCount,
-            original: originals.egg,
-            scale: 1,
             componentType: componentType.duckling,
             locations: ducklingLocations,
             locationComponent: componentType.land
@@ -231,21 +271,17 @@ function levelAI(scene) {
 
         var sticks = {
             count: stickCount,
-            original: originals.stick,
-            scale: 1,
             componentType: componentType.stick,
             locations: stickLocations,
             locationComponent: componentType.land
         }
 
         spawnAsset(duck);
-        /*
         spawnAsset(foxes);
         spawnAsset(hawks);
         spawnAsset(croqs);
         spawnAsset(ducklings);
         spawnAsset(sticks);
-        */
 
     }
 
@@ -254,7 +290,6 @@ function levelAI(scene) {
         for (var i = 0; i < params.count; i++) {
 
             var obj = assetPools[params.componentType][i];
-            //console.log("dck length? " + assetPools[params.componentType].length);
             actorsInLevel.push(obj);
 
             obj.asset.userData.location = params.locations[i];
@@ -389,7 +424,9 @@ function levelAI(scene) {
 
     function setAIActiveState(state) {
         for (var i = 0; i < actorsInLevel.length; i++) {
-            actorsInLevel[i].instance.setActive(state);
+            if (actorsInLevel[i].instance !== undefined) {
+                actorsInLevel[i].instance.setActive(state);
+            }
         }
     }
 
@@ -449,7 +486,9 @@ function levelAI(scene) {
             }
             else {
                 for (var i = 0; i < actorsInLevel.length; i++) {
-                    actorsInLevel[i].instance.update();
+                    if (actorsInLevel[i].instance !== undefined) {
+                        actorsInLevel[i].instance.update();
+                    }
                 }
             }
 

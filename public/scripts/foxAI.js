@@ -48,7 +48,11 @@ function foxAI(scene, fox)
             return;
         }
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-        var path = findPath(fox.position, duck.position, isLegalMove);
+        var path = null;
+        if (duck)
+        {
+            path = findPath(fox.position, duck.position, isLegalMove);
+        }
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");

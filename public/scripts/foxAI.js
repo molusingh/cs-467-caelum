@@ -15,11 +15,10 @@ function foxAI(scene, fox)
 
     // private variables
     var active = false;
-
-
-    fox.userData.currentDirection = 'down';
     var foxMover = new ObjectMover(fox);
     var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
+    var randomDirection = null;
+    fox.userData.currentDirection = 'down';
 
 
     /*
@@ -53,12 +52,14 @@ function foxAI(scene, fox)
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");
-            var random = getRandomInt(4) - 1;
-            var directions = ['up', 'down', 'left', 'right'];
-            if (isValid(fox.position, directions[random]))
+            var validRandomDirection = isValid(fox.position, randomDirection);
+            while (!validRandomDirection) // until direction is valid
             {
-                foxMover[directions[random]]();
+                var directions = ['up', 'down', 'left', 'right'];
+                randomDirection = directions[getRandomInt(4) - 1];
+                validRandomDirection = isValid(fox.position, randomDirection);
             }
+            foxMover[randomDirection]();
             return;
         }
         if (path.move == 'stay')
@@ -131,6 +132,8 @@ function foxAI(scene, fox)
                 target.z = point.z - 10;
                 target.x = point.x;
                 break;
+            case null:
+                return false;
             default:
                 console.log('Invalid direction!');
                 return false;

@@ -50,7 +50,7 @@ function board() {
         }
         var actorInSquare = getActorSquareInfo(x, y);
         if (actorInSquare !== null) {
-            console.log("actor: " + actorInSquare);
+            //console.log("actor: " + actorInSquare);
             return actorInSquare;
         }
         else {

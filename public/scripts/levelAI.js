@@ -97,7 +97,7 @@ function levelAI(scene) {
         params = {
             count: foxSize,
             original: fox,
-            scale: 10,
+            scale: 12,
             componentType: componentType.fox,
         }
         createAssetPool(params);
@@ -110,7 +110,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.croq,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var egg = scene.getObjectByName("egg");
         var eggSize = 10;
@@ -120,7 +120,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.egg,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var duckling = scene.getObjectByName("duckling");
         var ducklingSize = 10;
@@ -130,7 +130,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.duckling,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var hawk = scene.getObjectByName("hawk");
         var hawkSize = 10;
@@ -140,7 +140,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.hawk,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
         var stickSize = 10;
@@ -150,7 +150,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.stick,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
     }
 
     function createAssetPool(params) {
@@ -205,11 +205,11 @@ function levelAI(scene) {
         //rest to zero
         var defaultLocation = new THREE.Vector2(20, 20);
 
-        var foxCount = 1;
-        var hawkCount = 1;
-        var croqCount = 5;
-        var ducklingCount = 5;
-        var stickCount = 4;
+        var foxCount = 0;
+        var hawkCount = 0;
+        var croqCount = 0;
+        var ducklingCount = 0;
+        var stickCount = 0;
         var duckCount = 1;
 
         //TO DO: add rotation, not always down, will affect object mover
@@ -329,10 +329,6 @@ function levelAI(scene) {
 
     function placeAsset(asset) {
 
-        //console.log("obj: " + assetObj);
-
-        //var asset = assetObj.asset;
-        console.log("asset: " + asset);
         var location = asset.userData.location;
         var locationComponent = asset.userData.locationComponent;
 
@@ -458,7 +454,6 @@ function levelAI(scene) {
         if (currentState === levelState.build) {
             if (!levelAssetsLoaded) {
                 buildLevel();
-                console.log("instanCE: " + actorsInLevel[0].instance);
                 playerAI = actorsInLevel[0].instance;
             }
             else {
@@ -475,7 +470,7 @@ function levelAI(scene) {
             if (!AIsActive) {
                 setAIActiveState(true);
                 AIsActive = true;
-                grid.printGrid(15, 25, 20, 30);
+                //grid.printGrid(15, 25, 20, 30);
             }
 
             //get duck's state

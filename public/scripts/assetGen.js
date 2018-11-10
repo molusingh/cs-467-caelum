@@ -418,6 +418,7 @@ function assetGen(scene) {
 
         object.geo.position.z = x;
         object.geo.position.x = y;
+        object.geo.position.y = .1;
 
         registerInGrid(object.size, location, object.objectComponent);
 

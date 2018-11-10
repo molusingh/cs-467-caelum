@@ -35,10 +35,12 @@ function board() {
     }
 
     function normalizeX(x) {
+        //return ((x - originY) / 10);
         return ((x - originY + 5) / 10);
     }
 
     function normalizeZ(z) {
+        //return ((originX - z) / 10);
         return ((originX - z + 5) / 10);
     }
 
@@ -117,6 +119,9 @@ function board() {
     // ex. pass object's location + offset in z and x, each square is 10 x 10 
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, illegal 
     this.getSquareInfo = function (z, x) {
+
+        //var normalizedX = ((originX - z) / 10);
+        //var normalizedY = ((x - originY) / 10);
 
         var normalizedX = ((originX - z + 5) / 10);
         var normalizedY = ((x - originY + 5) / 10);

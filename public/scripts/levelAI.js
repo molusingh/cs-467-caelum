@@ -205,7 +205,7 @@ function levelAI(scene) {
         //rest to zero
         var defaultLocation = new THREE.Vector2(20, 20);
 
-        var foxCount = 0;
+        var foxCount = 1;
         var hawkCount = 0;
         var croqCount = 0;
         var ducklingCount = 0;
@@ -226,7 +226,8 @@ function levelAI(scene) {
             count: foxCount,
             componentType: componentType.fox,
             locations: foxLocations,
-            locationComponent: componentType.land
+            locationComponent: componentType.land,
+            componentType: componentType.fox
         }
 
         var hawkLocations = [(new THREE.Vector2(27, 25))]
@@ -235,7 +236,8 @@ function levelAI(scene) {
             componentType: componentType.hawk,
             locations: hawkLocations,
             //TO DO: air i.e. special case
-            locationComponent: componentType.air
+            locationComponent: componentType.air,
+            componentType: componentType.hawk
         }
 
         var croqLocations = [(new THREE.Vector2(27, 25)),
@@ -248,7 +250,8 @@ function levelAI(scene) {
             count: croqCount,
             componentType: componentType.croq,
             locations: croqLocations,
-            locationComponent: componentType.water
+            locationComponent: componentType.water,
+            componentType: componentType.croq
         }
 
         var ducklingLocations = [(new THREE.Vector2(20, 25)),
@@ -261,7 +264,8 @@ function levelAI(scene) {
             count: ducklingCount,
             componentType: componentType.duckling,
             locations: ducklingLocations,
-            locationComponent: componentType.land
+            locationComponent: componentType.land,
+            componentType: componentType.duckling
         }
 
         var stickLocations = [(new THREE.Vector2(20, 25)),
@@ -273,33 +277,46 @@ function levelAI(scene) {
             count: stickCount,
             componentType: componentType.stick,
             locations: stickLocations,
-            locationComponent: componentType.land
+            locationComponent: componentType.land,
+            componentType: componentType.stick
         }
 
         spawnAsset(duck);
         spawnAsset(foxes);
+        /*
         spawnAsset(hawks);
         spawnAsset(croqs);
         spawnAsset(ducklings);
         spawnAsset(sticks);
+        */
 
     }
 
     function spawnAsset(params) {
 
+        console.log("count: " + params.count);
+
         for (var i = 0; i < params.count; i++) {
 
-            var obj = assetPools[params.componentType][i];
-            actorsInLevel.push(obj);
+            //var obj = assetPools[params.componentType][i];
+            console.log(assetPools[params.componentType][i].asset);
+            actorsInLevel.push(assetPools[params.componentType][i]);
 
+            /*
             obj.asset.userData.location = params.locations[i];
             obj.asset.userData.locationComponent = params.locationComponent;
 
             placeAsset(obj.asset);
-
+            */
+            var loc = actorsInLevel.length - 1;
+            console.log("ACTOR: " + actorsInLevel[loc].asset);
+            actorsInLevel[loc].asset.userData.componentType = params.componentType;
+            actorsInLevel[loc].asset.userData.location = params.locations[i];
+            actorsInLevel[loc].asset.userData.locationComponent = params.locationComponent;
+            placeAsset(actorsInLevel[loc].asset);
             /*
             if (params.componentType === componentType.duckling) {
-                obj.asset.userData.callable = false;
+                obj.asset.userData.callabule = false;
             }
             */
         }
@@ -426,6 +443,16 @@ function levelAI(scene) {
         }
     }
 
+    function initAIs() {
+        for (var i = 0; i < actorsInLevel.length; i++) {
+            if (actorsInLevel[i].instance !== undefined &&
+                actorsInLevel[i].asset.userData.componentType != componentType.duck) {
+                console.log(actorsInLevel[i].asset.userData.componentType);
+                actorsInLevel[i].instance.init();
+            }
+        }
+    }
+
     function cleanup() {
         despawn();
         grid.reset();
@@ -469,6 +496,7 @@ function levelAI(scene) {
             //TO DO: replace this with better toggle for pause/continue, game start only for now
             if (!AIsActive) {
                 setAIActiveState(true);
+                initAIs();
                 AIsActive = true;
                 //grid.printGrid(15, 25, 20, 30);
             }

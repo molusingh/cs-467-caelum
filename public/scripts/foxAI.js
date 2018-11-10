@@ -11,7 +11,7 @@ function foxAI(scene, fox) {
     foxAI.prototype.toggleActive = toggleActive;
     foxAI.prototype.setActive = setActive;
     foxAI.prototype.update = update;
-    foxAI.prototype.update = setState;
+    foxAI.prototype.init = init;
 
     // private variables
     var active = false;
@@ -19,6 +19,7 @@ function foxAI(scene, fox) {
     fox.userData.currentDirection = 'down';
     var foxMover = new ObjectMover(fox);
     setState(foxState.pool);
+    fox.position.y = .1;
 
     /*
     -- subscribe
@@ -107,8 +108,8 @@ function foxAI(scene, fox) {
         if (!active) {
             return false;
         }
-        var squareType = grid.getSquareInfo(-5, -5);
-        //var squareType = grid.getSquareInfo(target.z, target.x);
+        //var squareType = grid.getSquareInfo(-5, -5);
+        var squareType = grid.getSquareInfo(target.z, target.x);
         switch (squareType) {
             case componentType.land:
             case componentType.duck:

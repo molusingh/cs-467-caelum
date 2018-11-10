@@ -205,7 +205,7 @@ function levelAI(scene) {
         //rest to zero
         var defaultLocation = new THREE.Vector2(20, 20);
 
-        var foxCount = 2;
+        var foxCount = 1;
         var hawkCount = 1;
         var croqCount = 5;
         var ducklingCount = 5;

@@ -173,14 +173,14 @@ function gameAI(scene, clock) {
         $('#scoreOutput').text(score);
         $('#levelOutput').text(currentLevel);
 
-        //console.log("gameState:" + currentState);
+        // console.log("gameState:" + currentState);
 
         if (currentState === gameState.level) {
             level.update();
             switch (level.getState()) {
                 case levelState.preGame:
                     sendSettings();
-                    //console.log("before BUILD");
+                    console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:

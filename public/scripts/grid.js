@@ -78,7 +78,7 @@ function board() {
             var location = actorTable[i].location;
 
             if (location.x === x && location.y === y) {
-                console.log("got here");
+                // console.log("got here");
                 return actorTable[i].actor;
             }
         }

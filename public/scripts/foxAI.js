@@ -5,20 +5,12 @@
 /* global findPath*/
 /* global bus*/
 /* global getRandomInt */
-function foxAI(scene, id) {
+function foxAI(scene, fox) {
 
     // public functions
     foxAI.prototype.toggleActive = toggleActive;
-    foxAI.prototype.setActive = setActive;
-    foxAI.prototype.update = update;
-    foxAI.prototype.init = init;
-    //foxAI.spawn = spawn;
-    //foxAI.prototype.spawn = spawn;
-    //foxAI.prototype.getActor = getActor;
 
     // private variables
-    var fox = scene.getObjectById(id);
-    var randId = getRandomInt(100);
     var active = false;
     var currentState;
     fox.userData.currentDirection = 'down';
@@ -38,11 +30,7 @@ function foxAI(scene, id) {
     -- ALL functions MUST be filtered through: if(!active) return;
     */
 
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * Math.floor(max));
-    }
-
-    function init() {
+    this.init = function () {
         fox.position.y = .1;
         var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         //bus.subscribe('moveFox', move);
@@ -55,12 +43,16 @@ function foxAI(scene, id) {
             return;
         }
 
-
         fox.position.z += 10;
         console.log(fox.uuid + "pos: " + fox.position.z);
         return;
+        /*
+        var directions = ['up', 'down', 'left', 'right'];
+        var random = getRandomInt(4) - 1;
+        foxMover[directions[random]]();
+        return;
 
-
+        */
 
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         //var test = new THREE.Vector3(25, 0, 25);
@@ -74,7 +66,9 @@ function foxAI(scene, id) {
             var random = getRandomInt(4) - 1;
             var directions = ['up', 'down', 'left', 'right'];
             if (isValid(fox.position, directions[random])) {
-                foxMover[directions[random]]();
+                fox.position.z += 10;
+                console.log(fox.uuid + "pos: " + fox.position.z);
+                //foxMover[directions[random]]();
             }
 
             return;
@@ -89,7 +83,7 @@ function foxAI(scene, id) {
     }
 
 
-    function setActive(value) {
+    this.setActive = function (value) {
         active = value;
     }
 
@@ -115,7 +109,7 @@ function foxAI(scene, id) {
         return fox;
     }
 
-    function update() {
+    this.update = function () {
 
         if (currentState === foxState.init) {
             init();

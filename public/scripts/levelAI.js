@@ -169,7 +169,7 @@ function levelAI(scene) {
                 asset.scale.z = params.scale;
                 asset.userData.componentType = params.componentType;
                 asset.position.y = asset.position.z + 10 * i;
-                //asset.position.y = -100;
+                asset.position.y = -100;
                 scene.add(asset);
 
             });
@@ -177,16 +177,12 @@ function levelAI(scene) {
             var instance;
             switch (params.componentType) {
                 case componentType.duck:
-                    assetPools[params.componentType].push(new playerControls(scene, asset));
+                    instance = new playerControls(scene, asset);
+                    assetPools[params.componentType].push(instance);
                     break;
                 case componentType.fox:
-                    console.log("Create ID: " + asset.id);
-                    //instance = new foxAI(scene, obj.asset);
-                    //assetPools[params.componentType].push(instance)
-                    assetPools[params.componentType].push(new foxAI(scene, asset.id));
-                    var last = assetPools[params.componentType].length - 1;
-                    console.log("In Instance UUID: " + assetPools[4][last].getActor().uuid);
-                    console.log("In Instance RandID: " + assetPools[4][last].getRandId());
+                    instance = new foxAI(scene, asset);
+                    assetPools[params.componentType].push(instance);
                     break;
                 case componentType.croq:
                     instance = new croqAI(scene, asset);
@@ -198,26 +194,8 @@ function levelAI(scene) {
                     instance = new ducklingAI(scene, asset);
                     break;
             }
-
-            //assetPools[params.componentType].push(instance);
-            var last = assetPools[params.componentType].length - 1;
-            if (last > 1) {
-
-                console.log("Pool1 UUID: " + assetPools[params.componentType][last - 1].getActor().uuid);
-                console.log("Pool1 UUID: " + assetPools[params.componentType][last - 1]);
-                console.log(assetPools[params.componentType][last - 1].getRandId());
-                console.log("Pool2 UUID: " + assetPools[params.componentType][last].getActor().uuid);
-                console.log("Pool2 UUID: " + assetPools[params.componentType][last]);
-                console.log(assetPools[params.componentType][last].getRandId());
-            }
         }
 
-        if (params.componentType === componentType.fox) {
-            for (var i = 0; i < 10; i++) {
-                console.log("fox actor: " + assetPools[4][i].getActor().uuid);
-                console.log(assetPools[4][i].getRandId());
-            }
-        }
     }
 
 

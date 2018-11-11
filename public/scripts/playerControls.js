@@ -4,8 +4,6 @@
 /* global soundLoader*/
 function playerControls(scene, duck) {
 
-    playerControls.prototype.spawn = spawn;
-
     /*
     -- subscribe
     speedboost (params: start, stop)
@@ -395,7 +393,7 @@ function playerControls(scene, duck) {
         active = value;
     }
 
-    function spawn() {
+    this.spawn = function () {
         grid.placeActor(duck);
     }
 

@@ -1,3 +1,17 @@
+/*
+-- subscribe
+stun
+-- check what's around you
+grid.getSquareInfo(x,z)
+-- find pray
+grid.getActorsInRadius(position(x,z), actorType)
+-- find next location 
+path.getPath(), could return either an array of points or just the next grid location
+-- must update grid after every move
+grid.updateActor(actorID)
+-- ALL functions MUST be filtered through: if(!active) return;
+*/
+
 /* global ObjectMover*/
 /* global clock*/
 /* global grid*/
@@ -5,118 +19,124 @@
 /* global findPath*/
 /* global bus*/
 /* global getRandomInt */
-function foxAI(scene, fox) {
+/* global foxState */
+function foxAI(scene, fox)
+{
 
     // public functions
-    foxAI.prototype.toggleActive = toggleActive;
+    this.toggleActive = toggleActive;
+    this.setActive = setActive;
+    this.update = update;
+    this.init = init;
+    this.spawn = spawn;
+    this.getRandId = getRandId;
+    this.getActor = getActor;
 
     // private variables
     var active = false;
-    var currentState;
-    fox.userData.currentDirection = 'down';
     var foxMover = new ObjectMover(fox);
+    var target = null;
+    var path = null;
+    var currentState = null;
+    var randomDirection = null;
+    fox.userData.currentDirection = 'down';
     setState(foxState.pool);
-    /*
-    -- subscribe
-    stun
-    -- check what's around you
-    grid.getSquareInfo(x,z)
-    -- find pray
-    grid.getActorsInRadius(position(x,z), actorType)
-    -- find next location 
-    path.getPath(), could return either an array of points or just the next grid location
-    -- must update grid after every move
-    grid.updateActor(actorID)
-    -- ALL functions MUST be filtered through: if(!active) return;
-    */
 
-    this.init = function () {
+    bus.subscribe('moveFox', move);
+
+    setInterval(move, 1000);
+
+    function spawn()
+    {
+
+        grid.placeActor(fox);
+    }
+
+    function getRandId()
+    {
+        return randId;
+    }
+
+    function getActor()
+    {
+        return fox;
+    }
+
+    function init()
+    {
         fox.position.y = .1;
-        var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
+        target = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         //bus.subscribe('moveFox', move);
-        setInterval(move, 1000);
+        // setInterval(move, 1000);
         console.log("INIT UUID: " + fox.uuid);
     }
 
-    function move() {
-        if (!active) {
+    function move()
+    {
+        if (!active)
+        {
             return;
         }
-
-        /*
-        fox.position.z += 10;
-        console.log(fox.uuid + "pos: " + fox.position.z);
-        return;
-        */
-        var directions = ['up', 'down', 'left', 'right'];
-        var random = getRandomInt(4) - 1;
-        foxMover[directions[random]]();
-        return;
-
-
-        duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-        //var test = new THREE.Vector3(25, 0, 25);
-        //var path = findPath(fox.position, test, isLegalMove);
-        var path = findPath(fox.position, duck.position, isLegalMove);
+        target = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
+        if (target) // if fuck found find path
+        {
+            path = findPath(fox.position, target.position, isLegalMove);
+        }
+        else
+        {
+            path = null;
+        }
+        console.log(path);
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");
-            //fox.position.z += 10;
-
-            var random = getRandomInt(4) - 1;
-            var directions = ['up', 'down', 'left', 'right'];
-            if (isValid(fox.position, directions[random])) {
-                fox.position.z += 10;
-                console.log(fox.uuid + "pos: " + fox.position.z);
-                //foxMover[directions[random]]();
+            var validRandomDirection = isValid(fox.position, randomDirection);
+            while (!validRandomDirection) // until direction is valid
+            {
+                var directions = ['up', 'down', 'left', 'right'];
+                randomDirection = directions[getRandomInt(4) - 1];
+                validRandomDirection = isValid(fox.position, randomDirection);
             }
-
+            foxMover[randomDirection]();
             return;
         }
-        if (path.move == 'stay') {
+        if (path.move == 'stay')
+        {
             return;
         }
-        if (path && isLegalMove(path.point)) {
+        if (path && isLegalMove(path.point))
+        {
             foxMover[path.move]();
         }
         grid.updateActor(fox);
     }
 
-
-    this.setActive = function (value) {
+    function setActive(value)
+    {
         active = value;
     }
 
-    function toggleActive() {
-        active = !active;
-    }
-
-    function setState(newState) {
+    function setState(newState)
+    {
         currentState = newState;
     }
 
-    //function spawn() {
-    this.spawn = function () {
-
-        grid.placeActor(fox);
+    function toggleActive()
+    {
+        active = !active;
     }
 
-    this.getRandId = function () {
-        return randId;
-    }
+    function update()
+    {
 
-    this.getActor = function () {
-        return fox;
-    }
-
-    this.update = function () {
-
-        if (currentState === foxState.init) {
+        if (currentState === foxState.init)
+        {
             init();
             currentState = foxState.alive;
         }
 
-        if (currentState === foxState.despawn) {
+        if (currentState === foxState.despawn)
+        {
             fox.position.y = -100;
             active = false;
             currentState = foxState.pool;
@@ -125,25 +145,30 @@ function foxAI(scene, fox) {
         var elapsedTime = clock.getElapsedTime();
     }
 
-    function isLegalMove(target) {
-        if (!active) {
+    function isLegalMove(target)
+    {
+        if (!active)
+        {
             return false;
         }
-        //var squareType = grid.getSquareInfo(-5, -5);
         var squareType = grid.getSquareInfo(target.z, target.x);
-        switch (squareType) {
+        switch (squareType)
+        {
             case componentType.land:
             case componentType.duck:
             case componentType.duckling:
             case componentType.egg:
+            case componentType.grass:
                 return true;
         }
         return false;
     }
 
-    function isValid(point, direction) {
+    function isValid(point, direction)
+    {
         var target = {};
-        switch (direction) {
+        switch (direction)
+        {
             case 'up':
                 target.z = point.z;
                 target.x = point.x - 10;
@@ -160,6 +185,8 @@ function foxAI(scene, fox) {
                 target.z = point.z - 10;
                 target.x = point.x;
                 break;
+            case null:
+                return false;
             default:
                 console.log('Invalid direction!');
                 return false;

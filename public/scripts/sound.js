@@ -11,139 +11,119 @@ bus.subscribe("invisibilitySound", playSound.invisiblity);
 bus.subscribe("speedBoostSound", playSound.speedBoost);
 bus.subscribe("superQuackSound", playSound.superQuack);
 
+bus.subscribe("stunSound", playSound.stunned);
+
 function soundLoader() {
 
 	var sound;
 
-	soundLoader.prototype.click = click;
-	soundLoader.prototype.move = move;
-	soundLoader.prototype.croqMove = croqMove;
-	soundLoader.prototype.hawkMove = hawkMove;
-	soundLoader.prototype.foxMove = foxMove;
-	soundLoader.prototype.fly = fly;	
-	soundLoader.prototype.jump = jump;
-	soundLoader.prototype.nest = nest;
-	soundLoader.prototype.call = call;
-	soundLoader.prototype.invisiblity = invisiblity;
-	soundLoader.prototype.speedBoost = speedBoost;
-	soundLoader.prototype.superQuack = superQuack;
-	soundLoader.prototype.crack = crack;
-	soundLoader.prototype.death = death;
-	soundLoader.prototype.duckling = duckling;
-	soundLoader.prototype.ducklingDeath = ducklingDeath;
-	soundLoader.prototype.enemyChomp = enemyChomp;
-	soundLoader.prototype.explode = explode;
-	soundLoader.prototype.notice = notice;
-	soundLoader.prototype.stunned = stunned;
-	soundLoader.prototype.levelEnd = levelEnd;
-
-	function click() {
+	this.click = function () {
 		sound = new Audio("./sound/click.mp3");
 		sound.play();
 	}
 
 	// movement
 
-	function move() {
+	this.move = function() {
 		sound = new Audio("./sound/duckMove.mp3");
 		sound.play();
 	}
 
-	function croqMove() {
+	this.croqMove = function() {
 		sound = new Audio("./sound/croqMove.mp3");
 		sound.play();
 	}
 
-	function foxMove() {
+	this.foxMove = function() {
 		sound = new Audio("./sound/foxMove.mp3");
 		sound.play();
 	}
 
-	function hawkMove() {
+	this.hawkMove = function() {
 		sound = new Audio("./sound/hawkMove.mp3");
 		sound.play();
 	}
 
 	// skills
 
-	function fly() {
+	this.fly = function() {
 		sound = new Audio ("./sound/fly.mp3");
 		sound.play();
 	}
 
-	function jump() {
+	this.jump = function() {
 		sound = new Audio("./sound/jump.mp3");
 		sound.play();
 	}
 
-	function nest() {
+	this.nest = function() {
 		sound = new Audio("./sound/nest.mp3");
 		sound.play();
 	}
 
-	function call() {
+	this.call = function() {
 		sound = new Audio("./sound/call.mp3");
 		sound.play();
 	}
 
-	function invisiblity() {
+	this.invisiblity = function() {
 		sound = new Audio("./sound/invisiblity.mp3");
 		sound.play();
 	}
 
-	function speedBoost() {
+	this.speedBoost = function() {
 		sound = new Audio("./sound/speedBoost.mp3");
 		sound.play();
 	}
 
-	function superQuack() {
+	this.superQuack = function() {
 		sound = new Audio("./sound/superQuack.mp3");
 		sound.play();
 	}
 
 	// misc
 
-	function crack() {
+	this.crack = function() {
 		sound = new Audio("./sound/crack.mp3");
 		sound.play();
 	}
 
-	function death() {
+	this.death = function() {
 		sound = new Audio("./sound/death.mp3");
 		sound.play();
 	}
 
-	function duckling() {
+	this.duckling = function() {
 		sound = new Audio("./sound/duckling.mp3");
 		sound.play();
 	}
 
-	function ducklingDeath() {
+	this.ducklingDeath = function() {
 		sound = new Audio("./sound/ducklingDeath.mp3");
 		sound.play();
 	}
 
-	function enemyChomp() {
+	this.enemyChomp = function() {
 		sound = new Audio("./sound/enemyChomp.mp3");
 		sound.play();
 	}
 
-	function explode() {
+	this.explode = function() {
 		sound = new Audio("./sound/explode.mp3");
 		sound.play();
 	}
 	
-	function notice() {
+	this.notice = function() {
 		sound = new Audio("./sound/notice.mp3");
 		sound.play();
 	}
 
-	function stunned() {
+	this.stunned = function() {
 		sound = new Audio("./sound/stunned.mp3");
 		sound.play();
-	}
+		}
 
-	function levelEnd() {
+	this.levelEnd = function() {
 		sound = new Audio("./sound/levelEnd.mp3");
 		sound.play();
 	}

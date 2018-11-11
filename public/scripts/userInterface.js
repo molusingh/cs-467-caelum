@@ -81,10 +81,6 @@ function UserInterface()
 	$("#menu").click(getPublishFunction("clickSound"));
 
 	// skill sounds
-	$("#flyButton").click(getPublishFunction("flySound"));
-	// jump sound published in playercontrols.jumpSkill
-	$("#callButton").click(getPublishFunction("callSound"));
-	$("#nestButton").click(getPublishFunction("nestSound"));
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
 	$("#speedButton").click(getPublishFunction("speedBoostSound"));
 	$("#quackButton").click(getPublishFunction("superQuackSound"));
@@ -193,7 +189,6 @@ function UserInterface()
 
 			case 51: // 3
 				bus.publish("call");
-				bus.publish("callSound");
 				break;
 
 			case 52: // 4
@@ -208,7 +203,7 @@ function UserInterface()
 
 			case 69: // E
 				bus.publish("quackSkillRequested");
-				bus.publish("superQuackSound");
+				// bus.publish("superQuackSound");
 				break;
 
 			case 82: // R

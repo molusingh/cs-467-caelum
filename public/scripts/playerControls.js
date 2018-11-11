@@ -87,7 +87,7 @@ function playerControls(scene, duck) {
     // skill sounds
     $("#invisibilityButton").click(playSound.invisiblity);
     $("#speedButton").click(playSound.speedBoost);
-    $("#quackButton").click(playSound.superQuack);
+
 
     // action sounds
     $("#flyButton").click(playSound.fly);
@@ -219,8 +219,13 @@ function playerControls(scene, duck) {
             return;
         }
 
-        if (grid.updateDucklingsInRadius === true) {
-            console.log("duckling AI follow function here");
+        // don't check anything if duck is in water or air
+        if (duck.userData.inWater === false && duck.userData.inAir === false) {
+
+            if (grid.updateDucklingsInRadius === true) {
+                console.log("duckling AI follow function here");
+                bus.publish("callSound");
+            }
         }
     }
 
@@ -276,6 +281,7 @@ function playerControls(scene, duck) {
 
         if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
             localStun = true;
+            bus.publish("stunSound");
             var elapsedTime = clock.getElapsedTime();
             beginStun = elapsedTime;
 

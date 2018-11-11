@@ -64,7 +64,7 @@ function croqAI(scene, croq)
         target = grid.getActorsInRadius(croq.position, 100, componentType.duck)[0];
         bus.subscribe('movecroq', move);
         setInterval(move, 1000);
-        console.log("INIT UUID: " + croq.uuid);
+        // console.log("INIT UUID: " + croq.uuid);
     }
 
     function move()
@@ -82,7 +82,6 @@ function croqAI(scene, croq)
         {
             path = null;
         }
-        console.log(path);
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");

@@ -64,7 +64,7 @@ function hawkAI(scene, hawk)
         target = grid.getActorsInRadius(hawk.position, 100, componentType.duck)[0];
         bus.subscribe('movehawk', move);
         setInterval(move, 1000);
-        console.log("INIT UUID: " + hawk.uuid);
+        // console.log("INIT UUID: " + hawk.uuid);
     }
 
     function move()
@@ -82,7 +82,6 @@ function hawkAI(scene, hawk)
         {
             path = null;
         }
-        console.log(path);
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");

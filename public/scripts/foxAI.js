@@ -64,7 +64,7 @@ function foxAI(scene, fox)
         target = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         bus.subscribe('moveFox', move);
         setInterval(move, 1000);
-        console.log("INIT UUID: " + fox.uuid);
+        // console.log("INIT UUID: " + fox.uuid);
     }
 
     function move()

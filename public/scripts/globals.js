@@ -15,13 +15,13 @@ Object.freeze(levelState);
 var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4, "won": 5 };
 Object.freeze(playerState);
 
-var ducklingState = { "init": 1, "ready": 2, "egg": 3, "duckling": 4, "dead": 5 };
+var ducklingState = { "init": 1, "pool": 2, "egg": 3, "duckling": 4, "dead": 5, "despawn": 6 };
 Object.freeze(ducklingState);
 
-var hawkState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
+var hawkState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };
 Object.freeze(hawkState);
 
-var croqState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
+var croqState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };
 Object.freeze(croqState);
 
 var foxState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };

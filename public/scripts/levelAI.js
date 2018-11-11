@@ -109,7 +109,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.croq,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
 
         var egg = scene.getObjectByName("egg");
         var eggSize = 10;
@@ -119,7 +119,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.egg,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
 
         var duckling = scene.getObjectByName("duckling");
         var ducklingSize = 10;
@@ -129,7 +129,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.duckling,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
 
         var hawk = scene.getObjectByName("hawk");
         var hawkSize = 10;
@@ -139,7 +139,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.hawk,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
         var stickSize = 10;
@@ -149,7 +149,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.stick,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
     }
 
     function createAssetPool(params) {
@@ -178,11 +178,9 @@ function levelAI(scene) {
             switch (params.componentType) {
                 case componentType.duck:
                     instance = new playerControls(scene, asset);
-                    assetPools[params.componentType].push(instance);
                     break;
                 case componentType.fox:
                     instance = new foxAI(scene, asset);
-                    assetPools[params.componentType].push(instance);
                     break;
                 case componentType.croq:
                     instance = new croqAI(scene, asset);
@@ -194,6 +192,8 @@ function levelAI(scene) {
                     instance = new ducklingAI(scene, asset);
                     break;
             }
+
+            assetPools[params.componentType].push(instance);
         }
 
     }
@@ -205,9 +205,9 @@ function levelAI(scene) {
         var defaultLocation = new THREE.Vector2(20, 20);
 
         var foxCount = 2;
-        var hawkCount = 0;
-        var croqCount = 0;
-        var ducklingCount = 0;
+        var hawkCount = 1;
+        var croqCount = 5;
+        var ducklingCount = 4;
         var stickCount = 0;
         var duckCount = 1;
 
@@ -282,12 +282,11 @@ function levelAI(scene) {
 
         spawnAsset(duck);
         spawnAsset(foxes);
-        /*
         spawnAsset(hawks);
         spawnAsset(croqs);
-        spawnAsset(ducklings);
-        spawnAsset(sticks);
-        */
+        //spawnAsset(ducklings);
+        //TO DO: add basic instance class
+        //spawnAsset(sticks);
 
     }
 
@@ -299,14 +298,15 @@ function levelAI(scene) {
 
             var pos = actorsInLevel.length - 1;
 
+            //TO DO: could also move the spawning back to here from AIs
             actorsInLevel[pos].getActor().userData.locationComponent = params.locationComponent;
             actorsInLevel[pos].getActor().userData.location = params.locations[i];
 
-            console.log("Spawn UUID: " + actorsInLevel[pos].getActor().uuid)
             actorsInLevel[pos].spawn();
 
         }
     }
+
 
     function despawn() {
         for (var i = 0; i < actorsInLevel.length; i++) {
@@ -326,7 +326,6 @@ function levelAI(scene) {
         levelAssetsLoaded = true;
 
     }
-
 
 
     function setState(state) {
@@ -349,7 +348,6 @@ function levelAI(scene) {
         for (var i = 0; i < actorsInLevel.length; i++) {
             if (actorsInLevel[i] !== undefined &&
                 actorsInLevel[i].getActor().userData.componentType !== componentType.duck) {
-                //console.log(actorsInLevel[i].asset.userData.componentType);
                 actorsInLevel[i].init();
             }
         }
@@ -400,7 +398,6 @@ function levelAI(scene) {
                 setAIActiveState(true);
                 initAIs();
                 AIsActive = true;
-                //grid.printGrid(15, 25, 20, 30);
             }
 
             //get duck's state

@@ -212,7 +212,7 @@ function levelAI(scene) {
         var duckCount = 1;
 
         //TO DO: add rotation, not always down, will affect object mover
-        var duckLocations = [(new THREE.Vector2(25, 25))]
+        var duckLocations = [(new THREE.Vector2(20, 20))]
         var duck = {
             count: duckCount,
             locations: duckLocations,

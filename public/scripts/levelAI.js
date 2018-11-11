@@ -15,7 +15,6 @@ function levelAI(scene) {
     var score;
     var actorsInLevel = [];
     var assetPools = init2DArray(13);
-    var originals = {};
     var player;
     var loader;
 
@@ -97,7 +96,7 @@ function levelAI(scene) {
         params = {
             count: foxSize,
             original: fox,
-            scale: 10,
+            scale: 12,
             componentType: componentType.fox,
         }
         createAssetPool(params);
@@ -110,7 +109,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.croq,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var egg = scene.getObjectByName("egg");
         var eggSize = 10;
@@ -120,7 +119,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.egg,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var duckling = scene.getObjectByName("duckling");
         var ducklingSize = 10;
@@ -130,7 +129,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.duckling,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var hawk = scene.getObjectByName("hawk");
         var hawkSize = 10;
@@ -140,7 +139,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.hawk,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
         var stickSize = 10;
@@ -150,66 +149,66 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.stick,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
     }
 
     function createAssetPool(params) {
 
         for (var i = 0; i < params.count; i++) {
 
-            var obj = {};
-            obj.asset = new THREE.Object3D();
+            var asset = new THREE.Object3D();
 
             params.original.traverse(function (child) {
 
                 if (child instanceof THREE.Mesh) {
                     var childClone = child.clone();
-                    obj.asset.add(childClone);
+                    asset.add(childClone);
                 }
-                obj.asset.scale.x = params.scale;
-                obj.asset.scale.y = params.scale;
-                obj.asset.scale.z = params.scale;
-                obj.asset.userData.componentType = params.componentType;
-                obj.asset.position.y = -100;
-                scene.add(obj.asset);
+                asset.scale.x = params.scale;
+                asset.scale.y = params.scale;
+                asset.scale.z = params.scale;
+                asset.userData.componentType = params.componentType;
+                asset.position.y = asset.position.z + 10 * i;
+                asset.position.y = -100;
+                scene.add(asset);
 
             });
 
             var instance;
             switch (params.componentType) {
                 case componentType.duck:
-                    instance = new playerControls(scene, obj.asset);
+                    instance = new playerControls(scene, asset);
+                    assetPools[params.componentType].push(instance);
                     break;
                 case componentType.fox:
-                    instance = new foxAI(scene, obj.asset);
+                    instance = new foxAI(scene, asset);
+                    assetPools[params.componentType].push(instance);
                     break;
                 case componentType.croq:
-                    instance = new croqAI(scene, obj.asset);
+                    instance = new croqAI(scene, asset);
                     break;
                 case componentType.hawk:
-                    instance = new hawkAI(scene, obj.asset);
+                    instance = new hawkAI(scene, asset);
                     break;
                 case componentType.duckling:
-                    instance = new ducklingAI(scene, obj.asset);
+                    instance = new ducklingAI(scene, asset);
                     break;
             }
-
-            assetPools[params.componentType].push({ instance: instance, asset: obj.asset });
-            //console.log(assetPools[params.componentType][i]);
         }
+
     }
 
 
     function populateAssets() {
 
-        //rest to zero
+        //rest to zer
         var defaultLocation = new THREE.Vector2(20, 20);
 
-        var foxCount = 1;
-        var hawkCount = 1;
-        var croqCount = 5;
-        var ducklingCount = 5;
-        var stickCount = 4;
+        var foxCount = 2;
+        var hawkCount = 0;
+        var croqCount = 0;
+        var ducklingCount = 0;
+        var stickCount = 0;
         var duckCount = 1;
 
         //TO DO: add rotation, not always down, will affect object mover
@@ -226,7 +225,8 @@ function levelAI(scene) {
             count: foxCount,
             componentType: componentType.fox,
             locations: foxLocations,
-            locationComponent: componentType.land
+            locationComponent: componentType.land,
+            componentType: componentType.fox
         }
 
         var hawkLocations = [(new THREE.Vector2(27, 25))]
@@ -235,7 +235,8 @@ function levelAI(scene) {
             componentType: componentType.hawk,
             locations: hawkLocations,
             //TO DO: air i.e. special case
-            locationComponent: componentType.air
+            locationComponent: componentType.air,
+            componentType: componentType.hawk
         }
 
         var croqLocations = [(new THREE.Vector2(27, 25)),
@@ -248,7 +249,8 @@ function levelAI(scene) {
             count: croqCount,
             componentType: componentType.croq,
             locations: croqLocations,
-            locationComponent: componentType.water
+            locationComponent: componentType.water,
+            componentType: componentType.croq
         }
 
         var ducklingLocations = [(new THREE.Vector2(20, 25)),
@@ -261,7 +263,8 @@ function levelAI(scene) {
             count: ducklingCount,
             componentType: componentType.duckling,
             locations: ducklingLocations,
-            locationComponent: componentType.land
+            locationComponent: componentType.land,
+            componentType: componentType.duckling
         }
 
         var stickLocations = [(new THREE.Vector2(20, 25)),
@@ -273,15 +276,18 @@ function levelAI(scene) {
             count: stickCount,
             componentType: componentType.stick,
             locations: stickLocations,
-            locationComponent: componentType.land
+            locationComponent: componentType.land,
+            componentType: componentType.stick
         }
 
         spawnAsset(duck);
         spawnAsset(foxes);
+        /*
         spawnAsset(hawks);
         spawnAsset(croqs);
         spawnAsset(ducklings);
         spawnAsset(sticks);
+        */
 
     }
 
@@ -289,27 +295,22 @@ function levelAI(scene) {
 
         for (var i = 0; i < params.count; i++) {
 
-            var obj = assetPools[params.componentType][i];
-            actorsInLevel.push(obj);
+            actorsInLevel.push(assetPools[params.componentType][i]);
 
-            obj.asset.userData.location = params.locations[i];
-            obj.asset.userData.locationComponent = params.locationComponent;
+            var pos = actorsInLevel.length - 1;
 
-            placeAsset(obj.asset);
+            actorsInLevel[pos].getActor().userData.locationComponent = params.locationComponent;
+            actorsInLevel[pos].getActor().userData.location = params.locations[i];
 
-            /*
-            if (params.componentType === componentType.duckling) {
-                obj.asset.userData.callable = false;
-            }
-            */
+            console.log("Spawn UUID: " + actorsInLevel[pos].getActor().uuid)
+            actorsInLevel[pos].spawn();
+
         }
     }
 
     function despawn() {
-        for (var i = 0; i < assetPools.length; i++) {
-            for (var j = 0; j < assetPools[i].length; j++) {
-                assetPools[i][j].asset.position.y = -100;
-            }
+        for (var i = 0; i < actorsInLevel.length; i++) {
+            actorsInLevel[i].getActor().position.y = -100;
         }
     }
 
@@ -327,92 +328,6 @@ function levelAI(scene) {
     }
 
 
-    function placeAsset(asset) {
-
-        //console.log("obj: " + assetObj);
-
-        //var asset = assetObj.asset;
-        console.log("asset: " + asset);
-        var location = asset.userData.location;
-        var locationComponent = asset.userData.locationComponent;
-
-        var testLocation = new THREE.Vector2(1, 1);
-        var validLocation = false;
-        var assetLocation;
-
-        function findValidSquare() {
-
-            var size = new THREE.Vector2(1, 1);
-            validLocation = grid.blockIsComponent(size, location, locationComponent);
-            if (validLocation === true) {
-                return location;
-            }
-
-            var radius = 1;
-
-            while (validLocation === false) {
-                for (var i = location.x - radius; i <= location.x + radius; i++) {
-                    testLocation.x = i;
-                    testLocation.y = location.y + radius;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-
-                for (var i = location.x - radius; i <= location.x + radius; i++) {
-                    testLocation.x = i;
-                    testLocation.y = location.y - radius;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-                for (var i = location.y - radius; i <= location.y + radius; i++) {
-                    testLocation.x = location.x + radius;
-                    testLocation.y = i;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-                for (var i = location.y - radius; i <= location.y + radius; i++) {
-                    testLocation.x = location.x - radius;
-                    testLocation.y = i;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-                radius++;
-                if (radius > 40) {
-                    break;
-                }
-            }
-
-        }
-
-        var assetLocation = findValidSquare();
-
-        if (validLocation === false) {
-            console.log("failed: " + asset);
-            return;
-        }
-
-        var originY = -200;
-        var originX = 200;
-
-        var y = originY + (assetLocation.y * 10) - 5;
-        var x = originX - (assetLocation.x * 10) + 5;
-
-        asset.position.z = x;
-        asset.position.x = y;
-        asset.position.y = .1;
-
-        grid.addActor(asset);
-        //grid.printGrid(0, 8, 0, 8);
-
-    }
 
     function setState(state) {
         currentState = state;
@@ -424,8 +339,18 @@ function levelAI(scene) {
 
     function setAIActiveState(state) {
         for (var i = 0; i < actorsInLevel.length; i++) {
-            if (actorsInLevel[i].instance !== undefined) {
-                actorsInLevel[i].instance.setActive(state);
+            if (actorsInLevel[i] !== undefined) {
+                actorsInLevel[i].setActive(state);
+            }
+        }
+    }
+
+    function initAIs() {
+        for (var i = 0; i < actorsInLevel.length; i++) {
+            if (actorsInLevel[i] !== undefined &&
+                actorsInLevel[i].getActor().userData.componentType !== componentType.duck) {
+                //console.log(actorsInLevel[i].asset.userData.componentType);
+                actorsInLevel[i].init();
             }
         }
     }
@@ -458,8 +383,7 @@ function levelAI(scene) {
         if (currentState === levelState.build) {
             if (!levelAssetsLoaded) {
                 buildLevel();
-                console.log("instanCE: " + actorsInLevel[0].instance);
-                playerAI = actorsInLevel[0].instance;
+                playerAI = actorsInLevel[0];
             }
             else {
                 levelAssetsLoaded = false;
@@ -474,8 +398,9 @@ function levelAI(scene) {
             //TO DO: replace this with better toggle for pause/continue, game start only for now
             if (!AIsActive) {
                 setAIActiveState(true);
+                initAIs();
                 AIsActive = true;
-                grid.printGrid(15, 25, 20, 30);
+                //grid.printGrid(15, 25, 20, 30);
             }
 
             //get duck's state
@@ -489,8 +414,8 @@ function levelAI(scene) {
             }
             else {
                 for (var i = 0; i < actorsInLevel.length; i++) {
-                    if (actorsInLevel[i].instance !== undefined) {
-                        actorsInLevel[i].instance.update();
+                    if (actorsInLevel[i] !== undefined) {
+                        actorsInLevel[i].update();
                     }
                 }
             }

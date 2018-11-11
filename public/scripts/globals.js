@@ -24,7 +24,7 @@ Object.freeze(hawkState);
 var croqState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
 Object.freeze(croqState);
 
-var foxState = { "init": 1, "ready": 2, "alive": 3, "stun": 4 };
+var foxState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };
 Object.freeze(foxState);
 
 var componentType = {

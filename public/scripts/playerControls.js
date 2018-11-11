@@ -35,6 +35,7 @@ function playerControls(scene, duck) {
     // console.log(duck.userData.currentDirection);
     duck.userData.inAir = false;
     duck.userData.inWater = false;
+    duck.position.y = .1;
 
     var maxPos = 185;
 
@@ -193,7 +194,7 @@ function playerControls(scene, duck) {
         }
     }
 
-    function callSkill () {
+    function callSkill() {
         if (grid.updateDucklingsInRadius === true) {
             console.log("duckling AI follow function here");
         }
@@ -211,7 +212,7 @@ function playerControls(scene, duck) {
                 var shadowMat = new THREE.ShadowMaterial({
                     color: 0xff0000, transparent: true, opacity: 0.5
                 });
-                    //load nest 
+                //load nest 
                 var stickLoader = new THREE.FBXLoader(manager);
                 stickLoader.load('./geo/stick.fbx', function (object) {
                     object.traverse(function (child) {
@@ -292,11 +293,11 @@ function playerControls(scene, duck) {
             foxes[0].userData.stunStatus = false;
             foxes.pop();
         }
-        while (hawks.length > 0) { 
+        while (hawks.length > 0) {
             hawks[0].userData.stunStatus = false;
             hawks.pop();
         }
-        while (croqs.length > 0) { 
+        while (croqs.length > 0) {
             croqs[0].userData.stunStatus = false;
             croqs.pop();
         }
@@ -390,6 +391,14 @@ function playerControls(scene, duck) {
 
     this.setActive = function (value) {
         active = value;
+    }
+
+    this.spawn = function () {
+        grid.placeActor(duck);
+    }
+
+    this.getActor = function () {
+        return duck;
     }
 
 

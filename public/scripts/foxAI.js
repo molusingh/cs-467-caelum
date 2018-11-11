@@ -5,22 +5,17 @@
 /* global findPath*/
 /* global bus*/
 /* global getRandomInt */
-function foxAI(scene, fox)
-{
+function foxAI(scene, fox) {
 
     // public functions
     foxAI.prototype.toggleActive = toggleActive;
-    foxAI.prototype.setActive = setActive;
-    foxAI.prototype.update = update;
 
     // private variables
     var active = false;
-    var foxMover = new ObjectMover(fox);
-    var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-    var randomDirection = null;
+    var currentState;
     fox.userData.currentDirection = 'down';
-
-
+    var foxMover = new ObjectMover(fox);
+    setState(foxState.pool);
     /*
     -- subscribe
     stun
@@ -35,77 +30,108 @@ function foxAI(scene, fox)
     -- ALL functions MUST be filtered through: if(!active) return;
     */
 
-    // setInterval(move, 1000);
+    this.init = function () {
+        fox.position.y = .1;
+        var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
+        //bus.subscribe('moveFox', move);
+        setInterval(move, 1000);
+        console.log("INIT UUID: " + fox.uuid);
+    }
 
-    bus.subscribe('moveFox', move);
-
-    setInterval(move, 1000);
-
-    function move()
-    {
-        if (!active)
-        {
+    function move() {
+        if (!active) {
             return;
         }
+
+        /*
+        fox.position.z += 10;
+        console.log(fox.uuid + "pos: " + fox.position.z);
+        return;
+        */
+        var directions = ['up', 'down', 'left', 'right'];
+        var random = getRandomInt(4) - 1;
+        foxMover[directions[random]]();
+        return;
+
+
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-        var path = null;
-        if (duck)
-        {
-            path = findPath(fox.position, duck.position, isLegalMove);
-        }
+        //var test = new THREE.Vector3(25, 0, 25);
+        //var path = findPath(fox.position, test, isLegalMove);
+        var path = findPath(fox.position, duck.position, isLegalMove);
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");
-            var validRandomDirection = isValid(fox.position, randomDirection);
-            while (!validRandomDirection) // until direction is valid
-            {
-                var directions = ['up', 'down', 'left', 'right'];
-                randomDirection = directions[getRandomInt(4) - 1];
-                validRandomDirection = isValid(fox.position, randomDirection);
+            //fox.position.z += 10;
+
+            var random = getRandomInt(4) - 1;
+            var directions = ['up', 'down', 'left', 'right'];
+            if (isValid(fox.position, directions[random])) {
+                fox.position.z += 10;
+                console.log(fox.uuid + "pos: " + fox.position.z);
+                //foxMover[directions[random]]();
             }
-            foxMover[randomDirection]();
+
             return;
         }
-        if (path.move == 'stay')
-        {
+        if (path.move == 'stay') {
             return;
         }
-        if (path && isLegalMove(path.point))
-        {
+        if (path && isLegalMove(path.point)) {
             foxMover[path.move]();
         }
         grid.updateActor(fox);
     }
 
-    function setActive(value)
-    {
+
+    this.setActive = function (value) {
         active = value;
     }
 
-    function toggleActive()
-    {
+    function toggleActive() {
         active = !active;
     }
 
-    function update()
-    {
-        if (!active)
-        {
-            return;
+    function setState(newState) {
+        currentState = newState;
+    }
+
+    //function spawn() {
+    this.spawn = function () {
+
+        grid.placeActor(fox);
+    }
+
+    this.getRandId = function () {
+        return randId;
+    }
+
+    this.getActor = function () {
+        return fox;
+    }
+
+    this.update = function () {
+
+        if (currentState === foxState.init) {
+            init();
+            currentState = foxState.alive;
+        }
+
+        if (currentState === foxState.despawn) {
+            fox.position.y = -100;
+            active = false;
+            currentState = foxState.pool;
         }
 
         var elapsedTime = clock.getElapsedTime();
     }
 
-    function isLegalMove(target)
-    {
-        if (!active)
-        {
+    function isLegalMove(target) {
+        if (!active) {
             return false;
         }
+        //var squareType = grid.getSquareInfo(-5, -5);
         var squareType = grid.getSquareInfo(target.z, target.x);
-        switch (squareType)
-        {
+        switch (squareType) {
             case componentType.land:
             case componentType.duck:
             case componentType.duckling:
@@ -115,11 +141,9 @@ function foxAI(scene, fox)
         return false;
     }
 
-    function isValid(point, direction)
-    {
+    function isValid(point, direction) {
         var target = {};
-        switch (direction)
-        {
+        switch (direction) {
             case 'up':
                 target.z = point.z;
                 target.x = point.x - 10;
@@ -136,8 +160,6 @@ function foxAI(scene, fox)
                 target.z = point.z - 10;
                 target.x = point.x;
                 break;
-            case null:
-                return false;
             default:
                 console.log('Invalid direction!');
                 return false;

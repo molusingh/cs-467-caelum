@@ -82,7 +82,6 @@ function foxAI(scene, fox)
         {
             path = null;
         }
-        console.log(path);
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");

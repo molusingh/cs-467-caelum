@@ -5,17 +5,20 @@
 /* global findPath*/
 /* global bus*/
 /* global getRandomInt */
-function foxAI(scene, fox) {
+function foxAI(scene, id) {
 
     // public functions
     foxAI.prototype.toggleActive = toggleActive;
     foxAI.prototype.setActive = setActive;
     foxAI.prototype.update = update;
     foxAI.prototype.init = init;
-    foxAI.prototype.spawn = spawn;
-    foxAI.prototype.getActor = getActor;
+    //foxAI.spawn = spawn;
+    //foxAI.prototype.spawn = spawn;
+    //foxAI.prototype.getActor = getActor;
 
     // private variables
+    var fox = scene.getObjectById(id);
+    var randId = getRandomInt(100);
     var active = false;
     var currentState;
     fox.userData.currentDirection = 'down';
@@ -35,12 +38,16 @@ function foxAI(scene, fox) {
     -- ALL functions MUST be filtered through: if(!active) return;
     */
 
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
     function init() {
         fox.position.y = .1;
         var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-        bus.subscribe('moveFox', move);
+        //bus.subscribe('moveFox', move);
         setInterval(move, 1000);
-        console.log("INST UUID: " + fox.uuid);
+        console.log("INIT UUID: " + fox.uuid);
     }
 
     function move() {
@@ -48,10 +55,11 @@ function foxAI(scene, fox) {
             return;
         }
 
-        /*
+
         fox.position.z += 10;
+        console.log(fox.uuid + "pos: " + fox.position.z);
         return;
-        */
+
 
 
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
@@ -93,11 +101,17 @@ function foxAI(scene, fox) {
         currentState = newState;
     }
 
-    function spawn() {
+    //function spawn() {
+    this.spawn = function () {
+
         grid.placeActor(fox);
     }
 
-    function getActor() {
+    this.getRandId = function () {
+        return randId;
+    }
+
+    this.getActor = function () {
         return fox;
     }
 

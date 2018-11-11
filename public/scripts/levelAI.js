@@ -156,45 +156,67 @@ function levelAI(scene) {
 
         for (var i = 0; i < params.count; i++) {
 
-            var obj = {};
-            obj.asset = new THREE.Object3D();
+            var asset = new THREE.Object3D();
 
             params.original.traverse(function (child) {
 
                 if (child instanceof THREE.Mesh) {
                     var childClone = child.clone();
-                    obj.asset.add(childClone);
+                    asset.add(childClone);
                 }
-                obj.asset.scale.x = params.scale;
-                obj.asset.scale.y = params.scale;
-                obj.asset.scale.z = params.scale;
-                obj.asset.userData.componentType = params.componentType;
-                obj.asset.position.y = -100;
-                scene.add(obj.asset);
+                asset.scale.x = params.scale;
+                asset.scale.y = params.scale;
+                asset.scale.z = params.scale;
+                asset.userData.componentType = params.componentType;
+                asset.position.y = asset.position.z + 10 * i;
+                //asset.position.y = -100;
+                scene.add(asset);
 
             });
 
             var instance;
             switch (params.componentType) {
                 case componentType.duck:
-                    instance = new playerControls(scene, obj.asset);
+                    assetPools[params.componentType].push(new playerControls(scene, asset));
                     break;
                 case componentType.fox:
-                    console.log("UUID: " + obj.asset.uuid);
-                    instance = new foxAI(scene, obj.asset);
+                    console.log("Create ID: " + asset.id);
+                    //instance = new foxAI(scene, obj.asset);
+                    //assetPools[params.componentType].push(instance)
+                    assetPools[params.componentType].push(new foxAI(scene, asset.id));
+                    var last = assetPools[params.componentType].length - 1;
+                    console.log("In Instance UUID: " + assetPools[4][last].getActor().uuid);
+                    console.log("In Instance RandID: " + assetPools[4][last].getRandId());
                     break;
                 case componentType.croq:
-                    instance = new croqAI(scene, obj.asset);
+                    instance = new croqAI(scene, asset);
                     break;
                 case componentType.hawk:
-                    instance = new hawkAI(scene, obj.asset);
+                    instance = new hawkAI(scene, asset);
                     break;
                 case componentType.duckling:
-                    instance = new ducklingAI(scene, obj.asset);
+                    instance = new ducklingAI(scene, asset);
                     break;
             }
 
-            assetPools[params.componentType].push(instance)
+            //assetPools[params.componentType].push(instance);
+            var last = assetPools[params.componentType].length - 1;
+            if (last > 1) {
+
+                console.log("Pool1 UUID: " + assetPools[params.componentType][last - 1].getActor().uuid);
+                console.log("Pool1 UUID: " + assetPools[params.componentType][last - 1]);
+                console.log(assetPools[params.componentType][last - 1].getRandId());
+                console.log("Pool2 UUID: " + assetPools[params.componentType][last].getActor().uuid);
+                console.log("Pool2 UUID: " + assetPools[params.componentType][last]);
+                console.log(assetPools[params.componentType][last].getRandId());
+            }
+        }
+
+        if (params.componentType === componentType.fox) {
+            for (var i = 0; i < 10; i++) {
+                console.log("fox actor: " + assetPools[4][i].getActor().uuid);
+                console.log(assetPools[4][i].getRandId());
+            }
         }
     }
 
@@ -204,7 +226,7 @@ function levelAI(scene) {
         //rest to zer
         var defaultLocation = new THREE.Vector2(20, 20);
 
-        var foxCount = 1;
+        var foxCount = 2;
         var hawkCount = 0;
         var croqCount = 0;
         var ducklingCount = 0;
@@ -293,8 +315,6 @@ function levelAI(scene) {
 
     function spawnAsset(params) {
 
-        console.log("count: " + params.count);
-
         for (var i = 0; i < params.count; i++) {
 
             actorsInLevel.push(assetPools[params.componentType][i]);
@@ -304,6 +324,7 @@ function levelAI(scene) {
             actorsInLevel[pos].getActor().userData.locationComponent = params.locationComponent;
             actorsInLevel[pos].getActor().userData.location = params.locations[i];
 
+            console.log("Spawn UUID: " + actorsInLevel[pos].getActor().uuid)
             actorsInLevel[pos].spawn();
 
         }

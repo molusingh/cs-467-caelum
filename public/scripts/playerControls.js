@@ -27,6 +27,8 @@ function playerControls(scene, duck) {
     -- ALL functions MUST be filtered through: if(!active) return;
     */
 
+    var nestBuilder = new assetGen(scene); 
+
     //when game is paused
     var active = false;
     var currentState = playerState.init;
@@ -91,9 +93,12 @@ function playerControls(scene, duck) {
     $("#flyButton").click(playSound.fly);
     $("#jumpButton").click(playSound.jump);
     $("#callButton").click(playSound.call);
-    $("#nestButton").click(playSound.nest);
 
     function duckUp(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateUp");
         var isLegal;
         isLegal = isLegalMove(duck);
@@ -104,6 +109,10 @@ function playerControls(scene, duck) {
     }
 
     function duckDown(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateDown");
         var isLegal;
         isLegal = isLegalMove(duck);
@@ -114,6 +123,10 @@ function playerControls(scene, duck) {
     }
 
     function duckLeft(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateLeft");
         var isLegal
         isLegal = isLegalMove(duck);
@@ -124,6 +137,10 @@ function playerControls(scene, duck) {
     }
 
     function duckRight(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateRight");
         var isLegal
         isLegal = isLegalMove(duck);
@@ -134,6 +151,10 @@ function playerControls(scene, duck) {
     }
 
     function jumpSkill(object) {
+        if(!active) {
+            return;
+        }
+
         var nextSquare;
         var facing = duck.userData.currentDirection;
         if (duck.userData.inAir === true) {
@@ -194,72 +215,60 @@ function playerControls(scene, duck) {
     }
 
     function callSkill () {
+        if(!active) {
+            return;
+        }
+
         if (grid.updateDucklingsInRadius === true) {
             console.log("duckling AI follow function here");
         }
     }
 
-    function nestSkill(object) {
+    function nestSkill(scene) {
+        if(!active) {
+            return;
+        }
+
+        var duckZ = duck.position.z;
+        var duckX = duck.position.x;
+
         // don't check anything if duck is in water or air
         if (duck.userData.inWater === false && duck.userData.inAir === false) {
+            
             var validArea = grid.getNestArea(duck.position.z, duck.position.x);
 
             if (validArea != 0 && duck.userData.inWater === false) {
-                var stick = new THREE.Object3D();
-                stick.name = "stick";
-                var manager = new THREE.LoadingManager();
-                var shadowMat = new THREE.ShadowMaterial({
-                    color: 0xff0000, transparent: true, opacity: 0.5
-                });
-                    //load nest 
-                var stickLoader = new THREE.FBXLoader(manager);
-                stickLoader.load('./geo/stick.fbx', function (object) {
-                    object.traverse(function (child) {
+               
+                // top right
+                if (validArea == 1) {
+                    nestBuilder.generateNest(duckZ - 5, duckX - 5);
 
-                        if (child instanceof THREE.Mesh) {
-                            child.castShadow = true;
-                            child.receiveShadow = true;
-                            child.shadowMaterial = shadowMat;
-                        }
+                } 
+                // bottom right
+                if (validArea == 2) {
+                    nestBuilder.generateNest(duckZ - 5, duckX + 5);
 
-                    });
-                    object.scale.x = 2;
-                    object.scale.y = 2;
-                    object.scale.z = 2;
+                }
+                // bottom left
+                if (validArea == 3) {
+                    nestBuilder.generateNest(duckZ + 5, duckX + 5);
 
-                    stick.add(object);
-                    scene.add(stick);
+                }
+                // top left
+                if (validArea == 4) {
+                    nestBuilder.generateNest(duckZ + 5, duckX - 5);
+                }
 
-                    // top right
-                    if (validArea == 1) {
-                        stick.position.z = (duck.position.z - 5);
-                        stick.position.x = (duck.position.x - 5);
-                    }
-                    // bottom right
-                    if (validArea == 2) {
-                        stick.position.z = (duck.position.z - 5);
-                        stick.position.x = (duck.position.x + 5);
-                    }
-                    // bottom left
-                    if (validArea == 3) {
-                        stick.position.z = (duck.position.z + 5);
-                        stick.position.x = (duck.position.x + 5);
-                    }
-                    // top left
-                    if (validArea == 4) {
-                        stick.position.z = (duck.position.z + 5);
-                        stick.position.x = (duck.position.x - 5);
-                    }
-
-                }, undefined, function (e) {
-                    console.error(e);
-                });
+                bus.publish("nestSound");
             }
         }
     }
 
 
     function superQuackSkill() {
+        if(!active) {
+            return;
+        }
 
         foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
         hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
@@ -304,10 +313,17 @@ function playerControls(scene, duck) {
     }
 
     function speedBoostSkill() {
+        if(!active) {
+            return;
+        }
+
 
     }
 
     function invisibilitySkill() {
+        if(!active) {
+            return;
+        }
 
     }
 

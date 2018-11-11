@@ -9,6 +9,7 @@ function UserInterface()
 {
 
 	var keyDown = false;
+
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
@@ -140,8 +141,8 @@ function UserInterface()
 	/*
 	 * Called when a key is pressed
 	 */
-	function onKeyDown(event)
-	{
+	function onKeyDown(event) {
+
 		switch (event.keyCode)
 		{
 			case 38: // up
@@ -197,7 +198,7 @@ function UserInterface()
 
 			case 52: // 4
 				bus.publish("nest");
-				bus.publish("nestSound");
+				// sound published in playerControls.nestSkill
 				break;
 
 			case 81: // Q 

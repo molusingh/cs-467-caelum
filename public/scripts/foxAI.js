@@ -42,10 +42,6 @@ function foxAI(scene, fox)
     fox.userData.currentDirection = 'down';
     setState(foxState.pool);
 
-    bus.subscribe('moveFox', move);
-
-    setInterval(move, 1000);
-
     function spawn()
     {
 
@@ -66,8 +62,8 @@ function foxAI(scene, fox)
     {
         fox.position.y = .1;
         target = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-        //bus.subscribe('moveFox', move);
-        // setInterval(move, 1000);
+        bus.subscribe('moveFox', move);
+        setInterval(move, 1000);
         console.log("INIT UUID: " + fox.uuid);
     }
 
@@ -91,8 +87,14 @@ function foxAI(scene, fox)
         {
             // console.log("no path found, moving randomly");
             var validRandomDirection = isValid(fox.position, randomDirection);
+            var count = 0;
             while (!validRandomDirection) // until direction is valid
             {
+                ++count;
+                if (count > 5)
+                {
+                    return;
+                }
                 var directions = ['up', 'down', 'left', 'right'];
                 randomDirection = directions[getRandomInt(4) - 1];
                 validRandomDirection = isValid(fox.position, randomDirection);

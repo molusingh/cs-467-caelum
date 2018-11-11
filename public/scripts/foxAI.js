@@ -12,6 +12,8 @@ function foxAI(scene, fox) {
     foxAI.prototype.setActive = setActive;
     foxAI.prototype.update = update;
     foxAI.prototype.init = init;
+    foxAI.prototype.spawn = spawn;
+    foxAI.prototype.getActor = getActor;
 
     // private variables
     var active = false;
@@ -19,8 +21,6 @@ function foxAI(scene, fox) {
     fox.userData.currentDirection = 'down';
     var foxMover = new ObjectMover(fox);
     setState(foxState.pool);
-    fox.position.y = .1;
-
     /*
     -- subscribe
     stun
@@ -40,6 +40,7 @@ function foxAI(scene, fox) {
         var duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         bus.subscribe('moveFox', move);
         setInterval(move, 1000);
+        console.log("INST UUID: " + fox.uuid);
     }
 
     function move() {
@@ -86,6 +87,14 @@ function foxAI(scene, fox) {
 
     function setState(newState) {
         currentState = newState;
+    }
+
+    function spawn() {
+        grid.placeActor(fox);
+    }
+
+    function getActor() {
+        return fox;
     }
 
     function update() {

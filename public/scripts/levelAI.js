@@ -15,7 +15,6 @@ function levelAI(scene) {
     var score;
     var actorsInLevel = [];
     var assetPools = init2DArray(13);
-    var originals = {};
     var player;
     var loader;
 
@@ -181,6 +180,7 @@ function levelAI(scene) {
                     instance = new playerControls(scene, obj.asset);
                     break;
                 case componentType.fox:
+                    console.log("UUID: " + obj.asset.uuid);
                     instance = new foxAI(scene, obj.asset);
                     break;
                 case componentType.croq:
@@ -194,8 +194,7 @@ function levelAI(scene) {
                     break;
             }
 
-            assetPools[params.componentType].push({ instance: instance, asset: obj.asset });
-            //console.log(assetPools[params.componentType][i]);
+            assetPools[params.componentType].push(instance);
         }
     }
 
@@ -213,7 +212,7 @@ function levelAI(scene) {
         var duckCount = 1;
 
         //TO DO: add rotation, not always down, will affect object mover
-        var duckLocations = [(new THREE.Vector2(20, 20))]
+        var duckLocations = [(new THREE.Vector2(25, 25))]
         var duck = {
             count: duckCount,
             locations: duckLocations,
@@ -298,35 +297,21 @@ function levelAI(scene) {
 
         for (var i = 0; i < params.count; i++) {
 
-            //var obj = assetPools[params.componentType][i];
-            console.log(assetPools[params.componentType][i].asset);
             actorsInLevel.push(assetPools[params.componentType][i]);
 
-            /*
-            obj.asset.userData.location = params.locations[i];
-            obj.asset.userData.locationComponent = params.locationComponent;
+            var pos = actorsInLevel.length - 1;
 
-            placeAsset(obj.asset);
-            */
-            var loc = actorsInLevel.length - 1;
-            console.log("ACTOR: " + actorsInLevel[loc].asset);
-            actorsInLevel[loc].asset.userData.componentType = params.componentType;
-            actorsInLevel[loc].asset.userData.location = params.locations[i];
-            actorsInLevel[loc].asset.userData.locationComponent = params.locationComponent;
-            placeAsset(actorsInLevel[loc].asset);
-            /*
-            if (params.componentType === componentType.duckling) {
-                obj.asset.userData.callabule = false;
-            }
-            */
+            actorsInLevel[pos].getActor().userData.locationComponent = params.locationComponent;
+            actorsInLevel[pos].getActor().userData.location = params.locations[i];
+
+            actorsInLevel[pos].spawn();
+
         }
     }
 
     function despawn() {
-        for (var i = 0; i < assetPools.length; i++) {
-            for (var j = 0; j < assetPools[i].length; j++) {
-                assetPools[i][j].asset.position.y = -100;
-            }
+        for (var i = 0; i < actorsInLevel.length; i++) {
+            actorsInLevel[i].getActor().position.y = -100;
         }
     }
 
@@ -344,88 +329,6 @@ function levelAI(scene) {
     }
 
 
-    function placeAsset(asset) {
-
-        var location = asset.userData.location;
-        var locationComponent = asset.userData.locationComponent;
-
-        var testLocation = new THREE.Vector2(1, 1);
-        var validLocation = false;
-        var assetLocation;
-
-        function findValidSquare() {
-
-            var size = new THREE.Vector2(1, 1);
-            validLocation = grid.blockIsComponent(size, location, locationComponent);
-            if (validLocation === true) {
-                return location;
-            }
-
-            var radius = 1;
-
-            while (validLocation === false) {
-                for (var i = location.x - radius; i <= location.x + radius; i++) {
-                    testLocation.x = i;
-                    testLocation.y = location.y + radius;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-
-                for (var i = location.x - radius; i <= location.x + radius; i++) {
-                    testLocation.x = i;
-                    testLocation.y = location.y - radius;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-                for (var i = location.y - radius; i <= location.y + radius; i++) {
-                    testLocation.x = location.x + radius;
-                    testLocation.y = i;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-                for (var i = location.y - radius; i <= location.y + radius; i++) {
-                    testLocation.x = location.x - radius;
-                    testLocation.y = i;
-                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
-                    if (validLocation === true) {
-                        return testLocation;
-                    }
-                }
-                radius++;
-                if (radius > 40) {
-                    break;
-                }
-            }
-
-        }
-
-        var assetLocation = findValidSquare();
-
-        if (validLocation === false) {
-            console.log("failed: " + asset);
-            return;
-        }
-
-        var originY = -200;
-        var originX = 200;
-
-        var y = originY + (assetLocation.y * 10) - 5;
-        var x = originX - (assetLocation.x * 10) + 5;
-
-        asset.position.z = x;
-        asset.position.x = y;
-        asset.position.y = .1;
-
-        grid.addActor(asset);
-        //grid.printGrid(0, 8, 0, 8);
-
-    }
 
     function setState(state) {
         currentState = state;
@@ -437,18 +340,18 @@ function levelAI(scene) {
 
     function setAIActiveState(state) {
         for (var i = 0; i < actorsInLevel.length; i++) {
-            if (actorsInLevel[i].instance !== undefined) {
-                actorsInLevel[i].instance.setActive(state);
+            if (actorsInLevel[i] !== undefined) {
+                actorsInLevel[i].setActive(state);
             }
         }
     }
 
     function initAIs() {
         for (var i = 0; i < actorsInLevel.length; i++) {
-            if (actorsInLevel[i].instance !== undefined &&
-                actorsInLevel[i].asset.userData.componentType != componentType.duck) {
-                console.log(actorsInLevel[i].asset.userData.componentType);
-                actorsInLevel[i].instance.init();
+            if (actorsInLevel[i] !== undefined &&
+                actorsInLevel[i].getActor().userData.componentType !== componentType.duck) {
+                //console.log(actorsInLevel[i].asset.userData.componentType);
+                actorsInLevel[i].init();
             }
         }
     }
@@ -481,7 +384,7 @@ function levelAI(scene) {
         if (currentState === levelState.build) {
             if (!levelAssetsLoaded) {
                 buildLevel();
-                playerAI = actorsInLevel[0].instance;
+                playerAI = actorsInLevel[0];
             }
             else {
                 levelAssetsLoaded = false;
@@ -512,8 +415,8 @@ function levelAI(scene) {
             }
             else {
                 for (var i = 0; i < actorsInLevel.length; i++) {
-                    if (actorsInLevel[i].instance !== undefined) {
-                        actorsInLevel[i].instance.update();
+                    if (actorsInLevel[i] !== undefined) {
+                        actorsInLevel[i].update();
                     }
                 }
             }

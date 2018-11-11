@@ -16,7 +16,7 @@ function assetGen(scene) {
         createWater();
         generateLand();
         recordLandInGrid();
-        generateLandObstacles(40, 20);
+        //generateLandObstacles(40, 20);
         generateGrassObstacles(60, 20);
     }
 

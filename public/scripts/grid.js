@@ -315,4 +315,87 @@ function board() {
         }
         return true;
     }
+
+    this.placeActor = function (asset) {
+
+        var location = asset.userData.location;
+        var locationComponent = asset.userData.locationComponent;
+
+        var testLocation = new THREE.Vector2(1, 1);
+        var validLocation = false;
+        var assetLocation;
+
+        function findValidSquare() {
+
+            var size = new THREE.Vector2(1, 1);
+            validLocation = grid.blockIsComponent(size, location, locationComponent);
+            if (validLocation === true) {
+                return location;
+            }
+
+            var radius = 1;
+
+            while (validLocation === false) {
+                for (var i = location.x - radius; i <= location.x + radius; i++) {
+                    testLocation.x = i;
+                    testLocation.y = location.y + radius;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+
+                for (var i = location.x - radius; i <= location.x + radius; i++) {
+                    testLocation.x = i;
+                    testLocation.y = location.y - radius;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                for (var i = location.y - radius; i <= location.y + radius; i++) {
+                    testLocation.x = location.x + radius;
+                    testLocation.y = i;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                for (var i = location.y - radius; i <= location.y + radius; i++) {
+                    testLocation.x = location.x - radius;
+                    testLocation.y = i;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                radius++;
+                if (radius > 40) {
+                    break;
+                }
+            }
+
+        }
+
+        var assetLocation = findValidSquare();
+
+        if (validLocation === false) {
+            console.log("failed: " + asset);
+            return;
+        }
+
+        var originY = -200;
+        var originX = 200;
+
+        var y = originY + (assetLocation.y * 10) - 5;
+        var x = originX - (assetLocation.x * 10) + 5;
+
+        asset.position.z = x;
+        asset.position.x = y;
+        asset.position.y = .1;
+
+        this.addActor(asset);
+        //grid.printGrid(0, 8, 0, 8);
+
+    }
 }

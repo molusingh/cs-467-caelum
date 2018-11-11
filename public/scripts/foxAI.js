@@ -43,16 +43,16 @@ function foxAI(scene, fox) {
             return;
         }
 
+        /*
         fox.position.z += 10;
         console.log(fox.uuid + "pos: " + fox.position.z);
         return;
-        /*
+        */
         var directions = ['up', 'down', 'left', 'right'];
         var random = getRandomInt(4) - 1;
         foxMover[directions[random]]();
         return;
 
-        */
 
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         //var test = new THREE.Vector3(25, 0, 25);

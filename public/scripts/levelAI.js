@@ -194,14 +194,14 @@ function levelAI(scene) {
                     break;
             }
 
-            assetPools[params.componentType].push(instance);
+            assetPools[params.componentType].push(instance)
         }
     }
 
 
     function populateAssets() {
 
-        //rest to zero
+        //rest to zer
         var defaultLocation = new THREE.Vector2(20, 20);
 
         var foxCount = 1;

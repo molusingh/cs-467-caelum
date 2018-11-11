@@ -47,10 +47,12 @@ function foxAI(scene, fox) {
         if (!active) {
             return;
         }
+
         /*
         fox.position.z += 10;
         return;
         */
+
 
         duck = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
         //var test = new THREE.Vector3(25, 0, 25);

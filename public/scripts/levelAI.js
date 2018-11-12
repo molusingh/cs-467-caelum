@@ -180,13 +180,13 @@ function levelAI(scene) {
                     instance = new playerControls(scene, asset);
                     break;
                 case componentType.fox:
-                    instance = new foxAI(scene, asset);
+                    instance = new Predator(scene, asset, predatorType.fox);
                     break;
                 case componentType.croq:
-                    instance = new croqAI(scene, asset);
+                    instance = new Predator(scene, asset, predatorType.croq);
                     break;
                 case componentType.hawk:
-                    instance = new hawkAI(scene, asset);
+                    instance = new Predator(scene, asset, predatorType.hawk);
                     break;
                 case componentType.duckling:
                     instance = new ducklingAI(scene, asset);

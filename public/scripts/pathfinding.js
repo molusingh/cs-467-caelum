@@ -162,9 +162,9 @@ function Point(x, y, z)
 
 
 /*
- * compares two points
+ * compares two points in x and z, not Y
  */
 function pointsEqual(p1, p2)
 {
-    return (p1.x == p2.x && p1.y == p2.y && p1.z == p2.z);
+    return (p1.x == p2.x && p1.z == p2.z);
 }

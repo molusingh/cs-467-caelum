@@ -1,4 +1,4 @@
-/* global EventBus*/
+// global EventBus
 // ENUMS
 
 //Note: these are 'external states', internal representations can have more
@@ -26,6 +26,9 @@ Object.freeze(croqState);
 
 var foxState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };
 Object.freeze(foxState);
+
+var predatorType = { fox: "fox", croq: "croq", hawk: "hawk"};
+var predatorState = { init: "init", pool: 'pool', alive: "alive", stun: 'stun', despawn: 'despawn' };
 
 var componentType = {
 	"land": 1, "water": 2, "obstacle": 3, "fox": 4, "hawk": 5, "croq": 6,

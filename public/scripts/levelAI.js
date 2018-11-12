@@ -284,7 +284,7 @@ function levelAI(scene) {
         spawnAsset(foxes);
         spawnAsset(hawks);
         spawnAsset(croqs);
-        //spawnAsset(ducklings);
+        spawnAsset(ducklings);
         //TO DO: add basic instance class
         //spawnAsset(sticks);
 

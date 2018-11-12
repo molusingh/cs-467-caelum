@@ -36,6 +36,7 @@ function Predator(scene, predator, type)
     this.move = move;
 
     // private variables
+    var moveIntervalId = null;
     var active = false;
     var predatorMover = new ObjectMover(predator);
     var target = null;
@@ -77,7 +78,7 @@ function Predator(scene, predator, type)
         bus.subscribe('movepredator', move);
         if (type != predatorType.hawk || true)
         {
-            setInterval(move, 1000);
+            moveIntervalId = setInterval(move, 1000);
         }
         // console.log("INIT UUID: " + predator.uuid);
     }
@@ -164,6 +165,7 @@ function Predator(scene, predator, type)
             predator.position.y = -100;
             active = false;
             currentState = predatorState.pool;
+            clearInterval(moveIntervalId);
         }
 
         var elapsedTime = clock.getElapsedTime();

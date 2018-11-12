@@ -35,10 +35,12 @@ function board() {
     }
 
     function normalizeX(x) {
+        //return ((x - originY) / 10);
         return ((x - originY + 5) / 10);
     }
 
     function normalizeZ(z) {
+        //return ((originX - z) / 10);
         return ((originX - z + 5) / 10);
     }
 
@@ -47,6 +49,22 @@ function board() {
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return 0;
+        }
+        var actorInSquare = getActorSquareInfo(x, y);
+        if (actorInSquare !== null) {
+            //console.log("actor: " + actorInSquare);
+            return actorInSquare;
+        }
+        else {
+            return envTable[x - 1][y - 1];
+        }
+    }
+
+    function getNormalizedEnvSquareInfo(x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return componentType.none;
         }
         return envTable[x - 1][y - 1];
     }
@@ -78,7 +96,6 @@ function board() {
             var location = actorTable[i].location;
 
             if (location.x === x && location.y === y) {
-                // console.log("got here");
                 return actorTable[i].actor;
             }
         }
@@ -88,7 +105,11 @@ function board() {
 
     this.reset = function () {
         initializeEnvTable(40, 40);
+        for (var i; i < actorTable.length; i++) {
+            actorTable[i] = undefined;
+        }
         actorTable.length = 0;
+        actorTable = [];
     }
 
     this.setInvisibility = function (value) {
@@ -107,6 +128,9 @@ function board() {
     // ex. pass object's location + offset in z and x, each square is 10 x 10 
     //returns componentType: water, land, duckling, duck, fox, croq, hawk, obstacle, illegal 
     this.getSquareInfo = function (z, x) {
+
+        //var normalizedX = ((originX - z) / 10);
+        //var normalizedY = ((x - originY) / 10);
 
         var normalizedX = ((originX - z + 5) / 10);
         var normalizedY = ((x - originY + 5) / 10);
@@ -139,6 +163,15 @@ function board() {
         var normalizedY = ((x - originY + 5) / 10);
 
         return getNormalizedSquareInfo(normalizedX, normalizedY);
+
+    }
+
+    this.getEnvOnlyInfo = function (z, x) {
+
+        var normalizedX = ((originX - z + 5) / 10);
+        var normalizedY = ((x - originY + 5) / 10);
+
+        return getNormalizedEnvSquareInfo(normalizedX, normalizedY);
 
     }
 
@@ -206,10 +239,12 @@ function board() {
 
     //testing function
     this.printGrid = function (start_x, end_x, start_y, end_y) {
-        for (var j = 0; j < end_y + 1; j++) {
+        for (var j = start_y; j < end_y + 1; j++) {
             var line = "";
             for (var i = start_x; i < end_x + 1; i++) {
-                line += String(grid[i][j]);
+                var squareValue = getNormalizedSquareInfo(i, j);
+                line += String(squareValue + ",");
+                //line += String(envTable[i][j] + ",");
             }
             console.log(line);
         }
@@ -249,7 +284,7 @@ function board() {
         var bottomLeft = [];
         var topLeft = [];
         var isValidSquare;
-        
+
         // top right
         topRight[0] = this.getSquareInfo(z, x - 10); // up
         topRight[1] = this.getSquareInfo(z - 10, x - 10); // up + right
@@ -290,12 +325,95 @@ function board() {
     }
 
     // returns true if all squares in array are land (1) or grass (10)
-    this.validNestArea = function(squareArray) {
+    this.validNestArea = function (squareArray) {
         for (i = 0; i < squareArray.length; i++) {
             if (squareArray[i] != 1 && squareArray[i] != 10) {
                 return false;
             }
         }
         return true;
+    }
+
+    this.placeActor = function (asset) {
+
+        var location = asset.userData.location;
+        var locationComponent = asset.userData.locationComponent;
+
+        var testLocation = new THREE.Vector2(1, 1);
+        var validLocation = false;
+        var assetLocation;
+
+        function findValidSquare() {
+
+            var size = new THREE.Vector2(1, 1);
+            validLocation = grid.blockIsComponent(size, location, locationComponent);
+            if (validLocation === true) {
+                return location;
+            }
+
+            var radius = 1;
+
+            while (validLocation === false) {
+                for (var i = location.x - radius; i <= location.x + radius; i++) {
+                    testLocation.x = i;
+                    testLocation.y = location.y + radius;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+
+                for (var i = location.x - radius; i <= location.x + radius; i++) {
+                    testLocation.x = i;
+                    testLocation.y = location.y - radius;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                for (var i = location.y - radius; i <= location.y + radius; i++) {
+                    testLocation.x = location.x + radius;
+                    testLocation.y = i;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                for (var i = location.y - radius; i <= location.y + radius; i++) {
+                    testLocation.x = location.x - radius;
+                    testLocation.y = i;
+                    validLocation = grid.blockIsComponent(size, testLocation, locationComponent);
+                    if (validLocation === true) {
+                        return testLocation;
+                    }
+                }
+                radius++;
+                if (radius > 40) {
+                    break;
+                }
+            }
+
+        }
+
+        var assetLocation = findValidSquare();
+
+        if (validLocation === false) {
+            console.log("failed: " + asset);
+            return;
+        }
+
+        var originY = -200;
+        var originX = 200;
+
+        var y = originY + (assetLocation.y * 10) - 5;
+        var x = originX - (assetLocation.x * 10) + 5;
+
+        asset.position.z = x;
+        asset.position.x = y;
+        asset.position.y = .1;
+
+        this.addActor(asset);
+        //grid.printGrid(0, 8, 0, 8);
+
     }
 }

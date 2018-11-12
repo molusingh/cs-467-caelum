@@ -37,18 +37,21 @@
   }
 
   function addHelpers() {
-    var dirLightHelper = new THREE.DirectionalLightHelper(light, 5, 0x444444);
-    scene.add(dirLightHelper);
 
     var gridHelper = new THREE.GridHelper(400, 40, 0x444444, 0x808080);
     gridHelper.position.y = 0;
     gridHelper.position.x = 0;
     scene.add(gridHelper);
 
+    /*
+    var dirLightHelper = new THREE.DirectionalLightHelper(light, 5, 0x444444);
+    scene.add(dirLightHelper);
+
     scene.add(new THREE.AxesHelper(20));
 
     var shadowHelper = new THREE.CameraHelper(light.shadow.camera);
     scene.add(shadowHelper);
+    */
   }
 
   function addFullScreenControls() {

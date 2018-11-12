@@ -17,7 +17,7 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 
 	<!-- jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="./lib/jquery.min.js"></script>
 </head>
 
 <body>
@@ -32,7 +32,7 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 			<img src="./images/interface/howtoplay.png">
 		</button> </br>
 	</div>
-	
+
 	<div id="menu" class="gameScreens">
 		<button id="closeMenuButton">
 			<img src="./images/interface/menu.png">
@@ -47,38 +47,38 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 			<img src="./images/interface/restart.png">
 		</button> </br>
 	</div>
-	
+
 	<div id="howToPlayScreen" class="gameScreens">
 		<div>
 			<p>
-				Mama Duck has lost her hatchlings! Help her find redemption by 
+				Mama Duck has lost her hatchlings! Help her find redemption by
 				finding them and avoiding dangerous predators.
 			</p>
 			<button id="closeHowToPlayButton">Return</button> </br>
 		</div>
 	</div>
-	
+
 	<div id="loseScreen" class="gameScreens">
 		<img src="./images/interface/youlose.png">
 	</div>
-	
+
 	<div id="winScreen" class="gameScreens">
-		<img src="./images/interface/youwin.png">	
+		<img src="./images/interface/youwin.png">
 	</div>
-	
+
 	<div id="boostsScreen" class="gameScreens">
 		<div>
 			<p>Points available: <span id="pointsOutput">null</span></p>
-			<button id="upgradeQuackButton">Upgrade Quack: <span id=quackCostOutput>null</span> points</button> 
+			<button id="upgradeQuackButton">Upgrade Quack: <span id=quackCostOutput>null</span> points</button>
 			<p>Quack Level: <span id='quackLevelOutput'>null</span></p>
-			<button id="upgradeSpeedButton">Upgrade Speed: <span id=speedCostOutput>null</span> points</button> 
+			<button id="upgradeSpeedButton">Upgrade Speed: <span id=speedCostOutput>null</span> points</button>
 			<p>Speed Level: <span id='speedLevelOutput'>null</span></p>
-			<button id="upgradeInvisibilityButton">Upgrade Invisibility: <span id=invisibilityCostOutput>null</span> points</button> 
+			<button id="upgradeInvisibilityButton">Upgrade Invisibility: <span id=invisibilityCostOutput>null</span> points</button>
 			<p>Invisibility Level: <span id='invisibilityLevelOutput'>null</span></p>
 			<button id="nextLevelButton">Next Level</button>
 		</div>
 	</div>
-	
+
 	<div id="interface">
 		<button id="menuButton">
 			<img src="./images/interface/menu.png">
@@ -156,10 +156,7 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 	<script src="scripts/grid.js"></script>
 	<script src="scripts/pathfinding.js"></script>
 
-
-	<script src="scripts/hawkAI.js"></script>
-	<script src="scripts/croqAI.js"></script>
-	<script src="scripts/foxAI.js"></script>
+	<script src="scripts/Predator.js"></script>
 	<script src="scripts/ducklingAI.js"></script>
 
 	<script src="scripts/levelAI.js"></script>
@@ -173,4 +170,5 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 		-->
 
 </body>
+
 </html>

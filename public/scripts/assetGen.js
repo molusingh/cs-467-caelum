@@ -27,7 +27,7 @@ function assetGen(scene) {
         landObjects.length = 0;
 
         for (var i = 0; i < grassObjects.length; i++) {
-            scene.remove(landObjects[i]);
+            scene.remove(grassObjects[i]);
         }
         grassObjects.length = 0;
 
@@ -418,6 +418,7 @@ function assetGen(scene) {
 
         object.geo.position.z = x;
         object.geo.position.x = y;
+        object.geo.position.y = .1;
 
         registerInGrid(object.size, location, object.objectComponent);
 

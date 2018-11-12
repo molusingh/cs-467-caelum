@@ -60,6 +60,15 @@ function board() {
         }
     }
 
+    function getNormalizedEnvSquareInfo(x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return componentType.none;
+        }
+        return envTable[x - 1][y - 1];
+    }
+
     function getActorSquareInfo(x, y) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
@@ -154,6 +163,15 @@ function board() {
         var normalizedY = ((x - originY + 5) / 10);
 
         return getNormalizedSquareInfo(normalizedX, normalizedY);
+
+    }
+
+    this.getEnvOnlyInfo = function (z, x) {
+
+        var normalizedX = ((originX - z + 5) / 10);
+        var normalizedY = ((x - originY + 5) / 10);
+
+        return getNormalizedEnvSquareInfo(normalizedX, normalizedY);
 
     }
 

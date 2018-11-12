@@ -74,7 +74,7 @@ function croqAI(scene, croq)
             return;
         }
         target = grid.getActorsInRadius(croq.position, 100, componentType.duck)[0];
-        if (target) // if fuck found find path
+        if (target) // if croq found find path
         {
             path = findPath(croq.position, target.position, isLegalMove);
         }
@@ -152,7 +152,7 @@ function croqAI(scene, croq)
         {
             return false;
         }
-        var squareType = grid.getEnvInfo(target.z, target.x);
+        var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         switch (squareType)
         {
             case componentType.water:

@@ -60,10 +60,11 @@ function hawkAI(scene, hawk)
 
     function init()
     {
-        hawk.position.y = .1;
+        hawk.position.y = 35;
         target = grid.getActorsInRadius(hawk.position, 100, componentType.duck)[0];
+        console.log(hawk.position);
         bus.subscribe('movehawk', move);
-        setInterval(move, 1000);
+        // setInterval(move, 1000);
         // console.log("INIT UUID: " + hawk.uuid);
     }
 
@@ -152,7 +153,7 @@ function hawkAI(scene, hawk)
         {
             return false;
         }
-        var squareType = grid.getEnvInfo(target.z, target.x);
+        var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         switch (squareType)
         {
             case componentType.air:

@@ -152,7 +152,7 @@ function foxAI(scene, fox)
         {
             return false;
         }
-        var squareType = grid.getEnvInfo(target.z, target.x);
+        var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         switch (squareType)
         {
             case componentType.land:

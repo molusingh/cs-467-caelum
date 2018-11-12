@@ -152,14 +152,10 @@ function hawkAI(scene, hawk)
         {
             return false;
         }
-        var squareType = grid.getSquareInfo(target.z, target.x);
+        var squareType = grid.getEnvInfo(target.z, target.x);
         switch (squareType)
         {
-            case componentType.land:
-            case componentType.duck:
-            case componentType.duckling:
-            case componentType.egg:
-            case componentType.grass:
+            case componentType.air:
                 return true;
         }
         return false;

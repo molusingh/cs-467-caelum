@@ -74,7 +74,7 @@ function foxAI(scene, fox)
             return;
         }
         target = grid.getActorsInRadius(fox.position, 100, componentType.duck)[0];
-        if (target) // if fuck found find path
+        if (target) // if fox found find target
         {
             path = findPath(fox.position, target.position, isLegalMove);
         }
@@ -152,14 +152,12 @@ function foxAI(scene, fox)
         {
             return false;
         }
-        var squareType = grid.getSquareInfo(target.z, target.x);
+        var squareType = grid.getEnvInfo(target.z, target.x);
         switch (squareType)
         {
             case componentType.land:
-            case componentType.duck:
-            case componentType.duckling:
-            case componentType.egg:
             case componentType.grass:
+            case componentType.duck:
                 return true;
         }
         return false;

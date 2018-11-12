@@ -69,11 +69,13 @@ function Predator(scene, predator, type)
         else if (type == predatorType.hawk)
         {
             predator.position.y = 35;
+            predator.position.x = 5;
+            predator.position.z = 5;
         }
 
         target = findTarget(componentType.duck);
         bus.subscribe('movepredator', move);
-        if (type != predatorType.hawk)
+        if (type != predatorType.hawk || true)
         {
             setInterval(move, 1000);
         }
@@ -94,7 +96,7 @@ function Predator(scene, predator, type)
             return;
         }
         target = findTarget(componentType.duck);
-        
+
         if (target) // if predator found target
         {
             path = findPath(predator.position, target.position, isLegalMove);
@@ -113,6 +115,7 @@ function Predator(scene, predator, type)
                 ++count;
                 if (count > 10) // if object is stuck
                 {
+                    console.log('stuck');
                     return;
                 }
                 var directions = ['up', 'down', 'left', 'right'];
@@ -185,7 +188,7 @@ function Predator(scene, predator, type)
         }
         else if (type == predatorType.hawk)
         {
-            validSquares = [componentType.air];
+            validSquares = [componentType.air, componentType.land];
         }
         else
         {

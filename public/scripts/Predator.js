@@ -132,7 +132,14 @@ function Predator(scene, predator, type)
         }
         if (path && isLegalMove(path.point))
         {
-            predatorMover[path.move]();
+            var rotateMove = 'rotate' + path.move[0].toUpperCase() +
+                path.move.substring(1);
+            predatorMover[rotateMove](); // always rotate to face
+            if (grid.getActor(path.point) == null || componentType.duck 
+                || componentType.duckling)
+            {
+                predatorMover[path.move]();
+            }
         }
         grid.updateActor(predator);
     }

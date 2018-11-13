@@ -78,6 +78,7 @@ function ducklingAI(scene, duckling)
         {
             return;
         }
+        target = findTarget(componentType.duck);
 
         if (target) // if duckling found target
         {
@@ -113,7 +114,13 @@ function ducklingAI(scene, duckling)
         }
         if (path && isLegalMove(path.point))
         {
-            ducklingMover[path.move]();
+            var rotateMove = 'rotate' + path.move[0].toUpperCase()
+                + path.move.substring(1);
+            ducklingMover[rotateMove](); // always rotate to face
+            if (grid.getActor(path.point) == null)
+            {
+                ducklingMover[path.move]();
+            }
         }
         grid.updateActor(duckling);
     }

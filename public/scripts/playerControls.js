@@ -75,7 +75,7 @@ function playerControls(scene, duck) {
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
 
 
-    // sounds for interface buttons
+    /* sounds for interface buttons
     $("#movementControls").click(playSound.click);
     $("#movementControls").click(playSound.move);
     $("#skillButtons").click(playSound.click);
@@ -94,7 +94,7 @@ function playerControls(scene, duck) {
     $("#flyButton").click(playSound.fly);
     $("#jumpButton").click(playSound.jump);
     $("#callButton").click(playSound.call);
-
+*/
     function duckUp(object) {
         if(!active) {
             return;
@@ -222,11 +222,8 @@ function playerControls(scene, duck) {
 
         // don't check anything if duck is in water or air
         if (duck.userData.inWater === false && duck.userData.inAir === false) {
-
-            if (grid.updateDucklingsInRadius === true) {
-                console.log("duckling AI follow function here");
-                bus.publish("callSound");
-            }
+            console.log("duckling AI follow function here");
+            bus.publish("callSound");
         }
     }
 

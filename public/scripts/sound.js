@@ -1,6 +1,8 @@
 var playSound = new soundLoader();
+var enableSound = true;
 
 // sound subscribers
+
 bus.subscribe("playerMove", playSound.move);
 bus.subscribe("clickSound", playSound.click);
 bus.subscribe("flySound", playSound.fly);
@@ -14,12 +16,33 @@ bus.subscribe("superQuackSound", playSound.superQuack);
 bus.subscribe("stunSound", playSound.stunned);
 bus.subscribe("stopStunSound", playSound.stopStunSound);
 
+bus.subscribe("playerLoses", playSound.duckDeath);
+bus.subscribe("playerWins", playSound.win);
+
 bus.subscribe("mainMusic", playSound.mainMusic);
+bus.subscribe("toggleMusic", playSound.toggleMusic);
+
+bus.subscribe("toggleSound", playSound.toggleSound);
 
 function soundLoader() {
 
 	var sound;
 	var stunSound;
+	var mainMusic;
+
+
+	this.toggleSound = function () {
+		if (enableSound === true) {
+			enableSound = false;
+		}
+		else {
+			enableSound = true;
+		}
+	}
+
+	if (enableSound === false) {
+		return;
+	}
 
 	this.click = function () {
 		sound = new Audio("./sound/click.mp3");
@@ -92,8 +115,10 @@ function soundLoader() {
 		sound.play();
 	}
 
-	this.death = function() {
-		sound = new Audio("./sound/death.mp3");
+	this.duckDeath = function() {
+		sound = new Audio("./sound/duckDeath.mp3");
+		mainMusic.loop = false;
+		mainMusic.pause();
 		sound.play();
 	}
 
@@ -133,15 +158,33 @@ function soundLoader() {
 		sound.play();
 	}
 
+	this.win = function() {
+		sound = new Audio("./sound/win.mp3");
+		mainMusic.loop = false;
+		mainMusic.pause();
+		sound.play;
+	}
+
 	this.stopStunSound = function() {
 		stunSound.loop = false;
 		stunSound.pause();
 	}
 
 	this.mainMusic = function () {
-		var mainMusic = new Audio("./sound/mainMusic.mp3");
+		mainMusic = new Audio("./sound/mainMusic.mp3");
 		mainMusic.loop = true;
 		mainMusic.volume = 0.5;
 		mainMusic.play();
+	}
+
+	this.toggleMusic = function () {
+		if (mainMusic.loop === true) {
+			mainMusic.loop = false;
+			mainMusic.pause();
+		}
+		else {
+			mainMusic.loop = true;
+			mainMusic.play();
+		}
 	}
 }

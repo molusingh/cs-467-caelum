@@ -7,7 +7,6 @@
  */
 function UserInterface()
 {
-
 	var keyDown = false;
 
 	// interface event subscriptions

@@ -37,6 +37,7 @@ function playerControls(scene, duck) {
     // console.log(duck.userData.currentDirection);
     duck.userData.inAir = false;
     duck.userData.inWater = false;
+    duck.position.y = .1;
 
     var maxPos = 185;
 
@@ -307,11 +308,11 @@ function playerControls(scene, duck) {
             foxes[0].userData.stunStatus = false;
             foxes.pop();
         }
-        while (hawks.length > 0) { 
+        while (hawks.length > 0) {
             hawks[0].userData.stunStatus = false;
             hawks.pop();
         }
-        while (croqs.length > 0) { 
+        while (croqs.length > 0) {
             croqs[0].userData.stunStatus = false;
             croqs.pop();
         }
@@ -337,8 +338,10 @@ function playerControls(scene, duck) {
 
     function isLegalMove(object) {
 
-        if (!active)
+        if (!active) {
+            console.log("dead");
             return false;
+        }
 
         var nextSquare;
         var facing = duck.userData.currentDirection;
@@ -346,6 +349,7 @@ function playerControls(scene, duck) {
         // all in-air moves are legal since they are over all tiles
         if (duck.userData.inAir === true) {
             return true;
+
         }
 
         // get type of square duck is facing
@@ -361,6 +365,7 @@ function playerControls(scene, duck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
+        // console.log("NextSquare: " + nextSquare + " pos: " + duck.position.z);
 
         // moving from land to land (1), duckling (8), grass (10), or stick (11)
         if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11)) {
@@ -393,6 +398,16 @@ function playerControls(scene, duck) {
         return currentState;
     };
 
+    this.setState = function (newState) {
+
+        currentState = newState;
+    };
+
+    this.reset = function () {
+        duck.userData.inWater = false;
+        duck.userData.inAir = false;
+    }
+
     this.idSelf = function () {
 
         return "duck";
@@ -401,6 +416,15 @@ function playerControls(scene, duck) {
     this.setActive = function (value) {
         active = value;
     }
+
+    this.spawn = function () {
+        grid.placeActor(duck);
+    }
+
+    this.getActor = function () {
+        return duck;
+    }
+
 
     this.update = function () {
 
@@ -415,6 +439,6 @@ function playerControls(scene, duck) {
                 resetStunStatus();
             }
         }
+    }
 
-    };
 }

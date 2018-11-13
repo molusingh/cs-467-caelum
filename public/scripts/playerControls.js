@@ -2,7 +2,7 @@
 /* global playerState*/
 /* global bus*/
 /* global soundLoader*/
-function playerControls(scene, clock, duck) {
+function playerControls(scene, duck) {
 
     /*
     -- subscribe
@@ -23,12 +23,18 @@ function playerControls(scene, clock, duck) {
 
     -- must update grid after every move
     grid.updateActor(actorID)
+
+    -- ALL functions MUST be filtered through: if(!active) return;
     */
 
+    var nestBuilder = new assetGen(scene); 
+
+    //when game is paused
+    var active = false;
     var currentState = playerState.init;
 
     duck.userData.currentDirection = 'down';
-    console.log(duck.userData.currentDirection);
+    // console.log(duck.userData.currentDirection);
     duck.userData.inAir = false;
     duck.userData.inWater = false;
 
@@ -36,8 +42,17 @@ function playerControls(scene, clock, duck) {
 
     var duckMover = new ObjectMover(duck);
 
+    // superquack variables
+    var localStun = false;
+    var beginStun;
+    var foxes;
+    var hawks;
+    var croqs;
+
+    //!!! Add if(active) to all core functions
+    //in Mover, 
+
     // subscriptions
-        // action subscribers
     bus.subscribe("moveLeft", duckMover.left);
     bus.subscribe("rotateLeft", duckMover.rotateLeft);
     bus.subscribe("duckLeft", duckLeft);
@@ -54,17 +69,10 @@ function playerControls(scene, clock, duck) {
     bus.subscribe("jump", jumpSkill);
     bus.subscribe("call", callSkill);
     bus.subscribe("nest", nestSkill);
-    
-        // sound subscribers
-    bus.subscribe("playerMove", playSound.move);
-    bus.subscribe("clickSound", playSound.click);
-    bus.subscribe("flySound", playSound.fly);
-    bus.subscribe("jumpSound", playSound.jump);
-    bus.subscribe("callSound", playSound.call);
-    bus.subscribe("nestSound", playSound.nest);
-    bus.subscribe("invisibilitySound", playSound.invisiblity);
-    bus.subscribe("speedBoostSound", playSound.speedBoost);
-    bus.subscribe("superQuackSound", playSound.superQuack);
+    bus.subscribe("quackSkillRequested", superQuackSkill);
+    bus.subscribe("speedSkillRequested", speedBoostSkill);
+    bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
+
 
     // sounds for interface buttons
     $("#movementControls").click(playSound.click);
@@ -79,188 +87,300 @@ function playerControls(scene, clock, duck) {
     // skill sounds
     $("#invisibilityButton").click(playSound.invisiblity);
     $("#speedButton").click(playSound.speedBoost);
-    $("#quackButton").click(playSound.superQuack);
+
 
     // action sounds
     $("#flyButton").click(playSound.fly);
     $("#jumpButton").click(playSound.jump);
     $("#callButton").click(playSound.call);
-    $("#nestButton").click(playSound.nest);
 
-    function duckUp(object)
-    {
+    function duckUp(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateUp");
         var isLegal;
         isLegal = isLegalMove(duck);
-        if(isLegal)
-        {
+        if (isLegal) {
             bus.publish("moveUp");
             bus.publish("playerMove");
         }
     }
 
-    function duckDown(object)
-    {
+    function duckDown(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateDown");
         var isLegal;
         isLegal = isLegalMove(duck);
-        if(isLegal)
-        {
+        if (isLegal) {
             bus.publish("moveDown");
             bus.publish("playerMove");
         }
     }
 
-    function duckLeft(object)
-    {
+    function duckLeft(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateLeft");
         var isLegal
         isLegal = isLegalMove(duck);
-        if(isLegal)
-        {
+        if (isLegal) {
             bus.publish("moveLeft");
             bus.publish("playerMove");
         }
     }
 
-    function duckRight(object)
-    {
+    function duckRight(object) {
+        if(!active) {
+            return;
+        }
+
         bus.publish("rotateRight");
         var isLegal
         isLegal = isLegalMove(duck);
-        if(isLegal)
-        {
+        if (isLegal) {
             bus.publish("moveRight");
             bus.publish("playerMove");
         }
     }
 
-    function jumpSkill(object)
-    {
-        var nextSquare;
-        var facing = duck.userData.currentDirection;
-        if(duck.userData.inAir === true)
-        {
+    function jumpSkill(object) {
+        if(!active) {
             return;
         }
-        
+
+        var nextSquare;
+        var facing = duck.userData.currentDirection;
+        if (duck.userData.inAir === true) {
+            return;
+        }
+
         // get type of square duck is facing
-        if (facing === 'up')
-        {
+        if (facing === 'up') {
             nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
         }
-        else if (facing === 'left')
-        {
+        else if (facing === 'left') {
             nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
         }
-        else if (facing === 'down')
-        {
+        else if (facing === 'down') {
             nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
         }
-        else if (facing === 'right')
-        {
+        else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
 
         // if duck isn't in water and the square it is facing is water, go ahead
-        if (duck.userData.inWater === false && nextSquare == 2)
-        {
+        if (duck.userData.inWater === false && nextSquare == 2) {
             bus.publish("jumpSound");
             duck.userData.inWater = true;
 
-            if (facing ==='up')
-            {
+            if (facing === 'up') {
                 bus.publish("moveUp");
             }
-            else if (facing === 'left')
-            {
+            else if (facing === 'left') {
                 bus.publish("moveLeft");
             }
-            else if (facing === 'down')
-            {
+            else if (facing === 'down') {
                 bus.publish("moveDown");
             }
-            else if (facing === 'right')
-            {
+            else if (facing === 'right') {
                 bus.publish("moveRight");
             }
         }
 
         // if duck is in water and the square it is facing is land, duckling, grass, or stick, go ahead
-        if (duck.userData.inWater === true && (nextSquare == 1 || nextSquare == 8 || nextSquare == 9 || nextSquare == 10))
-        {
+        if (duck.userData.inWater === true && (nextSquare == 1 || nextSquare == 8 || nextSquare == 9 || nextSquare == 10)) {
             bus.publish("jumpSound");
             duck.userData.inWater = false;
 
-            if (facing ==='up')
-            {
+            if (facing === 'up') {
                 bus.publish("moveUp");
             }
-            else if (facing === 'left')
-            {
+            else if (facing === 'left') {
                 bus.publish("moveLeft");
             }
-            else if (facing === 'down')
-            {
+            else if (facing === 'down') {
                 bus.publish("moveDown");
             }
-            else if (facing === 'right')
-            {
+            else if (facing === 'right') {
                 bus.publish("moveRight");
             }
         }
     }
 
-    function callSkill(object)
-    {
-        console.log("callSkill not yet implemented");
+    function callSkill () {
+        if(!active) {
+            return;
+        }
+
+        // don't check anything if duck is in water or air
+        if (duck.userData.inWater === false && duck.userData.inAir === false) {
+
+            if (grid.updateDucklingsInRadius === true) {
+                console.log("duckling AI follow function here");
+                bus.publish("callSound");
+            }
+        }
     }
 
-    function nestSkill(object)
-    {
-        console.log("nestSkill not yet implemented");
+    function nestSkill(scene) {
+        if(!active) {
+            return;
+        }
+
+        var duckZ = duck.position.z;
+        var duckX = duck.position.x;
+
+        // don't check anything if duck is in water or air
+        if (duck.userData.inWater === false && duck.userData.inAir === false) {
+            
+            var validArea = grid.getNestArea(duck.position.z, duck.position.x);
+
+            if (validArea != 0 && duck.userData.inWater === false) {
+               
+                // top right
+                if (validArea == 1) {
+                    nestBuilder.generateNest(duckZ - 5, duckX - 5);
+
+                } 
+                // bottom right
+                if (validArea == 2) {
+                    nestBuilder.generateNest(duckZ - 5, duckX + 5);
+
+                }
+                // bottom left
+                if (validArea == 3) {
+                    nestBuilder.generateNest(duckZ + 5, duckX + 5);
+
+                }
+                // top left
+                if (validArea == 4) {
+                    nestBuilder.generateNest(duckZ + 5, duckX - 5);
+                }
+
+                bus.publish("nestSound");
+            }
+        }
     }
 
-    //document.addEventListener('keydown', onKeyDown);
 
-    function isLegalMove(object)
-    {
+    function superQuackSkill() {
+        if(!active) {
+            return;
+        }
+
+        foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
+        hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
+        croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
+
+        if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
+            localStun = true;
+            beginStun = clock.getElapsedTime();
+            
+            bus.publish("stunSound");
+
+            for (i = 0; i < foxes.length; i++) {
+                foxes[i].userData.stunStatus = true;
+            }
+
+            for (i = 0; i < hawks.length; i++) {
+                hawks[i].userData.stunStatus = true;
+            }
+
+            for (i = 0; i < croqs.length; i++) {
+                croqs[i].userData.stunStatus = true;
+            }
+        }
+    }
+
+    // called by update function after (stunLength) seconds has elapsed
+    function resetStunStatus() {
+        localStun = false;
+
+        while (foxes.length > 0) {
+            foxes[0].userData.stunStatus = false;
+            foxes.pop();
+        }
+        while (hawks.length > 0) { 
+            hawks[0].userData.stunStatus = false;
+            hawks.pop();
+        }
+        while (croqs.length > 0) { 
+            croqs[0].userData.stunStatus = false;
+            croqs.pop();
+        }
+
+        bus.publish("stopStunSound");
+
+    }
+
+    function speedBoostSkill() {
+        if(!active) {
+            return;
+        }
+
+
+    }
+
+    function invisibilitySkill() {
+        if(!active) {
+            return;
+        }
+
+    }
+
+    function isLegalMove(object) {
+
+        if (!active)
+            return false;
+
         var nextSquare;
         var facing = duck.userData.currentDirection;
-        
+
         // all in-air moves are legal since they are over all tiles
-        if (duck.userData.inAir === true)
-        {
+        if (duck.userData.inAir === true) {
             return true;
         }
-      
+
         // get type of square duck is facing
-        if (facing ==='up')
-        {
+        if (facing === 'up') {
             nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
         }
-        else if (facing === 'left')
-        {
+        else if (facing === 'left') {
             nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
         }
-        else if (facing === 'down')
-        {
+        else if (facing === 'down') {
             nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
         }
-        else if (facing === 'right')
-        {
+        else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
 
         // moving from land to land (1), duckling (8), grass (10), or stick (11)
-        if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11))
-        {
+        if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11)) {
             return true;
         }
 
         // moving from water to water (2), requires jumpSkill to move to land
-        if (duck.userData.inWater === true && nextSquare == 2)
-        {
+        if (duck.userData.inWater === true && nextSquare == 2) {
+            return true;
+        }
+
+        // !!!!!temporary death sim, simulator to acutal!!!!
+        if (nextSquare == componentType.fox) {
+            currentState = playerState.dead;
+            return true;
+        }
+
+        // !!!!!temporary win simulation, nothing like actual!!!!!
+        if (nextSquare == componentType.croq) {
+            currentState = playerState.won;
             return true;
         }
 
@@ -273,9 +393,28 @@ function playerControls(scene, clock, duck) {
         return currentState;
     };
 
+    this.idSelf = function () {
+
+        return "duck";
+    };
+
+    this.setActive = function (value) {
+        active = value;
+    }
+
     this.update = function () {
 
+        if (!active)
+            return;
+
         var elapsedTime = clock.getElapsedTime();
+
+        if (localStun === true) {
+            // stunLength is global, modified by superquack level
+            if (elapsedTime - beginStun > stunLength) {
+                resetStunStatus();
+            }
+        }
 
     };
 }

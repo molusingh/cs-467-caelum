@@ -2,6 +2,8 @@ function assetGen(scene) {
 
     var tileSize = 9;
     var landObjects = [];
+    var landObstacles = [];
+    var grassObjects = [];
 
     var shadowMat = new THREE.ShadowMaterial({
         color: 0xff0000, transparent: true, opacity: 0.5
@@ -16,6 +18,56 @@ function assetGen(scene) {
         recordLandInGrid();
         generateLandObstacles(40, 20);
         generateGrassObstacles(60, 20);
+    }
+
+    this.generateNest = function(z, x) {
+        var nest = new THREE.Object3D();
+        nest.name = "nest";
+        var manager = new THREE.LoadingManager();
+
+            //load nest 
+        var nestLoader = new THREE.FBXLoader(manager);
+        nestLoader.load('./geo/stick.fbx', function (object) {
+            object.traverse(function (child) {
+
+                if (child instanceof THREE.Mesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    child.shadowMaterial = shadowMat;
+                }
+
+            });
+            object.scale.x = 2;
+            object.scale.y = 2;
+            object.scale.z = 2;
+
+            nest.add(object);
+            scene.add(nest);
+
+            }, undefined, function (e) {
+                    console.error(e);
+            });
+
+            nest.position.z = z;
+            nest.position.x = x;
+
+    }
+
+    this.cleanup = function () {
+        for (var i = 0; i < landObjects.length; i++) {
+            scene.remove(landObjects[i]);
+        }
+        landObjects.length = 0;
+
+        for (var i = 0; i < grassObjects.length; i++) {
+            scene.remove(landObjects[i]);
+        }
+        grassObjects.length = 0;
+
+        for (var i = 0; i < landObstacles.length; i++) {
+            scene.remove(landObstacles[i]);
+        }
+        landObstacles.length = 0;
     }
 
     //creates 4 points determining corners of 8x8 tile
@@ -295,13 +347,13 @@ function assetGen(scene) {
 
             var size = new THREE.Vector2(1, 1);
 
-            //patch = new THREE.Mesh(grass.clone(), material);
-            patch = grass.clone();
-            patch.position.y -= 0.1;
+            var patch = grass.clone();
+            patch.position.y = 0.1;
             patch.castShadow = true;
             patch.receiveShadow = true;
             patch.shadowMaterial = shadowMat;
             scene.add(patch);
+            grassObjects.push(patch);
 
             var offset = new THREE.Vector2(5, 5);
 
@@ -345,6 +397,7 @@ function assetGen(scene) {
             obstacle.receiveShadow = true;
             obstacle.shadowMaterial = shadowMat;
             scene.add(obstacle);
+            landObstacles.push(obstacle);
 
             var offset = new THREE.Vector2(10, 10);
 
@@ -411,5 +464,7 @@ function assetGen(scene) {
             }
         }
     }
+
+
 
 }

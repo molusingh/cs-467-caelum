@@ -1,6 +1,6 @@
- var playSound = new soundLoader();
+var playSound = new soundLoader();
 
-     // sound subscribers
+// sound subscribers
 bus.subscribe("playerMove", playSound.move);
 bus.subscribe("clickSound", playSound.click);
 bus.subscribe("flySound", playSound.fly);
@@ -12,10 +12,14 @@ bus.subscribe("speedBoostSound", playSound.speedBoost);
 bus.subscribe("superQuackSound", playSound.superQuack);
 
 bus.subscribe("stunSound", playSound.stunned);
+bus.subscribe("stopStunSound", playSound.stopStunSound);
+
+bus.subscribe("mainMusic", playSound.mainMusic);
 
 function soundLoader() {
 
 	var sound;
+	var stunSound;
 
 	this.click = function () {
 		sound = new Audio("./sound/click.mp3");
@@ -119,12 +123,25 @@ function soundLoader() {
 	}
 
 	this.stunned = function() {
-		sound = new Audio("./sound/stunned.mp3");
-		sound.play();
-		}
+		stunSound = new Audio("./sound/stunned.mp3");
+		stunSound.loop = true;
+		stunSound.play();
+	}
 
 	this.levelEnd = function() {
 		sound = new Audio("./sound/levelEnd.mp3");
 		sound.play();
+	}
+
+	this.stopStunSound = function() {
+		stunSound.loop = false;
+		stunSound.pause();
+	}
+
+	this.mainMusic = function () {
+		var mainMusic = new Audio("./sound/mainMusic.mp3");
+		mainMusic.loop = true;
+		mainMusic.volume = 0.5;
+		mainMusic.play();
 	}
 }

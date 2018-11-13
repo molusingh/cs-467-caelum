@@ -35,6 +35,7 @@ function UserInterface()
 	// game state buttons
 	$("#restartButton").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
+	$("#startButton").click(getPublishFunction("mainMusic"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
 	$("#closeMenuButton").click(getPublishFunction("closeMenu"));
 	$("#howToPlayButton").click(getPublishFunction("openHowToPlay"));

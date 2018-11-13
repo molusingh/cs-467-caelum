@@ -281,9 +281,9 @@ function playerControls(scene, duck) {
 
         if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
             localStun = true;
+            beginStun = clock.getElapsedTime();
+            
             bus.publish("stunSound");
-            var elapsedTime = clock.getElapsedTime();
-            beginStun = elapsedTime;
 
             for (i = 0; i < foxes.length; i++) {
                 foxes[i].userData.stunStatus = true;
@@ -315,6 +315,8 @@ function playerControls(scene, duck) {
             croqs[0].userData.stunStatus = false;
             croqs.pop();
         }
+
+        bus.publish("stopStunSound");
 
     }
 

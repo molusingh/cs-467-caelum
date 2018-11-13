@@ -5,15 +5,15 @@ function ObjectMover(object)
 	var maxPosition = 185;
 	var duckFlightHeight = 20;
 	var hawkFlightHeight = 35;
-	ObjectMover.prototype.up = up;
-	ObjectMover.prototype.rotateUp = rotateUp;
-	ObjectMover.prototype.down = down;
-	ObjectMover.prototype.rotateDown = rotateDown;
-	ObjectMover.prototype.left = left;
-	ObjectMover.prototype.rotateLeft = rotateLeft;
-	ObjectMover.prototype.right = right;
-	ObjectMover.prototype.rotateRight = rotateRight;
-	ObjectMover.prototype.flyToggle = flyToggle;
+	this.up = up;
+	this.rotateUp = rotateUp;
+	this.down = down;
+	this.rotateDown = rotateDown;
+	this.left = left;
+	this.rotateLeft = rotateLeft;
+	this.right = right;
+	this.rotateRight = rotateRight;
+	this.flyToggle = flyToggle;
 
 	function up()
 	{
@@ -136,7 +136,9 @@ function ObjectMover(object)
 			if (actorInfo == "7")
 			{
 				// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
-				if (currentSquareInfo != 3 && currentSquareInfo != 4 && currentSquareInfo != 5 && currentSquareInfo != 6 && currentSquareInfo != 9)
+				if (currentSquareInfo != 3 && currentSquareInfo != 4 && 
+					currentSquareInfo != 5 && currentSquareInfo != 6 && 
+					currentSquareInfo != 9)
 				{
 					object.position.y -= duckFlightHeight;
 					// if we land in water, toggle flag

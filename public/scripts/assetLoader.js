@@ -54,29 +54,6 @@ function assetLoader(scene) {
         allAssetsLoaded = true;
     }
 
-    //load FPO env
-    /*
-    var loader = new THREE.FBXLoader(manager);
-    loader.load('./geo/envFPO.fbx', function (object) {
-        object.traverse(function (child) {
-
-            if (child instanceof THREE.Mesh) {
-                //child.scale.x = 10;
-                child.castShadow = true;
-                child.receiveShadow = true;
-                child.shadowMaterial = shadowMat;
-            }
-
-        });
-        object.scale.x = 100;
-        object.scale.y = 100;
-        object.scale.z = 100;
-        object.castShadow = true;
-        object.receiveShadow = true;
-        scene.add(object);
-
-    });
-    */
 
     //load Mama Duck
     var duckLoader = new THREE.FBXLoader(manager);
@@ -93,6 +70,7 @@ function assetLoader(scene) {
         object.scale.x = 10;
         object.scale.y = 10;
         object.scale.z = 10;
+        object.position.y = -100;
 
         duck.add(object);
         scene.add(duck);
@@ -116,6 +94,7 @@ function assetLoader(scene) {
         object.scale.x = 12;
         object.scale.y = 12;
         object.scale.z = 12;
+        object.position.y = -100;
 
         fox.add(object);
         scene.add(fox);
@@ -139,6 +118,7 @@ function assetLoader(scene) {
         object.scale.x = 1;
         object.scale.y = 1;
         object.scale.z = 1;
+        object.position.y = -100;
 
         croq.add(object);
         scene.add(croq);
@@ -162,6 +142,7 @@ function assetLoader(scene) {
         object.scale.x = 1;
         object.scale.y = 1;
         object.scale.z = 1;
+        object.position.y = -100;
 
         duckling.add(object);
         scene.add(duckling);
@@ -185,6 +166,7 @@ function assetLoader(scene) {
         object.scale.x = 1;
         object.scale.y = 1;
         object.scale.z = 1;
+        object.position.y = -100;
 
         egg.add(object);
         scene.add(egg);
@@ -218,6 +200,7 @@ function assetLoader(scene) {
         object.scale.x = 1;
         object.scale.y = 1;
         object.scale.z = 1;
+        object.position.y = -100;
 
         hawk.add(object);
         scene.add(hawk);
@@ -241,6 +224,7 @@ function assetLoader(scene) {
         object.scale.x = 1;
         object.scale.y = 1;
         object.scale.z = 1;
+        //object.position.y = -100;
 
         grass.add(object);
         scene.add(grass);
@@ -264,6 +248,7 @@ function assetLoader(scene) {
         object.scale.x = 1;
         object.scale.y = 1;
         object.scale.z = 1;
+        object.position.y = -100;
 
         stick.add(object);
         scene.add(stick);

@@ -154,6 +154,17 @@ function board() {
         return getNormalizedSquareInfo(normalizedX, normalizedY);
 
     }
+    
+    this.getActor = function (point)
+    {
+        var normalizedX = ((originX - point.z + 5) / 10);
+        var normalizedY = ((point.x - originY + 5) / 10);
+
+        //get actor if found in location
+        return getActorSquareInfo(normalizedX, normalizedY);
+
+        
+    }
 
     //use as a secondary check when hawk searches for duck or ducklings
     //ex.a square with duckling could also be grass, i.e. no access for hawk

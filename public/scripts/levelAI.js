@@ -309,9 +309,17 @@ function levelAI(scene) {
 
 
     function despawn() {
-        for (var i = 0; i < actorsInLevel.length; i++) {
-            actorsInLevel[i].getActor().position.y = -100;
+        setAIActiveState(false);
+        var allActors = actorsInLevel.length;
+        for (var i = 0; i < allActors; i++) {
+            var type = actorsInLevel[i].getActor().userData.componentType;
+            
+            if (type === componentType.croq || type === componentType.hawk || type === componentType.fox)
+            {
+                actorsInLevel[i].despawn();
+            }
         }
+        actorsInLevel = [];
     }
 
     //init prototypes, initLevelAssets

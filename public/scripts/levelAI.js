@@ -175,7 +175,7 @@ function levelAI(scene) {
                     instance = new Predator(scene, asset, predatorType.hawk);
                     break;
                 case componentType.duckling:
-                    //asset.userData.hatchTime = config.getHatchTime();
+                    //asset.userData.speed = config.getSpeed(componentType.hawk);
                     instance = new ducklingAI(scene, asset, egg);
                     break;
             }
@@ -186,7 +186,17 @@ function levelAI(scene) {
     }
 
     function cloneAsset(params, asset, egg) {
-        params.original.traverse(function (child) {
+
+        var original;
+
+        if (egg) {
+            original = scene.getObjectByName("egg");
+        }
+        else {
+            original = params.original;
+        }
+
+        original.traverse(function (child) {
 
             if (child instanceof THREE.Mesh) {
                 var childClone = child.clone();
@@ -197,9 +207,14 @@ function levelAI(scene) {
                 asset.scale.x = params.scale;
                 asset.scale.y = params.scale;
                 asset.scale.z = params.scale;
+                asset.userData.componentType = params.componentType;
+            }
+            else {
+                asset.userData.componentType = componentType.egg;
+                //asset.userData.hatchTime = config.getHatchTime();
+                asset.userData.hatchTime = 5;
             }
 
-            asset.userData.componentType = params.componentType;
             asset.position.y = -100;
             scene.add(asset);
 

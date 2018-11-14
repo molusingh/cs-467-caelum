@@ -22,7 +22,7 @@ global ducklingState
  * @param scene passed in scene object
  * @param duckling 3d duckling object
  */
-function ducklingAI(scene, duckling, egg) {
+function ducklingAI(scene, hatchling, egg) {
     // public functions
     this.toggleActive = toggleActive;
     this.setActive = setActive;
@@ -33,6 +33,7 @@ function ducklingAI(scene, duckling, egg) {
     this.move = move;
 
     // private variables
+    var duckling = egg;
     var moveIntervalId = null;
     var active = false;
     var ducklingMover = new ObjectMover(duckling);
@@ -51,13 +52,29 @@ function ducklingAI(scene, duckling, egg) {
         return duckling;
     }
 
-    // initialize the duckling
-    function init() {
-        bus.subscribe('moveduckling', move);
+    function hatch() {
+
+        hatchling.position = egg.position;
+        duckling = hatchling;
+        egg.position.y = -100;
+        duckling.position.z += 5;
+        duckling.position.x += 5;
+        duckling.position.y = .1;
+        console.log("DUCKLING: " + duckling.position.x, duckling.position.y, duckling.position.z);
         if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
-        // console.log("INIT UUID: " + duckling.uuid);
+        //TO DO: Update grid with new entity!
+
+    }
+
+    // initialize the duckling
+    function init() {
+        hatchling.position.y = -100;
+        egg.position.y = .1;
+        bus.subscribe('moveduckling', move);
+        setTimeout(function () { hatch(); }, egg.userData.hatchTime * 1000);
+
     }
 
     // locates the specified target

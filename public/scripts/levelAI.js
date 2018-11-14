@@ -111,23 +111,15 @@ function levelAI(scene) {
         }
         createAssetPool(params);
 
-        var egg = scene.getObjectByName("egg");
-        var eggSize = 10;
-        params = {
-            count: eggSize,
-            original: egg,
-            scale: 1,
-            componentType: componentType.egg,
-        }
-        createAssetPool(params);
-
         var duckling = scene.getObjectByName("duckling");
+        var egg = scene.getObjectByName("egg");
         var ducklingSize = 10;
         params = {
             count: ducklingSize,
             original: duckling,
             scale: 1,
             componentType: componentType.duckling,
+            egg: egg
         }
         createAssetPool(params);
 
@@ -157,22 +149,13 @@ function levelAI(scene) {
         for (var i = 0; i < params.count; i++) {
 
             var asset = new THREE.Object3D();
+            var egg = new THREE.Object3D();
 
-            params.original.traverse(function (child) {
+            cloneAsset(params, asset, false);
 
-                if (child instanceof THREE.Mesh) {
-                    var childClone = child.clone();
-                    asset.add(childClone);
-                }
-                asset.scale.x = params.scale;
-                asset.scale.y = params.scale;
-                asset.scale.z = params.scale;
-                asset.userData.componentType = params.componentType;
-                asset.position.y = asset.position.z + 10 * i;
-                asset.position.y = -100;
-                scene.add(asset);
-
-            });
+            if (params.componentType === componentType.duckling) {
+                cloneAsset(params, egg, true);
+            }
 
             var instance;
             switch (params.componentType) {
@@ -180,21 +163,47 @@ function levelAI(scene) {
                     instance = new playerControls(scene, asset);
                     break;
                 case componentType.fox:
+                    //asset.userData.speed = config.getSpeed(componentType.fox);
                     instance = new Predator(scene, asset, predatorType.fox);
                     break;
                 case componentType.croq:
+                    //asset.userData.speed = config.getSpeed(componentType.croq);
                     instance = new Predator(scene, asset, predatorType.croq);
                     break;
                 case componentType.hawk:
+                    //asset.userData.speed = config.getSpeed(componentType.hawk);
                     instance = new Predator(scene, asset, predatorType.hawk);
                     break;
                 case componentType.duckling:
-                    instance = new ducklingAI(scene, asset);
+                    //asset.userData.hatchTime = config.getHatchTime();
+                    instance = new ducklingAI(scene, asset, egg);
                     break;
             }
 
             assetPools[params.componentType].push(instance);
         }
+
+    }
+
+    function cloneAsset(params, asset, egg) {
+        params.original.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                var childClone = child.clone();
+                asset.add(childClone);
+            }
+
+            if (!egg) {
+                asset.scale.x = params.scale;
+                asset.scale.y = params.scale;
+                asset.scale.z = params.scale;
+            }
+
+            asset.userData.componentType = params.componentType;
+            asset.position.y = -100;
+            scene.add(asset);
+
+        });
 
     }
 
@@ -204,11 +213,21 @@ function levelAI(scene) {
         //rest to zer
         var defaultLocation = new THREE.Vector2(20, 20);
 
+        //var foxCount = config.getCount(componentType.fox);
         var foxCount = 2;
+
+        //var hawkCount = config.getCount(componentType.hawk);
         var hawkCount = 1;
+
+        //var croqCount = config.getCount(componentType.croq);
         var croqCount = 5;
+
+        //var ducklingCount = config.getCount(componentType.duckling);
         var ducklingCount = 4;
+
+        //var stickCount = config.getCount(componentType.stick);
         var stickCount = 0;
+
         var duckCount = 1;
 
         //TO DO: add rotation, not always down, will affect object mover
@@ -313,9 +332,8 @@ function levelAI(scene) {
         var allActors = actorsInLevel.length;
         for (var i = 0; i < allActors; i++) {
             var type = actorsInLevel[i].getActor().userData.componentType;
-            
-            if (type === componentType.croq || type === componentType.hawk || type === componentType.fox)
-            {
+
+            if (type === componentType.croq || type === componentType.hawk || type === componentType.fox) {
                 actorsInLevel[i].despawn();
             }
         }

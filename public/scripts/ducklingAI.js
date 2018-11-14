@@ -22,8 +22,7 @@ global ducklingState
  * @param scene passed in scene object
  * @param duckling 3d duckling object
  */
-function ducklingAI(scene, duckling)
-{
+function ducklingAI(scene, duckling, egg) {
     // public functions
     this.toggleActive = toggleActive;
     this.setActive = setActive;
@@ -44,38 +43,31 @@ function ducklingAI(scene, duckling)
     duckling.userData.currentDirection = 'down';
     setState(ducklingState.pool);
 
-    function spawn()
-    {
+    function spawn() {
         grid.placeActor(duckling);
     }
 
-    function getActor()
-    {
+    function getActor() {
         return duckling;
     }
 
     // initialize the duckling
-    function init()
-    {
+    function init() {
         bus.subscribe('moveduckling', move);
-        if (true)
-        {
+        if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
         // console.log("INIT UUID: " + duckling.uuid);
     }
 
     // locates the specified target
-    function findTarget(targetType)
-    {
+    function findTarget(targetType) {
         return grid.getActorsInRadius(duckling.position, 100, targetType)[0];
     }
 
     // moves the duckling
-    function move()
-    {
-        if (!active)
-        {
+    function move() {
+        if (!active) {
             return;
         }
         target = findTarget(componentType.duck);
@@ -108,48 +100,39 @@ function ducklingAI(scene, duckling)
             ducklingMover[randomDirection]();
             return;
         }
-        if (path.move == 'stay')
-        {
+        if (path.move == 'stay') {
             return;
         }
-        if (path && isLegalMove(path.point))
-        {
+        if (path && isLegalMove(path.point)) {
             var rotateMove = 'rotate' + path.move[0].toUpperCase()
                 + path.move.substring(1);
             ducklingMover[rotateMove](); // always rotate to face
-            if (grid.getActor(path.point) == null)
-            {
+            if (grid.getActor(path.point) == null) {
                 ducklingMover[path.move]();
             }
         }
         grid.updateActor(duckling);
     }
 
-    function setActive(value)
-    {
+    function setActive(value) {
         active = value;
     }
 
-    function setState(newState)
-    {
+    function setState(newState) {
         currentState = newState;
     }
 
-    function toggleActive()
-    {
+    function toggleActive() {
         active = !active;
     }
 
-    function update()
-    {
-        if (currentState === ducklingState.init)
-        {
+    function update() {
+        if (currentState === ducklingState.init) {
             init();
             currentState = ducklingState.alive;
         }
 
-        if (currentState === ducklingState.despawn)
-        {
+        if (currentState === ducklingState.despawn) {
             duckling.position.y = -100;
             active = false;
             currentState = ducklingState.pool;
@@ -160,10 +143,8 @@ function ducklingAI(scene, duckling)
     }
 
     // returns true if specified move to target is legal
-    function isLegalMove(target)
-    {
-        if (!active)
-        {
+    function isLegalMove(target) {
+        if (!active) {
             return false;
         }
         var squareType = grid.getEnvOnlyInfo(target.z, target.x);
@@ -174,18 +155,15 @@ function ducklingAI(scene, duckling)
         ];
         return validSquares.find(validate) != undefined;
 
-        function validate(element)
-        {
+        function validate(element) {
             return element == squareType;
         }
     }
 
     // returns true if move in specified direction from start poiint is legal
-    function isValid(start, direction)
-    {
+    function isValid(start, direction) {
         var target = {};
-        switch (direction)
-        {
+        switch (direction) {
             case 'up':
                 target.z = start.z;
                 target.x = start.x - 10;

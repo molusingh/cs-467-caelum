@@ -20,6 +20,39 @@ function assetGen(scene) {
         generateGrassObstacles(60, 20);
     }
 
+    this.generateNest = function(z, x) {
+        var nest = new THREE.Object3D();
+        nest.name = "nest";
+        var manager = new THREE.LoadingManager();
+
+            //load nest 
+        var nestLoader = new THREE.FBXLoader(manager);
+        nestLoader.load('./geo/stick.fbx', function (object) {
+            object.traverse(function (child) {
+
+                if (child instanceof THREE.Mesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    child.shadowMaterial = shadowMat;
+                }
+
+            });
+            object.scale.x = 2;
+            object.scale.y = 2;
+            object.scale.z = 2;
+
+            nest.add(object);
+            scene.add(nest);
+
+            }, undefined, function (e) {
+                    console.error(e);
+            });
+
+            nest.position.z = z;
+            nest.position.x = x;
+
+    }
+
     this.cleanup = function () {
         for (var i = 0; i < landObjects.length; i++) {
             scene.remove(landObjects[i]);
@@ -432,5 +465,7 @@ function assetGen(scene) {
             }
         }
     }
+
+
 
 }

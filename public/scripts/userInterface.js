@@ -7,8 +7,8 @@
  */
 function UserInterface()
 {
-
 	var keyDown = false;
+
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
@@ -34,6 +34,7 @@ function UserInterface()
 	// game state buttons
 	$("#restartButton").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
+	$("#startButton").click(getPublishFunction("mainMusic"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
 	$("#closeMenuButton").click(getPublishFunction("closeMenu"));
 	$("#howToPlayButton").click(getPublishFunction("openHowToPlay"));
@@ -80,10 +81,6 @@ function UserInterface()
 	$("#menu").click(getPublishFunction("clickSound"));
 
 	// skill sounds
-	$("#flyButton").click(getPublishFunction("flySound"));
-	// jump sound published in playercontrols.jumpSkill
-	$("#callButton").click(getPublishFunction("callSound"));
-	$("#nestButton").click(getPublishFunction("nestSound"));
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
 	$("#speedButton").click(getPublishFunction("speedBoostSound"));
 	$("#quackButton").click(getPublishFunction("superQuackSound"));
@@ -140,8 +137,8 @@ function UserInterface()
 	/*
 	 * Called when a key is pressed
 	 */
-	function onKeyDown(event)
-	{
+	function onKeyDown(event) {
+
 		switch (event.keyCode)
 		{
 			case 38: // up
@@ -192,12 +189,11 @@ function UserInterface()
 
 			case 51: // 3
 				bus.publish("call");
-				bus.publish("callSound");
 				break;
 
 			case 52: // 4
 				bus.publish("nest");
-				bus.publish("nestSound");
+				// sound published in playerControls.nestSkill
 				break;
 
 			case 81: // Q 
@@ -207,7 +203,7 @@ function UserInterface()
 
 			case 69: // E
 				bus.publish("quackSkillRequested");
-				bus.publish("superQuackSound");
+				// bus.publish("superQuackSound");
 				break;
 
 			case 82: // R

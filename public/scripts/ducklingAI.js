@@ -54,14 +54,13 @@ function ducklingAI(scene, hatchling, egg) {
 
     function hatch() {
 
-        hatchling.position.x = egg.position.x - 5;
-        hatchling.position.y = egg.position.y;
-        hatchling.position.z = egg.position.z - 5;
+        hatchling.position.x = egg.position.x;
+        hatchling.position.z = egg.position.z;
         duckling = hatchling;
         egg.position.y = -100;
-        duckling.position.z += 5;
-        duckling.position.x += 5;
         duckling.position.y = .1
+        grid.addActor(duckling);
+        //TO DO: remove egg!!
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
         bus.subscribe('moveduckling', move);
@@ -91,7 +90,6 @@ function ducklingAI(scene, hatchling, egg) {
         if (!active) {
             return;
         }
-        console.log("got here!!!");
         target = findTarget(componentType.duck);
 
         if (target) // if duckling found target
@@ -113,6 +111,7 @@ function ducklingAI(scene, hatchling, egg) {
                 if (count > 10) // if object is stuck
                 {
                     console.log('stuck');
+                    grid.updateActor(duckling);
                     return;
                 }
                 var directions = ['up', 'down', 'left', 'right'];
@@ -120,9 +119,11 @@ function ducklingAI(scene, hatchling, egg) {
                 validRandom = isValid(duckling.position, randomDirection);
             }
             ducklingMover[randomDirection]();
+            grid.updateActor(duckling);
             return;
         }
         if (path.move == 'stay') {
+            grid.updateActor(duckling);
             return;
         }
         if (path && isLegalMove(path.point)) {
@@ -130,7 +131,6 @@ function ducklingAI(scene, hatchling, egg) {
                 + path.move.substring(1);
             ducklingMover[rotateMove](); // always rotate to face
             if (grid.getActor(path.point) == null) {
-                console.log("should MOVE");
                 ducklingMover[path.move]();
             }
         }

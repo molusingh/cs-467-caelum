@@ -154,16 +154,15 @@ function board() {
         return getNormalizedSquareInfo(normalizedX, normalizedY);
 
     }
-    
-    this.getActor = function (point)
-    {
+
+    this.getActor = function (point) {
         var normalizedX = ((originX - point.z + 5) / 10);
         var normalizedY = ((point.x - originY + 5) / 10);
 
         //get actor if found in location
         return getActorSquareInfo(normalizedX, normalizedY);
 
-        
+
     }
 
     //use as a secondary check when hawk searches for duck or ducklings
@@ -424,7 +423,6 @@ function board() {
         asset.position.y = .1;
 
         this.addActor(asset);
-        //grid.printGrid(0, 8, 0, 8);
 
     }
 }

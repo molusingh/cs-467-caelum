@@ -24,8 +24,7 @@ global predatorType
  * @param predator 3d predator object
  * @param type the type of the predator
  */
-function Predator(scene, predator, type)
-{
+function Predator(scene, predator, type) {
     // public functions
     this.toggleActive = toggleActive;
     this.setActive = setActive;
@@ -47,34 +46,27 @@ function Predator(scene, predator, type)
     predator.userData.currentDirection = 'down';
     setState(predatorState.pool);
 
-    function spawn()
-    {
+    function spawn() {
         grid.placeActor(predator);
     }
 
-    function despawn()
-    {
+    function despawn() {
         currentState = predatorState.despawn;
     }
 
-    function getActor()
-    {
+    function getActor() {
         return predator;
     }
 
     // initialize the predator
-    function init()
-    {
-        if (type == predatorType.fox)
-        {
+    function init() {
+        if (type == predatorType.fox) {
             predator.position.y = 0.1;
         }
-        else if (type == predatorType.croq)
-        {
+        else if (type == predatorType.croq) {
             predator.position.y = 0.1;
         }
-        else if (type == predatorType.hawk)
-        {
+        else if (type == predatorType.hawk) {
             predator.position.y = 35;
             predator.position.x = 5;
             predator.position.z = 5;
@@ -82,8 +74,7 @@ function Predator(scene, predator, type)
 
         target = findTarget(componentType.duck);
         bus.subscribe('movepredator', move);
-        if (type != predatorType.hawk || true)
-        {
+        if (type != predatorType.hawk || true) {
             moveIntervalId = setInterval(move, 1000);
         }
         // console.log("INIT UUID: " + predator.uuid);
@@ -91,17 +82,13 @@ function Predator(scene, predator, type)
     }
 
     // locates the specified target
-    function findTarget(targetType)
-    {
+    function findTarget(targetType) {
         return grid.getActorsInRadius(predator.position, 100, targetType)[0];
     }
 
     // moves the predator
-    function move()
-    {
-        console.log("PRED: " + predator.position.z + " " + predator.position.x + " " + predator.position.y);
-        if (!active)
-        {
+    function move() {
+        if (!active) {
             return;
         }
         target = findTarget(componentType.duck);
@@ -134,49 +121,40 @@ function Predator(scene, predator, type)
             predatorMover[randomDirection]();
             return;
         }
-        if (path.move == 'stay')
-        {
+        if (path.move == 'stay') {
             return;
         }
-        if (path && isLegalMove(path.point))
-        {
+        if (path && isLegalMove(path.point)) {
             var rotateMove = 'rotate' + path.move[0].toUpperCase() +
                 path.move.substring(1);
             predatorMover[rotateMove](); // always rotate to face
-            if (grid.getActor(path.point) == null || componentType.duck 
-                || componentType.duckling)
-            {
+            if (grid.getActor(path.point) == null || componentType.duck
+                || componentType.duckling) {
                 predatorMover[path.move]();
             }
         }
         grid.updateActor(predator);
     }
 
-    function setActive(value)
-    {
+    function setActive(value) {
         active = value;
     }
 
-    function setState(newState)
-    {
+    function setState(newState) {
         currentState = newState;
     }
 
-    function toggleActive()
-    {
+    function toggleActive() {
         active = !active;
     }
 
-    function update()
-    {
-        if (currentState === predatorState.init)
-        {
+    function update() {
+        if (currentState === predatorState.init) {
             init();
             currentState = predatorState.alive;
         }
 
-        if (currentState === predatorState.despawn)
-        {
+        if (currentState === predatorState.despawn) {
             predator.position.y = -100;
             active = false;
             currentState = predatorState.pool;
@@ -187,44 +165,35 @@ function Predator(scene, predator, type)
     }
 
     // returns true if specified move to target is legal
-    function isLegalMove(target)
-    {
-        if (!active)
-        {
+    function isLegalMove(target) {
+        if (!active) {
             return false;
         }
         var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         var validSquares;
-        if (type == predatorType.fox)
-        {
+        if (type == predatorType.fox) {
             validSquares = [componentType.land, componentType.grass];
         }
-        else if (type == predatorType.croq)
-        {
+        else if (type == predatorType.croq) {
             validSquares = [componentType.water];
         }
-        else if (type == predatorType.hawk)
-        {
+        else if (type == predatorType.hawk) {
             validSquares = [componentType.air, componentType.land];
         }
-        else
-        {
+        else {
             return false;
         }
         return validSquares.find(validate) != undefined;
 
-        function validate(element)
-        {
+        function validate(element) {
             return element == squareType;
         }
     }
 
     // returns true if move in specified direction from start poiint is legal
-    function isValid(start, direction)
-    {
+    function isValid(start, direction) {
         var target = {};
-        switch (direction)
-        {
+        switch (direction) {
             case 'up':
                 target.z = start.z;
                 target.x = start.x - 10;

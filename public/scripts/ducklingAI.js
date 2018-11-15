@@ -36,12 +36,12 @@ function ducklingAI(scene, hatchling, egg) {
     var duckling = egg;
     var moveIntervalId = null;
     var active = false;
-    var ducklingMover = new ObjectMover(duckling);
+    var ducklingMover;
+    //var ducklingMover = new ObjectMover(duckling);
     var target = null;
     var path = null;
     var currentState = null;
     var randomDirection = null;
-    duckling.userData.currentDirection = 'down';
     setState(ducklingState.pool);
 
     function spawn() {
@@ -54,13 +54,19 @@ function ducklingAI(scene, hatchling, egg) {
 
     function hatch() {
 
-        hatchling.position = egg.position;
+        hatchling.position.x = egg.position.x - 5;
+        hatchling.position.y = egg.position.y;
+        hatchling.position.z = egg.position.z - 5;
         duckling = hatchling;
         egg.position.y = -100;
         duckling.position.z += 5;
         duckling.position.x += 5;
-        duckling.position.y = .1;
+        duckling.position.y = .1
+        ducklingMover = new ObjectMover(duckling);
+        duckling.userData.currentDirection = 'down';
+        bus.subscribe('moveduckling', move);
         console.log("DUCKLING: " + duckling.position.x, duckling.position.y, duckling.position.z);
+        active = true;
         if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
@@ -72,7 +78,7 @@ function ducklingAI(scene, hatchling, egg) {
     function init() {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        bus.subscribe('moveduckling', move);
+        //bus.subscribe('moveduckling', move);
         setTimeout(function () { hatch(); }, egg.userData.hatchTime * 1000);
 
     }
@@ -87,6 +93,7 @@ function ducklingAI(scene, hatchling, egg) {
         if (!active) {
             return;
         }
+        console.log("got here!!!");
         target = findTarget(componentType.duck);
 
         if (target) // if duckling found target
@@ -125,6 +132,7 @@ function ducklingAI(scene, hatchling, egg) {
                 + path.move.substring(1);
             ducklingMover[rotateMove](); // always rotate to face
             if (grid.getActor(path.point) == null) {
+                console.log("should MOVE");
                 ducklingMover[path.move]();
             }
         }

@@ -220,7 +220,9 @@ function soundLoader() {
 		mainMusic = new Audio("./sound/mainMusic.mp3");
 		mainMusic.loop = true;
 		mainMusic.volume = 0.5;
-		mainMusic.play();
+		//mainMusic.play();
+		// paused by default for dev sanity
+		mainMusic.pause();
 	}
 
 	this.toggleMusic = function () {

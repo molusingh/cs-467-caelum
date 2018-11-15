@@ -36,7 +36,7 @@ function ducklingAI(scene, hatchling, egg) {
     var duckling = egg;
     var moveIntervalId = null;
     var active = false;
-    var ducklingMover;
+    var ducklingMover
     //var ducklingMover = new ObjectMover(duckling);
     var target = null;
     var path = null;
@@ -65,8 +65,8 @@ function ducklingAI(scene, hatchling, egg) {
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
         bus.subscribe('moveduckling', move);
-        console.log("DUCKLING: " + duckling.position.x, duckling.position.y, duckling.position.z);
         active = true;
+        currentState = ducklingState.duckling;
         if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
@@ -78,9 +78,7 @@ function ducklingAI(scene, hatchling, egg) {
     function init() {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        //bus.subscribe('moveduckling', move);
         setTimeout(function () { hatch(); }, egg.userData.hatchTime * 1000);
-
     }
 
     // locates the specified target
@@ -154,7 +152,7 @@ function ducklingAI(scene, hatchling, egg) {
     function update() {
         if (currentState === ducklingState.init) {
             init();
-            currentState = ducklingState.alive;
+            currentState = ducklingState.egg;
         }
 
         if (currentState === ducklingState.despawn) {

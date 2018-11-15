@@ -112,6 +112,7 @@ function playerControls(scene, duck) {
             bus.publish("moveDown");
             bus.publish("playerMove");
         }
+        grid.printGrid(15, 25, 15, 25);
     }
 
     function duckLeft(object) {

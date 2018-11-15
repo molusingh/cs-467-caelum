@@ -32,6 +32,7 @@ function Predator(scene, predator, type)
     this.update = update;
     this.init = init;
     this.spawn = spawn;
+    this.despawn = despawn;
     this.getActor = getActor;
     this.move = move;
 
@@ -49,6 +50,11 @@ function Predator(scene, predator, type)
     function spawn()
     {
         grid.placeActor(predator);
+    }
+
+    function despawn()
+    {
+        currentState = predatorState.despawn;
     }
 
     function getActor()
@@ -81,6 +87,7 @@ function Predator(scene, predator, type)
             moveIntervalId = setInterval(move, 1000);
         }
         // console.log("INIT UUID: " + predator.uuid);
+        currentState = predatorState.alive;
     }
 
     // locates the specified target
@@ -92,6 +99,7 @@ function Predator(scene, predator, type)
     // moves the predator
     function move()
     {
+        console.log("PRED: " + predator.position.z + " " + predator.position.x + " " + predator.position.y);
         if (!active)
         {
             return;

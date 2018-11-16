@@ -53,6 +53,7 @@ function levelAI(scene) {
     function setupSubscriptions() {
         bus.subscribe("invisibilitySkillRequested", processInvisibility());
         bus.subscribe("quackSkillRequested", processSuperquack());
+        bus.subscribe("ducklingDead", removeActor(actor));
     }
 
     function setupPublications() {
@@ -403,6 +404,23 @@ function levelAI(scene) {
         playerAI.reset();
     }
 
+    function removedActor(actor) {
+        var location = 0;
+        var length = actorsInLevel.length;
+        for (var i = 0; i < length; i++) {
+            if (actorsInLevel[i] == actor) {
+                location = i;
+                break;
+            }
+        }
+
+        for (i = location; i < length - 1; i++) {
+            actorsInLevel[i] = actorsInLevel[i + 1];
+        }
+
+        actorsInLevel.length = length - 1;
+    }
+
     var playerAI = {};
 
     this.update = function () {
@@ -438,7 +456,10 @@ function levelAI(scene) {
             if (!AIsActive) {
                 setAIActiveState(true);
                 initAIs();
-                AIsActive = true;
+                AIsActive = true
+                console.log("inLevel.length: " + actorsInLevel.length + " #2 UUID: " + actorsInLevel[2].getActor().uuid);
+                grid.removeActor(actorsInLevel[2].getActor());
+                console.log("inLevel.length: " + actorsInLevel.length + " #2 UUID: " + actorsInLevel[2].getActor().uuid);
             }
 
             //get duck's state
@@ -454,6 +475,7 @@ function levelAI(scene) {
                 for (var i = 0; i < actorsInLevel.length; i++) {
                     if (actorsInLevel[i] !== undefined) {
                         actorsInLevel[i].update();
+                        cleanupRemovedActor();
                     }
                 }
             }

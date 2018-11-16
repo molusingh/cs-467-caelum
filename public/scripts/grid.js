@@ -86,6 +86,23 @@ function board() {
         return null;
     }
 
+    function getActorObjectInSquare(x, y) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return null;
+        }
+        for (var i = 0; i < actorTable.length; i++) {
+            var location = actorTable[i].location;
+
+            if (location.x === x && location.y === y) {
+                return actorTable[i].actor;
+            }
+        }
+
+        return null;
+    }
+
     function getActorInfo(x, y) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
@@ -161,8 +178,14 @@ function board() {
 
         //get actor if found in location
         return getActorSquareInfo(normalizedX, normalizedY);
+    }
 
+    this.getActorObject = function (point) {
+        var normalizedX = ((originX - point.z + 5) / 10);
+        var normalizedY = ((point.x - originY + 5) / 10);
 
+        //get actor if found in location
+        return getActorObjectInSquare(normalizedX, normalizedY);
     }
 
     //use as a secondary check when hawk searches for duck or ducklings
@@ -241,6 +264,24 @@ function board() {
         var actorInfo = { actor: actor, location: position }
         //push worked before as well
         actorTable[actorTable.length] = actorInfo;
+    }
+
+    this.removeActor = function (actor) {
+        var location = 0;
+        var length = actorTable.length;
+
+        for (i = 0; i < length; i++) {
+            if (actorTable[i].actor == actor) {
+                location = i;
+                break;
+            }
+        }
+
+        for (i = location; i < length - 1; i++) {
+            actorTable[i] = actorTable[i + 1];
+        }
+
+        actorTable.length = length - 1;
     }
 
     this.setEnvSquare = function (x, y, componentType) {

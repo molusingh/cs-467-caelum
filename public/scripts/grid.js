@@ -36,7 +36,7 @@ function board() {
 
     function normalizeX(x) {
         //return ((x - originY) / 10);
-        return ((x - originY + 5) / 10);
+         return ((x - originY + 5) / 10);
     }
 
     function normalizeZ(z) {
@@ -288,10 +288,11 @@ function board() {
         envTable[x][y] = componentType;
     }
 
-    this.setEnvSquareInGameSpace = function (z, x) {
-        var x = normalizeZ(z);
-        var y = normalizeX(x);
-        envTable[x][y] = componentType;
+    this.setEnvSquareInGameSpace = function (z, x, componentType) {
+        var xAxis = normalizeZ(z);
+        var yAxis = normalizeX(x);
+
+        envTable[xAxis][yAxis] = componentType;
     }
 
     //testing function

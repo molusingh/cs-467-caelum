@@ -4,6 +4,7 @@ function assetGen(scene) {
     var landObjects = [];
     var landObstacles = [];
     var grassObjects = [];
+    var nestObjects = [];
 
     var shadowMat = new THREE.ShadowMaterial({
         color: 0xff0000, transparent: true, opacity: 0.5
@@ -21,7 +22,7 @@ function assetGen(scene) {
     }
 
     this.generateNest = function (z, x) {
-        var nest = new THREE.Object3D();
+     /*   var nest = new THREE.Object3D();
         nest.name = "nest";
         var manager = new THREE.LoadingManager();
 
@@ -47,10 +48,35 @@ function assetGen(scene) {
         }, undefined, function (e) {
             console.error(e);
         });
+    */
 
-        nest.position.z = z;
-        nest.position.x = x;
+        var nest = scene.getObjectByName("nest");
+        var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
+        var size = new THREE.Vector2(1, 1);
 
+        var newNest = nest.clone();
+        newNest.position.y = 0.1;
+        newNest.position.z = z;
+        newNest.position.x = x;
+        newNest.castShadow = true;
+        newNest.receiveShadow = true;
+        newNest.shadowMaterial = shadowMat;
+        scene.add(newNest);
+        nestObjects.push(newNest);
+
+        var offset = new THREE.Vector2(5, 5);
+
+        var object = {
+            'geo': newNest,
+            'size': size,
+            'objectComponent': componentType.nest
+        };
+
+
+        grid.setEnvSquareInGameSpace(z - 5, x - 5, componentType.nest);       
+        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);
+        grid.setEnvSquareInGameSpace(z - 5, x + 5, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 5, x + 5, componentType.nest);
     }
 
     this.cleanup = function () {

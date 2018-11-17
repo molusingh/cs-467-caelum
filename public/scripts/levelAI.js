@@ -16,8 +16,10 @@ function levelAI(scene) {
     var actorsInLevel = [];
     var pawnsInLevel = [];
     var assetPools = init2DArray(13);
-    var player;
     var loader;
+    var ducklingsSpawned = 0;
+    var ducklingsDead = 0;
+    var ducklingsNested = 0;
 
     var currentLevel = 1;
     var invisibilityLevel = 0;
@@ -54,7 +56,27 @@ function levelAI(scene) {
     function setupSubscriptions() {
         //bus.subscribe("quackSkillRequested", processSuperquack());
         //bus.subscribe("ducklingDead", test);
-        bus.subscribe("ducklingDead", removeActor);
+        bus.subscribe("ducklingDead", addDead);
+        bus.subscribe("ducklingNested", addNested);
+    }
+
+    function addNested() {
+        ducklingsNested++;
+        checkDucklings();
+    }
+
+    function addDead(actor) {
+        removeActor(actor);
+        ducklingsDead++;
+        checkDucklings();
+    }
+
+    function checkDucklings() {
+
+        if (ducklingsDead + ducklingsNested == ducklingsSpawned) {
+            currentState = levelState.end;
+            cleanup();
+        }
     }
 
     function setupPublications() {
@@ -73,7 +95,6 @@ function levelAI(scene) {
         //if quack available
         grid.setSuperquack(true);
     }
-
 
     function initAssetPools() {
 
@@ -255,6 +276,7 @@ function levelAI(scene) {
 
         //var ducklingCount = config.getCount(componentType.duckling);
         var ducklingCount = 4;
+        ducklingsSpawned = ducklingCount;
 
         //var stickCount = config.getCount(componentType.stick);
         var stickCount = 12;

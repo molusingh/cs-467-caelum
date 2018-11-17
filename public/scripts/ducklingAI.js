@@ -31,7 +31,6 @@ function ducklingAI(scene, hatchling, egg) {
     this.spawn = spawn;
     this.getActor = getActor;
     this.move = move;
-    this.kill = kill;
 
     // private variables
     var duckling = egg;
@@ -66,7 +65,8 @@ function ducklingAI(scene, hatchling, egg) {
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
         bus.subscribe('moveduckling', move);
-        bus.subscribe("ducklingKilled", killDuckling(ducklingKilled));
+        bus.subscribe("killDuckling", killDuckling);
+        bus.subscribe("eggEaten", eatEgg);
         active = true;
         currentState = ducklingState.duckling;
         if (true) {
@@ -153,15 +153,16 @@ function ducklingAI(scene, hatchling, egg) {
     }
 
     function killDuckling(ducklingKilled) {
-        if (ducklingKilled !== duckling)
+        console.log("duckling killed");
+        if (ducklingKilled != duckling)
             return;
 
         playDead();
         setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
     }
 
-    function eatEgg(foundEgg) {
-        if (foundEgg !== egg)
+    function eatEgg(eaten) {
+        if (eaten !== egg)
             return;
 
         //egg will never hatch

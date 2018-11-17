@@ -6,7 +6,7 @@ function levelAI(scene) {
 
     /*
     publish: level scores
-    subscribe: userAction (nest)
+    subscribe: nest, with # of ducklings from playerControls
     */
     var currentState;
     setState(levelState.init);
@@ -51,15 +51,16 @@ function levelAI(scene) {
     }
 
     function setupSubscriptions() {
-        bus.subscribe("invisibilitySkillRequested", processInvisibility());
-        bus.subscribe("quackSkillRequested", processSuperquack());
-        bus.subscribe("ducklingDead", removeActor(actor));
+        //bus.subscribe("quackSkillRequested", processSuperquack());
+        //bus.subscribe("ducklingDead", test);
+        bus.subscribe("ducklingDead", removeActor);
+    }
+
+    function test() {
+        console.log("TEST");
     }
 
     function setupPublications() {
-    }
-
-    function setupSubscriptions() {
     }
 
 
@@ -135,14 +136,24 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
-        var stickSize = 10;
+        var stickSize = 12;
         params = {
             count: stickSize,
             original: stick,
             scale: 1,
             componentType: componentType.stick,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
+
+        var nest = scene.getObjectByName("nest");
+        var nestSize = 3;
+        params = {
+            count: nestSize,
+            original: nest,
+            scale: 1,
+            componentType: componentType.nest,
+        }
+        //createAssetPool(params);
     }
 
     function createAssetPool(params) {
@@ -404,7 +415,7 @@ function levelAI(scene) {
         playerAI.reset();
     }
 
-    function removedActor(actor) {
+    function removeActor(actor) {
         var location = 0;
         var length = actorsInLevel.length;
         for (var i = 0; i < length; i++) {
@@ -419,6 +430,7 @@ function levelAI(scene) {
         }
 
         actorsInLevel.length = length - 1;
+        console.log(actorsInLevel.length);
     }
 
     var playerAI = {};
@@ -475,7 +487,7 @@ function levelAI(scene) {
                 for (var i = 0; i < actorsInLevel.length; i++) {
                     if (actorsInLevel[i] !== undefined) {
                         actorsInLevel[i].update();
-                        cleanupRemovedActor();
+                        //cleanupRemovedActor();
                     }
                 }
             }

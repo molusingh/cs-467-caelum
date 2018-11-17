@@ -132,7 +132,7 @@ function Predator(scene, predator, type) {
             if (actorInPath == null || componentType.duck
                 || componentType.duckling) {
                 if (actorInPath == componentType.duckling) {
-                    bus.publish("ducklingKilled", grid.getActorObject(path.point));
+                    bus.publish("killDuckling", grid.getActorObject(path.point));
                 }
                 predatorMover[path.move]();
 

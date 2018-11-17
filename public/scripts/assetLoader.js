@@ -27,6 +27,10 @@ function assetLoader(scene) {
     var stick = new THREE.Object3D();
     stick.name = "stick";
 
+    var nest = new THREE.Object3D();
+    nest.name = "nest";
+
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -279,6 +283,30 @@ function assetLoader(scene) {
 
         stick.add(object);
         scene.add(stick);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    //load nest 
+    var nestLoader = new THREE.FBXLoader(manager);
+    nestLoader.load('./geo/nest.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+        object.position.y = -100;
+
+        nest.add(object);
+        scene.add(nest);
 
     }, undefined, function (e) {
         console.error(e);

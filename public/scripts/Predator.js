@@ -35,6 +35,9 @@ function Predator(scene, predator, type) {
     this.getActor = getActor;
     this.move = move;
 
+    var id = getRandomInt(10000);
+    var predId = getRandomInt(1000);
+
     // private variables
     var moveIntervalId = null;
     var active = false;
@@ -104,6 +107,7 @@ function Predator(scene, predator, type) {
         if (path == null) // if no path move randomly
         {
             // console.log("no path found, moving randomly");
+            console.log("Predator: " + predId + " instance: " + id);
             var validRandom = isValid(predator.position, randomDirection);
             var count = 0;
             while (!validRandom) // until direction is valid

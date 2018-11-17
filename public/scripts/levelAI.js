@@ -54,6 +54,7 @@ function levelAI(scene) {
         //bus.subscribe("ducklingDead", test);
         bus.subscribe("ducklingDead", addDead);
         bus.subscribe("ducklingNested", addNested);
+        bus.subscribe("foundStick", foundStick);
     }
 
     function addNested() {
@@ -73,6 +74,12 @@ function levelAI(scene) {
             currentState = levelState.end;
             cleanup();
         }
+    }
+
+    function foundStick(stick) {
+        actor.position.y = -100;
+        removeActor(stick);
+        grid.removeActor(stick);
     }
 
     function setupPublications() {
@@ -472,7 +479,6 @@ function levelAI(scene) {
             }
 
             actorsInLevel.length = length - 1;
-            //console.log(actorsInLevel.length);
         }
         else {
             console.log("actor doesn't exist");

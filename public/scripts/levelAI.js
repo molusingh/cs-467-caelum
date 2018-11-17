@@ -4,10 +4,6 @@ function levelAI(scene) {
     this.setState = setState;
     this.updateSettings = updateSettings;
 
-    /*
-    publish: level scores
-    subscribe: nest, with # of ducklings from playerControls
-    */
     var currentState;
     setState(levelState.init);
 
@@ -86,6 +82,7 @@ function levelAI(scene) {
         loader = new assetLoader(scene);
     }
 
+    /*
     function processInvisibility() {
         //if invisibility available
         grid.setInvisibility(true);
@@ -95,6 +92,7 @@ function levelAI(scene) {
         //if quack available
         grid.setSuperquack(true);
     }
+    */
 
     function initAssetPools() {
 
@@ -162,18 +160,6 @@ function levelAI(scene) {
         }
         createAssetPool(params);
 
-        /*
-        done in assetGen instead
-        var nest = scene.getObjectByName("nest");
-        var nestSize = 3;
-        params = {
-            count: nestSize,
-            original: nest,
-            scale: 1,
-            componentType: componentType.nest,
-        }
-        createAssetPool(params);
-        */
     }
 
 
@@ -366,8 +352,6 @@ function levelAI(scene) {
         spawnActor(croqs);
         spawnActor(ducklings);
         spawnPawn(sticks);
-        //TO DO: add basic instance class
-        //spawnAsset(sticks);
 
     }
 
@@ -549,10 +533,6 @@ function levelAI(scene) {
                     }
                 }
             }
-
-            //set all duckling.userData.callable = false (need to setup a pool)
-            //if (duck)
-            //   grid.updateDucklingsInRadius(duck);
 
         }
 

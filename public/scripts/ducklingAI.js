@@ -35,6 +35,7 @@ function ducklingAI(scene, hatchling, egg) {
     // private variables
     var duckling = egg;
     var moveIntervalId = null;
+    var hatchingTimeoutId = null;
     var active = false;
     var ducklingMover
     //var ducklingMover = new ObjectMover(duckling);
@@ -64,6 +65,8 @@ function ducklingAI(scene, hatchling, egg) {
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
         bus.subscribe('moveduckling', move);
+        bus.subscribe("killDuckling", killDuckling);
+        bus.subscribe("eggEaten", eatEgg);
         active = true;
         currentState = ducklingState.duckling;
         if (true) {
@@ -77,7 +80,7 @@ function ducklingAI(scene, hatchling, egg) {
     function init() {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        setTimeout(function () { hatch(); }, egg.userData.hatchTime * 1000);
+        hatchingTimeoutId = setTimeout(function () { hatch(); }, egg.userData.hatchTime * 1000);
     }
 
     // locates the specified target
@@ -149,6 +152,43 @@ function ducklingAI(scene, hatchling, egg) {
         active = !active;
     }
 
+    function despawn() {
+        grid.removeActor(duckling);
+        duckling.position.y = -100;
+        active = false;
+        currentState = ducklingState.pool;
+        clearInterval(moveIntervalId);
+        clearTimeout(hatchingTimeoutId);
+    }
+
+    function killDuckling(ducklingKilled) {
+        if (ducklingKilled != duckling)
+            return;
+
+        despawn();
+        playDead();
+        setTimeout(function () {
+            bus.publish("ducklingDead", duckling);
+        }, 1000);
+    }
+
+    function eatEgg(eaten) {
+        if (eaten !== egg)
+            return;
+
+        //egg will never hatch
+        clearTimeout(hatchingTimeoutId);
+
+        //show broken egg();
+
+        //wait a second to show broken egg
+        setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
+    }
+
+    function playDead() {
+        //show red pool of blood
+    }
+
     function update() {
         if (currentState === ducklingState.init) {
             init();
@@ -156,10 +196,12 @@ function ducklingAI(scene, hatchling, egg) {
         }
 
         if (currentState === ducklingState.despawn) {
+            grid.removeActor(duckling);
             duckling.position.y = -100;
             active = false;
             currentState = ducklingState.pool;
             clearInterval(moveIntervalId);
+            clearTimeout(hatchingTimeoutId);
         }
 
         var elapsedTime = clock.getElapsedTime();

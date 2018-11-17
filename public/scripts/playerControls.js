@@ -27,7 +27,7 @@ function playerControls(scene, duck) {
     -- ALL functions MUST be filtered through: if(!active) return;
     */
 
-    var nestBuilder = new assetGen(scene); 
+    var nestBuilder = new assetGen(scene);
 
     //when game is paused
     var active = false;
@@ -96,7 +96,7 @@ function playerControls(scene, duck) {
     $("#callButton").click(playSound.call);
 */
     function duckUp(object) {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -110,7 +110,7 @@ function playerControls(scene, duck) {
     }
 
     function duckDown(object) {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -121,11 +121,11 @@ function playerControls(scene, duck) {
             bus.publish("moveDown");
             bus.publish("playerMove");
         }
-        grid.printGrid(15, 25, 15, 25);
+        //grid.printGrid(15, 25, 15, 25);
     }
 
     function duckLeft(object) {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -139,7 +139,7 @@ function playerControls(scene, duck) {
     }
 
     function duckRight(object) {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -153,7 +153,7 @@ function playerControls(scene, duck) {
     }
 
     function jumpSkill(object) {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -216,8 +216,8 @@ function playerControls(scene, duck) {
         }
     }
 
-    function callSkill () {
-        if(!active) {
+    function callSkill() {
+        if (!active) {
             return;
         }
 
@@ -229,7 +229,7 @@ function playerControls(scene, duck) {
     }
 
     function nestSkill(scene) {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -238,16 +238,16 @@ function playerControls(scene, duck) {
 
         // don't check anything if duck is in water or air
         if (duck.userData.inWater === false && duck.userData.inAir === false) {
-            
+
             var validArea = grid.getNestArea(duck.position.z, duck.position.x);
 
             if (validArea != 0 && duck.userData.inWater === false) {
-               
+
                 // top right
                 if (validArea == 1) {
                     nestBuilder.generateNest(duckZ - 5, duckX - 5);
 
-                } 
+                }
                 // bottom right
                 if (validArea == 2) {
                     nestBuilder.generateNest(duckZ - 5, duckX + 5);
@@ -270,7 +270,7 @@ function playerControls(scene, duck) {
 
 
     function superQuackSkill() {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -281,7 +281,7 @@ function playerControls(scene, duck) {
         if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
             localStun = true;
             beginStun = clock.getElapsedTime();
-            
+
             bus.publish("stunSound");
 
             for (i = 0; i < foxes.length; i++) {
@@ -320,7 +320,7 @@ function playerControls(scene, duck) {
     }
 
     function speedBoostSkill() {
-        if(!active) {
+        if (!active) {
             return;
         }
 
@@ -328,7 +328,7 @@ function playerControls(scene, duck) {
     }
 
     function invisibilitySkill() {
-        if(!active) {
+        if (!active) {
             return;
         }
 

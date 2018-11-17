@@ -6,7 +6,7 @@ function levelAI(scene) {
 
     /*
     publish: level scores
-    subscribe: userAction (nest)
+    subscribe: nest, with # of ducklings from playerControls
     */
     var currentState;
     setState(levelState.init);
@@ -51,14 +51,16 @@ function levelAI(scene) {
     }
 
     function setupSubscriptions() {
-        bus.subscribe("invisibilitySkillRequested", processInvisibility());
-        bus.subscribe("quackSkillRequested", processSuperquack());
+        //bus.subscribe("quackSkillRequested", processSuperquack());
+        //bus.subscribe("ducklingDead", test);
+        bus.subscribe("ducklingDead", removeActor);
+    }
+
+    function test() {
+        console.log("TEST");
     }
 
     function setupPublications() {
-    }
-
-    function setupSubscriptions() {
     }
 
 
@@ -134,14 +136,24 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
-        var stickSize = 10;
+        var stickSize = 12;
         params = {
             count: stickSize,
             original: stick,
             scale: 1,
             componentType: componentType.stick,
         }
-        createAssetPool(params);
+        //createAssetPool(params);
+
+        var nest = scene.getObjectByName("nest");
+        var nestSize = 3;
+        params = {
+            count: nestSize,
+            original: nest,
+            scale: 1,
+            componentType: componentType.nest,
+        }
+        //createAssetPool(params);
     }
 
     function createAssetPool(params) {
@@ -403,6 +415,31 @@ function levelAI(scene) {
         playerAI.reset();
     }
 
+    function removeActor(actor) {
+        var location = 0;
+        var found = false;
+        var length = actorsInLevel.length;
+        for (var i = 0; i < length; i++) {
+            if (actorsInLevel[i].getActor() == actor) {
+                found = true;
+                location = i;
+                break;
+            }
+        }
+
+        if (found) {
+            for (i = location; i < length - 1; i++) {
+                actorsInLevel[i] = actorsInLevel[i + 1];
+            }
+
+            actorsInLevel.length = length - 1;
+            console.log(actorsInLevel.length);
+        }
+        else {
+            console.log("actor doesn't exist");
+        }
+    }
+
     var playerAI = {};
 
     this.update = function () {
@@ -438,7 +475,10 @@ function levelAI(scene) {
             if (!AIsActive) {
                 setAIActiveState(true);
                 initAIs();
-                AIsActive = true;
+                AIsActive = true
+                console.log("inLevel.length: " + actorsInLevel.length + " #2 UUID: " + actorsInLevel[2].getActor().uuid);
+                grid.removeActor(actorsInLevel[2].getActor());
+                console.log("inLevel.length: " + actorsInLevel.length + " #2 UUID: " + actorsInLevel[2].getActor().uuid);
             }
 
             //get duck's state
@@ -454,6 +494,7 @@ function levelAI(scene) {
                 for (var i = 0; i < actorsInLevel.length; i++) {
                     if (actorsInLevel[i] !== undefined) {
                         actorsInLevel[i].update();
+                        //cleanupRemovedActor();
                     }
                 }
             }

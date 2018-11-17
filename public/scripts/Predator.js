@@ -128,9 +128,14 @@ function Predator(scene, predator, type) {
             var rotateMove = 'rotate' + path.move[0].toUpperCase() +
                 path.move.substring(1);
             predatorMover[rotateMove](); // always rotate to face
-            if (grid.getActor(path.point) == null || componentType.duck
+            var actorInPath = grid.getActor(path.point);
+            if (actorInPath == null || componentType.duck
                 || componentType.duckling) {
+                if (actorInPath == componentType.duckling) {
+                    bus.publish("killDuckling", grid.getActorObject(path.point));
+                }
                 predatorMover[path.move]();
+
             }
         }
         grid.updateActor(predator);

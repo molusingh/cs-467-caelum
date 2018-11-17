@@ -54,7 +54,11 @@ function Predator(scene, predator, type) {
     }
 
     function despawn() {
-        currentState = predatorState.despawn;
+        //currentState = predatorState.despawn;
+        predator.position.y = -100;
+        active = false;
+        currentState = predatorState.pool;
+        clearInterval(moveIntervalId);
     }
 
     function getActor() {

@@ -399,7 +399,10 @@ function levelAI(scene) {
         for (var i = 0; i < allActors; i++) {
             var type = actorsInLevel[i].getActor().userData.componentType;
 
-            if (type === componentType.croq || type === componentType.hawk || type === componentType.fox) {
+            if (type === componentType.croq ||
+                type === componentType.hawk ||
+                type === componentType.fox ||
+                type === componentType.duckling) {
                 actorsInLevel[i].despawn();
             }
         }

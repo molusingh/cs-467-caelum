@@ -29,6 +29,7 @@ function ducklingAI(scene, hatchling, egg) {
     this.update = update;
     this.init = init;
     this.spawn = spawn;
+    this.despawn = despawn;
     this.getActor = getActor;
     this.move = move;
 

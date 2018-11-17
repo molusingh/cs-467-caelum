@@ -152,13 +152,24 @@ function ducklingAI(scene, hatchling, egg) {
         active = !active;
     }
 
+    function despawn() {
+        grid.removeActor(duckling);
+        duckling.position.y = -100;
+        active = false;
+        currentState = ducklingState.pool;
+        clearInterval(moveIntervalId);
+        clearTimeout(hatchingTimeoutId);
+    }
+
     function killDuckling(ducklingKilled) {
-        console.log("duckling killed");
         if (ducklingKilled != duckling)
             return;
 
+        despawn();
         playDead();
-        setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
+        setTimeout(function () {
+            bus.publish("ducklingDead", duckling);
+        }, 1000);
     }
 
     function eatEgg(eaten) {
@@ -185,6 +196,7 @@ function ducklingAI(scene, hatchling, egg) {
         }
 
         if (currentState === ducklingState.despawn) {
+            grid.removeActor(duckling);
             duckling.position.y = -100;
             active = false;
             currentState = ducklingState.pool;

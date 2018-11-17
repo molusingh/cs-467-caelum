@@ -417,20 +417,27 @@ function levelAI(scene) {
 
     function removeActor(actor) {
         var location = 0;
+        var found = false;
         var length = actorsInLevel.length;
         for (var i = 0; i < length; i++) {
-            if (actorsInLevel[i] == actor) {
+            if (actorsInLevel[i].getActor() == actor) {
+                found = true;
                 location = i;
                 break;
             }
         }
 
-        for (i = location; i < length - 1; i++) {
-            actorsInLevel[i] = actorsInLevel[i + 1];
-        }
+        if (found) {
+            for (i = location; i < length - 1; i++) {
+                actorsInLevel[i] = actorsInLevel[i + 1];
+            }
 
-        actorsInLevel.length = length - 1;
-        console.log(actorsInLevel.length);
+            actorsInLevel.length = length - 1;
+            console.log(actorsInLevel.length);
+        }
+        else {
+            console.log("actor doesn't exist");
+        }
     }
 
     var playerAI = {};

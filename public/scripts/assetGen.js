@@ -20,14 +20,14 @@ function assetGen(scene) {
         generateGrassObstacles(60, 20);
     }
 
-    this.generateNest = function(z, x) {
+    this.generateNest = function (z, x) {
         var nest = new THREE.Object3D();
         nest.name = "nest";
         var manager = new THREE.LoadingManager();
 
-            //load nest 
+        //load nest 
         var nestLoader = new THREE.FBXLoader(manager);
-        nestLoader.load('./geo/stick.fbx', function (object) {
+        nestLoader.load('./geo/nest.fbx', function (object) {
             object.traverse(function (child) {
 
                 if (child instanceof THREE.Mesh) {
@@ -44,12 +44,12 @@ function assetGen(scene) {
             nest.add(object);
             scene.add(nest);
 
-            }, undefined, function (e) {
-                    console.error(e);
-            });
+        }, undefined, function (e) {
+            console.error(e);
+        });
 
-            nest.position.z = z;
-            nest.position.x = x;
+        nest.position.z = z;
+        nest.position.x = x;
 
     }
 

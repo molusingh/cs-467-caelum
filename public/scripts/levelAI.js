@@ -14,6 +14,7 @@ function levelAI(scene) {
     //should come straight from playerControler?
     var score;
     var actorsInLevel = [];
+    var pawnsInLevel = [];
     var assetPools = init2DArray(13);
     var player;
     var loader;
@@ -56,13 +57,8 @@ function levelAI(scene) {
         bus.subscribe("ducklingDead", removeActor);
     }
 
-    function test() {
-        console.log("TEST");
-    }
-
     function setupPublications() {
     }
-
 
     function loadAssets() {
         loader = new assetLoader(scene);
@@ -143,8 +139,10 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.stick,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
 
+        /*
+        done in assetGen instead
         var nest = scene.getObjectByName("nest");
         var nestSize = 3;
         params = {
@@ -153,8 +151,10 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.nest,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
+        */
     }
+
 
     function createAssetPool(params) {
 
@@ -189,6 +189,10 @@ function levelAI(scene) {
                 case componentType.duckling:
                     //asset.userData.speed = config.getSpeed(componentType.hawk);
                     instance = new ducklingAI(scene, asset, egg);
+                    break;
+                case componentType.stick:
+                    //asset.userData.speed = config.getSpeed(componentType.hawk);
+                    instance = asset;
                     break;
             }
 
@@ -326,17 +330,18 @@ function levelAI(scene) {
             componentType: componentType.stick
         }
 
-        spawnAsset(duck);
-        spawnAsset(foxes);
-        spawnAsset(hawks);
-        spawnAsset(croqs);
-        spawnAsset(ducklings);
+        spawnActor(duck);
+        spawnActor(foxes);
+        spawnActor(hawks);
+        spawnActor(croqs);
+        spawnActor(ducklings);
+        spawnPawn(sticks);
         //TO DO: add basic instance class
         //spawnAsset(sticks);
 
     }
 
-    function spawnAsset(params) {
+    function spawnActor(params) {
 
         for (var i = 0; i < params.count; i++) {
 
@@ -353,6 +358,19 @@ function levelAI(scene) {
         }
     }
 
+    function spawnPawn(params) {
+
+        for (var i = 0; i < params.count; i++) {
+
+            var pawn = assetPools[params.componentType][i];
+            pawnsInLevel.push(pawn);
+            pawn.userData.locationComponent = params.locationComponent;
+            pawn.userData.location = params.locations[i];
+
+            grid.placeActor(pawn);
+
+        }
+    }
 
     function despawn() {
         setAIActiveState(false);
@@ -365,6 +383,13 @@ function levelAI(scene) {
             }
         }
         actorsInLevel = [];
+
+        var allPawns = pawnsInLevel.length;
+        for (var i = 0; i < allPawns; i++) {
+            pawnsInLevel[i].position.y = -100;
+        }
+
+        pawnsInLevel = [];
     }
 
     //init prototypes, initLevelAssets
@@ -433,7 +458,7 @@ function levelAI(scene) {
             }
 
             actorsInLevel.length = length - 1;
-            console.log(actorsInLevel.length);
+            //console.log(actorsInLevel.length);
         }
         else {
             console.log("actor doesn't exist");
@@ -476,9 +501,6 @@ function levelAI(scene) {
                 setAIActiveState(true);
                 initAIs();
                 AIsActive = true
-                console.log("inLevel.length: " + actorsInLevel.length + " #2 UUID: " + actorsInLevel[2].getActor().uuid);
-                grid.removeActor(actorsInLevel[2].getActor());
-                console.log("inLevel.length: " + actorsInLevel.length + " #2 UUID: " + actorsInLevel[2].getActor().uuid);
             }
 
             //get duck's state
@@ -494,7 +516,6 @@ function levelAI(scene) {
                 for (var i = 0; i < actorsInLevel.length; i++) {
                     if (actorsInLevel[i] !== undefined) {
                         actorsInLevel[i].update();
-                        //cleanupRemovedActor();
                     }
                 }
             }

@@ -15,6 +15,9 @@ function assetLoader(scene) {
     var egg = new THREE.Object3D();
     egg.name = "egg";
 
+    var eggShell = new THREE.Object3D();
+    eggShell.name = "eggShell";
+
     var hawk = new THREE.Object3D();
     hawk.name = "hawk";
 
@@ -175,6 +178,30 @@ function assetLoader(scene) {
         console.error(e);
     });
 
+    //load eggCracked 
+    var eggLoader = new THREE.FBXLoader(manager);
+    eggLoader.load('./geo/eggCracked.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+        object.position.y = -100;
+
+        eggShell.add(object);
+        scene.add(eggShell);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
 
     this.checkAssetsLoaded = function () {
         if (allAssetsLoaded === true) {
@@ -256,7 +283,5 @@ function assetLoader(scene) {
     }, undefined, function (e) {
         console.error(e);
     });
-
-
 
 }

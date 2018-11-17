@@ -257,7 +257,7 @@ function levelAI(scene) {
         var ducklingCount = 4;
 
         //var stickCount = config.getCount(componentType.stick);
-        var stickCount = 0;
+        var stickCount = 12;
 
         var duckCount = 1;
 
@@ -320,7 +320,15 @@ function levelAI(scene) {
         var stickLocations = [(new THREE.Vector2(20, 25)),
         (new THREE.Vector2(35, 15)),
         (new THREE.Vector2(25, 5)),
-        (new THREE.Vector2(25, 15))]
+        (new THREE.Vector2(7, 15)),
+        (new THREE.Vector2(5, 12)),
+        (new THREE.Vector2(3, 35)),
+        (new THREE.Vector2(5, 25)),
+        (new THREE.Vector2(15, 15)),
+        (new THREE.Vector2(15, 25)),
+        (new THREE.Vector2(35, 35)),
+        (new THREE.Vector2(25, 15)),
+        (new THREE.Vector2(25, 10))]
 
         var sticks = {
             count: stickCount,

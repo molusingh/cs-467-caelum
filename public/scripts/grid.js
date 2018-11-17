@@ -288,6 +288,12 @@ function board() {
         envTable[x][y] = componentType;
     }
 
+    this.setEnvSquareInGameSpace = function (z, x) {
+        var x = normalizeZ(z);
+        var y = normalizeX(x);
+        envTable[x][y] = componentType;
+    }
+
     //testing function
     this.printGrid = function (start_x, end_x, start_y, end_y) {
         for (var j = start_y; j < end_y + 1; j++) {

@@ -42,7 +42,6 @@ function EventBus() {
     function subscribe(eventType, callback) {
         event = findEvent(eventType);
         if (event == undefined) {
-            console.log("sub: " + eventType);
             event = new Event(eventType);
             events.push(event);
         }

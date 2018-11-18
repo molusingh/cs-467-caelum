@@ -103,6 +103,20 @@ function Predator(scene, predator, type)
         return grid.getActorsInRadius(predator.position, 100, targetType)[0];
     }
 
+    function getPath(targetType)
+    {
+        target = findTarget(targetType);
+
+        if (target) // if predator found target
+        {
+            return findPath(predator.position, target.position, isLegalMove);
+        }
+        else // otherwise no path
+        {
+            return null;
+        }
+    }
+
     // moves the predator
     function move()
     {
@@ -110,15 +124,10 @@ function Predator(scene, predator, type)
         {
             return;
         }
-        target = findTarget(componentType.duck);
-
-        if (target) // if predator found target
+        path = getPath(componentType.duck);
+        if (path == null) // if no path to duck, go after duckling
         {
-            path = findPath(predator.position, target.position, isLegalMove);
-        }
-        else // otherwise no path
-        {
-            path = null;
+            path = getPath(componentType.duckling);
         }
         if (path == null) // if no path move randomly
         {
@@ -150,18 +159,14 @@ function Predator(scene, predator, type)
                 path.move.substring(1);
             predatorMover[rotateMove](); // always rotate to face
             var actor = grid.getActor(path.point);
-            if (actor == null || actor == componentType.duck ||
-                actor == componentType.duckling)
+            if (actor != null) // either duckling or duck
             {
-                if (actor != null)
+                if (predator.position.y == target.position.y)
                 {
-                    if (predator.position.y == target.position.y)
-                    {
-                        bus.publish("kill", grid.getActorObject(path.point));
-                    }
+                    bus.publish("kill", grid.getActorObject(path.point));
                 }
-                predatorMover[path.move]();
             }
+            predatorMover[path.move]();
         }
         grid.updateActor(predator);
     }
@@ -207,6 +212,12 @@ function Predator(scene, predator, type)
         {
             return false;
         }
+        var actor = grid.getActor(target); // actor at current target
+        if (actor != null && actor != componentType.duck &&
+            actor != componentType.duckling)
+        {
+            return false;
+        }
         var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         var validSquares;
         if (type == predatorType.fox)
@@ -219,7 +230,10 @@ function Predator(scene, predator, type)
         }
         else if (type == predatorType.hawk)
         {
-            validSquares = [componentType.air, componentType.land];
+            validSquares = [
+                componentType.air, componentType.land, componentType.grass,
+                componentType.water
+            ];
         }
         else
         {

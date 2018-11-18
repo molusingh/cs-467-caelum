@@ -454,16 +454,15 @@ function board() {
         }
 
 
-        if (asset.userData.componentType === componentType.air) {
+        if (asset.userData.componentType === componentType.hawk) {
             assetLocation = location;
         }
         else {
             assetLocation = findValidSquare();
-        }
-
-        if (validLocation === false) {
-            console.log("failed: " + asset);
-            return;
+            if (validLocation === false) {
+                console.log("failed: " + asset);
+                return;
+            }
         }
 
         var originY = -200;

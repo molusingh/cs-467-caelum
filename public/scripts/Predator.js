@@ -87,7 +87,7 @@ function Predator(scene, predator, type)
             predator.position.z = 5;
         }
 
-        target = findTarget(componentType.duck);
+        target = findTargets(componentType.duck)[0];
         bus.subscribe('movepredator', move);
         if (type != predatorType.hawk || true)
         {
@@ -97,24 +97,29 @@ function Predator(scene, predator, type)
         currentState = predatorState.alive;
     }
 
-    // locates the specified target
-    function findTarget(targetType)
+    // locates the specified targets
+    function findTargets(targetType)
     {
-        return grid.getActorsInRadius(predator.position, 100, targetType)[0];
+        return grid.getActorsInRadius(predator.position, 100, targetType);
     }
 
     function getPath(targetType)
     {
-        target = findTarget(targetType);
-
-        if (target) // if predator found target
+        var targets = findTargets(targetType);
+        var path = null;
+        if (targets) // if predator found targets
         {
-            return findPath(predator.position, target.position, isLegalMove);
+            for (var i = 0; i < targets.length; ++i)
+            {
+                target = targets[i];
+                path = findPath(predator.position, target.position, isLegalMove);
+                if (path)
+                {
+                    break;
+                }
+            }
         }
-        else // otherwise no path
-        {
-            return null;
-        }
+        return path;
     }
 
     // moves the predator

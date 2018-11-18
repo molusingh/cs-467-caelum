@@ -46,6 +46,8 @@ var motionUnit = 1.0;
 var callRadius = 5.0;
 var callRadiusOffset = 5.0;
 var stunLength = 10;
+var invisLength = 10;
+var invisActive = false;
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max) + 1);

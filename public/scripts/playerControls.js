@@ -46,11 +46,15 @@ function playerControls(scene, duck) {
     var duckMover = new ObjectMover(duck);
 
     // superquack variables
-    var localStun = false;
-    var beginStun;
+//    var localStun = false;
+//    var beginStun;
+    var stunTimeoutId = null;
     var foxes = [];
     var hawks = [];
     var croqs = [];
+
+    // invis variables
+    invisTimeoutId = null;
 
     //!!! Add if(active) to all core functions
     //in Mover, 
@@ -345,13 +349,14 @@ console.log("foxes: " + foxes.length);
 console.log("hawks: " + hawks.length);
 console.log("croqs: " + croqs.length);
         if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
-            localStun = true;
-            beginStun = clock.getElapsedTime();
+//            localStun = true;
+//            beginStun = clock.getElapsedTime();
 
             bus.publish("stunSound");
 
             for (i = 0; i < foxes.length; i++) {
                 bus.publish("stunned", foxes[i]);
+                
             }
 
             for (i = 0; i < hawks.length; i++) {
@@ -359,8 +364,10 @@ console.log("croqs: " + croqs.length);
             }
 
             for (i = 0; i < croqs.length; i++) {
-                bus.publish("stunned", croqs[i]);
+                //bus.publish("stunned", croqs[i]);
             }
+
+            stunTimeoutId = setTimeout(function() { resetStunStatus(); }, stunLength * 1000);
         }
     }
 
@@ -395,6 +402,9 @@ console.log("croqs: " + croqs.length);
         if (!active) {
             return;
         }
+
+        invisActive = true;
+        invisTimeoutId = setTimeout(function() { invisActive = false; }, invisLength * 1000);
     }
     
     function kill(ducklingKilled)
@@ -501,12 +511,12 @@ console.log("croqs: " + croqs.length);
 
         var elapsedTime = clock.getElapsedTime();
 
-        if (localStun === true) {
+/*        if (localStun === true) {
             // stunLength is global, modified by superquack level
             if (elapsedTime - beginStun > stunLength) {
                 resetStunStatus();
             }
         }
-    }
+*/    }
 
 }

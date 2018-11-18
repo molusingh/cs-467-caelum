@@ -125,7 +125,7 @@ function Predator(scene, predator, type)
             return;
         }
         path = getPath(componentType.duck);
-        if (path == null) // if no path to duck, go after duckling
+        if (path == null) // if no path to duck, try duckling
         {
             path = getPath(componentType.duckling);
         }

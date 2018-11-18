@@ -116,8 +116,8 @@ function ducklingAI(scene, hatchling, egg)
 
     function isPredator(actorType)
     {
-        return actorType == componentType.fox || actorType == componentType.croq 
-            || actorType == componentType.hawk;
+        return actorType == componentType.fox || actorType == componentType.croq ||
+            actorType == componentType.hawk;
     }
 
     // moves the duckling
@@ -323,6 +323,11 @@ function ducklingAI(scene, hatchling, egg)
                 return false;
         }
         target.y = start.y;
+        var actor = grid.getActor(target);
+        if (actor != null)
+        {
+           return false;
+        }
         return isLegalMove(target);
     }
 }

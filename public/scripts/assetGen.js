@@ -22,61 +22,41 @@ function assetGen(scene) {
     }
 
     this.generateNest = function (z, x) {
-     /*   var nest = new THREE.Object3D();
-        nest.name = "nest";
-        var manager = new THREE.LoadingManager();
-
-        //load nest 
-        var nestLoader = new THREE.FBXLoader(manager);
-        nestLoader.load('./geo/nest.fbx', function (object) {
-            object.traverse(function (child) {
-
-                if (child instanceof THREE.Mesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                    child.shadowMaterial = shadowMat;
-                }
-
-            });
-            object.scale.x = 2;
-            object.scale.y = 2;
-            object.scale.z = 2;
-
-            nest.add(object);
-            scene.add(nest);
-
-        }, undefined, function (e) {
-            console.error(e);
-        });
-    */
 
         var nest = scene.getObjectByName("nest");
-        var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
-        var size = new THREE.Vector2(1, 1);
+        var asset = new THREE.Object3D();
+        
+        var params = {
+            original: nest,
+            scale: 1,
+            componentType: componentType.nest,
+        }
 
-        var newNest = nest.clone();
-        newNest.position.y = 0.1;
-        newNest.position.z = z;
-        newNest.position.x = x;
-        newNest.castShadow = true;
-        newNest.receiveShadow = true;
-        newNest.shadowMaterial = shadowMat;
-        scene.add(newNest);
-        nestObjects.push(newNest);
+        var original = params.original;
 
-        var offset = new THREE.Vector2(5, 5);
+        original.traverse(function (child) {
 
-        var object = {
-            'geo': newNest,
-            'size': size,
-            'objectComponent': componentType.nest
-        };
+            if (child instanceof THREE.Mesh) {
+                var childClone = child.clone();
+                asset.add(childClone);
+            }
 
+            asset.scale.x = params.scale;
+            asset.scale.y = params.scale;
+            asset.scale.z = params.scale;
+            asset.userData.componentType = params.componentType;
 
-        grid.setEnvSquareInGameSpace(z - 5, x - 5, componentType.nest);       
-        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);
-        grid.setEnvSquareInGameSpace(z - 5, x + 5, componentType.nest);
-        grid.setEnvSquareInGameSpace(z + 5, x + 5, componentType.nest);
+            asset.position.z = z;
+            asset.position.x = x;
+
+            scene.add(asset);
+            nestObjects.push(asset);
+        });
+
+        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);       
+        grid.setEnvSquareInGameSpace(z + 15, x - 5, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 5, x - 15, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 15, x - 15, componentType.nest);
     }
 
     this.cleanup = function () {
@@ -94,6 +74,11 @@ function assetGen(scene) {
             scene.remove(landObstacles[i]);
         }
         landObstacles.length = 0;
+
+        for (var i = 0; i < nestObjects.length; i++) {
+            scene.remove(nestObjects[i]);
+        }
+        nestObjects.length = 0;
     }
 
     //creates 4 points determining corners of 8x8 tile

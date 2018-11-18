@@ -86,7 +86,7 @@ function levelAI(scene) {
     }
 
     function foundStick(stick) {
-        actor.position.y = -100;
+        stick.position.y = -100;
         removeActor(stick);
         grid.removeActor(stick);
     }

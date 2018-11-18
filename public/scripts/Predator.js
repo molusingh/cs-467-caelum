@@ -49,6 +49,13 @@ function Predator(scene, predator, type)
     var randomDirection = null;
     predator.userData.currentDirection = 'down';
     setState(predatorState.pool);
+    var stunTimeoutId = null;
+    bus.subscribe("stunned", stun);
+
+    function stun() {
+        toggleActive();
+        stunTimeoutId = setTimeout(function() { toggleActive(); }, stunLength * 1000);
+    }
 
     function spawn()
     {

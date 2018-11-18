@@ -48,9 +48,9 @@ function playerControls(scene, duck) {
     // superquack variables
     var localStun = false;
     var beginStun;
-    var foxes;
-    var hawks;
-    var croqs;
+    var foxes = [];
+    var hawks = [];
+    var croqs = [];
 
     //!!! Add if(active) to all core functions
     //in Mover, 
@@ -179,9 +179,14 @@ function playerControls(scene, duck) {
 
         var stickObject;
 
-        if (grid.getSquareInfo(point.z, point.x) == 11) {
+        if (grid.getSquareInfo(point.z, point.x) == componentType.stick) {
             stickObject = grid.getActorObject(point);
             bus.publish("foundStick", stickObject);
+
+            var currentSticks = document.getElementById('sticksOutput');
+            var numSticks = currentSticks.innerHTML;
+            numSticks++;
+            currentSticks.innerHTML = numSticks;
         }
     }
 
@@ -282,6 +287,13 @@ function playerControls(scene, duck) {
             return;
         }
 
+        var currentSticks = document.getElementById('sticksOutput');
+        var numSticks = currentSticks.innerHTML;
+
+        if (numSticks < 4) {
+            return;
+        }
+
         var duckZ = duck.position.z;
         var duckX = duck.position.x;
 
@@ -313,6 +325,8 @@ function playerControls(scene, duck) {
                 }
 
                 bus.publish("nestSound");
+                numSticks = 0;
+                currentSticks.innerHTML = numSticks;
             }
         }
     }
@@ -327,6 +341,9 @@ function playerControls(scene, duck) {
         hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
         croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
 
+console.log("foxes: " + foxes.length);
+console.log("hawks: " + hawks.length);
+console.log("croqs: " + croqs.length);
         if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
             localStun = true;
             beginStun = clock.getElapsedTime();
@@ -334,7 +351,7 @@ function playerControls(scene, duck) {
             bus.publish("stunSound");
 
             for (i = 0; i < foxes.length; i++) {
-                foxes[i].userData.stunStatus = true;
+                bus.publish("stunned", foxes[i]);
             }
 
             for (i = 0; i < hawks.length; i++) {
@@ -342,7 +359,7 @@ function playerControls(scene, duck) {
             }
 
             for (i = 0; i < croqs.length; i++) {
-                croqs[i].userData.stunStatus = true;
+                bus.publish("stunned", croqs[i]);
             }
         }
     }

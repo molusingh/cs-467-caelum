@@ -191,6 +191,7 @@ function playerControls(scene, duck) {
         }
 
         var nextSquare;
+
         var facing = duck.userData.currentDirection;
         if (duck.userData.inAir === true) {
             return;
@@ -219,7 +220,7 @@ function playerControls(scene, duck) {
         }
 
         // if duck isn't in water and the square it is facing is water, go ahead
-        if (duck.userData.inWater === false && nextSquare == 2) {
+        if (duck.userData.inWater === false && nextSquare == componentType.water) {
             bus.publish("jumpSound");
             duck.userData.inWater = true;
 
@@ -237,8 +238,8 @@ function playerControls(scene, duck) {
             }
         }
 
-        // if duck is in water and the square it is facing is land, duckling, grass, stick, or nest go ahead
-        if (duck.userData.inWater === true && (nextSquare == 1 || nextSquare == 8 || nextSquare == 9 || nextSquare == 10 || nextSquare == 11 || nextSquare == 14)) {
+        // if duck is in water and the square it is facing is land, duckling, grass, egg, stick, or nest go ahead
+        if (duck.userData.inWater === true && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
 
             bus.publish("jumpSound");
             duck.userData.inWater = false;
@@ -423,13 +424,13 @@ function playerControls(scene, duck) {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
 
-        // moving from land to land (1), duckling (8), grass (10), stick (11), or nest (14)
-        if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11 || nextSquare == 14)) {
+        // moving from land to land, duckling, grass, egg, stick, or nest
+        if (duck.userData.inWater === false && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
             return true;
         }
 
-        // moving from water to water (2), requires jumpSkill to move to land
-        if (duck.userData.inWater === true && nextSquare == 2) {
+        // moving from water to water, requires jumpSkill to move to land
+        if (duck.userData.inWater === true && nextSquare == componentType.water) {
             return true;
         }
 

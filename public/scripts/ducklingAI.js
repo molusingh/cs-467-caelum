@@ -37,7 +37,7 @@ function ducklingAI(scene, hatchling, egg) {
     var moveIntervalId = null;
     var hatchingTimeoutId = null;
     var active = false;
-    var ducklingMover
+    var ducklingMover;
     //var ducklingMover = new ObjectMover(duckling);
     var target = null;
     var path = null;
@@ -138,6 +138,11 @@ function ducklingAI(scene, hatchling, egg) {
             }
         }
         grid.updateActor(duckling);
+        
+        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14) {
+            setState(ducklingState.nested);
+            toggleActive();
+        }
     }
 
     function setActive(value) {
@@ -216,7 +221,8 @@ function ducklingAI(scene, hatchling, egg) {
         var validSquares = [
             componentType.land,
             componentType.grass,
-            componentType.water
+            componentType.water,
+            componentType.nest
         ];
         return validSquares.find(validate) != undefined;
 

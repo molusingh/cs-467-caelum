@@ -385,8 +385,13 @@ function playerControls(scene, duck) {
         {
             return;
         }
+        setTimeout(callback, 1000);
         active = false;
-        currentState = playerState.dead;
+        function callback()
+        {
+            currentState = playerState.dead;
+        }
+
     }
 
     function isLegalMove(object) {

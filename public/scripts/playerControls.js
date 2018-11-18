@@ -75,6 +75,7 @@ function playerControls(scene, duck) {
     bus.subscribe("quackSkillRequested", superQuackSkill);
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
+    bus.subscribe("kill", kill);
 
     bus.subscribe("gridTest", gridTest);
 
@@ -175,7 +176,7 @@ function playerControls(scene, duck) {
         if (duck.userData.inAir === true) {
             return;
         }
- 
+
         var stickObject;
 
         if (grid.getSquareInfo(point.z, point.x) == 11) {
@@ -270,7 +271,7 @@ function playerControls(scene, duck) {
 
         // don't check anything if duck is in water or air
         if (duck.userData.inWater === false && duck.userData.inAir === false) {
-            console.log("duckling AI follow function here");
+            // console.log("duckling AI follow function here");
             bus.publish("callSound");
         }
     }
@@ -377,11 +378,20 @@ function playerControls(scene, duck) {
             return;
         }
     }
+    
+    function kill(ducklingKilled)
+    {
+        if (ducklingKilled != duck)
+        {
+            return;
+        }
+        active = false;
+        currentState = playerState.dead;
+    }
 
     function isLegalMove(object) {
 
         if (!active) {
-            console.log("dead");
             return false;
         }
 
@@ -419,14 +429,8 @@ function playerControls(scene, duck) {
         }
 
         // !!!!!temporary death sim, simulator to acutal!!!!
-        if (nextSquare == componentType.fox) {
+        if (nextSquare === componentType.fox || nextSquare === componentType.croq) {
             currentState = playerState.dead;
-            return true;
-        }
-
-        // !!!!!temporary win simulation, nothing like actual!!!!!
-        if (nextSquare == componentType.croq) {
-            currentState = playerState.won;
             return true;
         }
 

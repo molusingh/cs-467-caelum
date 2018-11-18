@@ -4,10 +4,6 @@ function levelAI(scene) {
     this.setState = setState;
     this.updateSettings = updateSettings;
 
-    /*
-    publish: level scores
-    subscribe: nest, with # of ducklings from playerControls
-    */
     var currentState;
     setState(levelState.init);
 
@@ -15,9 +11,12 @@ function levelAI(scene) {
     var score;
     var actorsInLevel = [];
     var pawnsInLevel = [];
-    var assetPools = init2DArray(13);
-    var player;
+    //num of enums
+    var assetPools = init2DArray(16);
     var loader;
+    var ducklingsSpawned = 0;
+    var ducklingsDead = 0;
+    var ducklingsNested = 0;
 
     var currentLevel = 1;
     var invisibilityLevel = 0;
@@ -54,7 +53,42 @@ function levelAI(scene) {
     function setupSubscriptions() {
         //bus.subscribe("quackSkillRequested", processSuperquack());
         //bus.subscribe("ducklingDead", test);
-        bus.subscribe("ducklingDead", removeActor);
+        bus.subscribe("ducklingDead", addDead);
+        bus.subscribe("ducklingNested", addNested);
+        bus.subscribe("foundStick", foundStick);
+        bus.subscribe("ducklingHatched", breakShell);
+    }
+
+    function breakShell(duckling) {
+
+        var location = duckling.position;
+        placePawn(componentType.eggShell, location);
+
+    }
+
+    function addNested() {
+        ducklingsNested++;
+        checkDucklings();
+    }
+
+    function addDead(actor) {
+        removeActor(actor);
+        ducklingsDead++;
+        checkDucklings();
+    }
+
+    function checkDucklings() {
+
+        if (ducklingsDead + ducklingsNested == ducklingsSpawned) {
+            currentState = levelState.end;
+            cleanup();
+        }
+    }
+
+    function foundStick(stick) {
+        stick.position.y = -100;
+        removeActor(stick);
+        grid.removeActor(stick);
     }
 
     function setupPublications() {
@@ -64,6 +98,7 @@ function levelAI(scene) {
         loader = new assetLoader(scene);
     }
 
+    /*
     function processInvisibility() {
         //if invisibility available
         grid.setInvisibility(true);
@@ -73,7 +108,7 @@ function levelAI(scene) {
         //if quack available
         grid.setSuperquack(true);
     }
-
+    */
 
     function initAssetPools() {
 
@@ -141,18 +176,16 @@ function levelAI(scene) {
         }
         createAssetPool(params);
 
-        /*
-        done in assetGen instead
-        var nest = scene.getObjectByName("nest");
-        var nestSize = 3;
+        var eggShell = scene.getObjectByName("eggShell");
+        var eggShellSize = 10;
         params = {
-            count: nestSize,
-            original: nest,
+            count: eggShellSize,
+            original: eggShell,
             scale: 1,
-            componentType: componentType.nest,
+            componentType: componentType.eggShell,
         }
         createAssetPool(params);
-        */
+
     }
 
 
@@ -187,11 +220,14 @@ function levelAI(scene) {
                     instance = new Predator(scene, asset, predatorType.hawk);
                     break;
                 case componentType.duckling:
-                    //asset.userData.speed = config.getSpeed(componentType.hawk);
+                    //asset.userData.speed = config.getSpeed(componentType.duckling);
                     instance = new ducklingAI(scene, asset, egg);
                     break;
                 case componentType.stick:
-                    //asset.userData.speed = config.getSpeed(componentType.hawk);
+                    instance = asset;
+                    break;
+                case componentType.eggShell:
+                    asset.userData.available = true;
                     instance = asset;
                     break;
             }
@@ -200,6 +236,7 @@ function levelAI(scene) {
         }
 
     }
+
 
     function cloneAsset(params, asset, egg) {
 
@@ -255,6 +292,7 @@ function levelAI(scene) {
 
         //var ducklingCount = config.getCount(componentType.duckling);
         var ducklingCount = 4;
+        ducklingsSpawned = ducklingCount;
 
         //var stickCount = config.getCount(componentType.stick);
         var stickCount = 12;
@@ -276,13 +314,11 @@ function levelAI(scene) {
             componentType: componentType.fox,
             locations: foxLocations,
             locationComponent: componentType.land,
-            componentType: componentType.fox
         }
 
         var hawkLocations = [(new THREE.Vector2(27, 25))]
         var hawks = {
             count: hawkCount,
-            componentType: componentType.hawk,
             locations: hawkLocations,
             //TO DO: air i.e. special case
             locationComponent: componentType.air,
@@ -297,7 +333,6 @@ function levelAI(scene) {
 
         var croqs = {
             count: croqCount,
-            componentType: componentType.croq,
             locations: croqLocations,
             locationComponent: componentType.water,
             componentType: componentType.croq
@@ -311,7 +346,6 @@ function levelAI(scene) {
 
         var ducklings = {
             count: ducklingCount,
-            componentType: componentType.duckling,
             locations: ducklingLocations,
             locationComponent: componentType.land,
             componentType: componentType.duckling
@@ -332,7 +366,6 @@ function levelAI(scene) {
 
         var sticks = {
             count: stickCount,
-            componentType: componentType.stick,
             locations: stickLocations,
             locationComponent: componentType.land,
             componentType: componentType.stick
@@ -344,8 +377,6 @@ function levelAI(scene) {
         spawnActor(croqs);
         spawnActor(ducklings);
         spawnPawn(sticks);
-        //TO DO: add basic instance class
-        //spawnAsset(sticks);
 
     }
 
@@ -366,6 +397,7 @@ function levelAI(scene) {
         }
     }
 
+    //series of pawns, at level load
     function spawnPawn(params) {
 
         for (var i = 0; i < params.count; i++) {
@@ -380,13 +412,42 @@ function levelAI(scene) {
         }
     }
 
+    //specific pawn, during game play
+    function placePawn(type, location) {
+
+        var pawn;
+
+        for (var i = 0; i < assetPools[type].length; i++) {
+            var candidate = assetPools[type][i];
+            if (candidate.userData.available) {
+                pawn = candidate;
+                break;
+            }
+        }
+
+        if (pawn !== undefined) {
+            pawn.position.x = location.x;
+            pawn.position.y = location.y;
+            pawn.position.z = location.z;
+            pawn.userData.available = false;
+            pawnsInLevel.push(pawn);
+        }
+        else {
+            console.log("No pawn available");
+        }
+
+    }
+
     function despawn() {
         setAIActiveState(false);
         var allActors = actorsInLevel.length;
         for (var i = 0; i < allActors; i++) {
             var type = actorsInLevel[i].getActor().userData.componentType;
 
-            if (type === componentType.croq || type === componentType.hawk || type === componentType.fox) {
+            if (type === componentType.croq ||
+                type === componentType.hawk ||
+                type === componentType.fox ||
+                type === componentType.duckling) {
                 actorsInLevel[i].despawn();
             }
         }
@@ -395,6 +456,9 @@ function levelAI(scene) {
         var allPawns = pawnsInLevel.length;
         for (var i = 0; i < allPawns; i++) {
             pawnsInLevel[i].position.y = -100;
+            if (pawnsInLevel[i].userData.componentType === componentType.eggShell) {
+                pawnsInLevel[i].userData.available = true;
+            }
         }
 
         pawnsInLevel = [];
@@ -466,7 +530,6 @@ function levelAI(scene) {
             }
 
             actorsInLevel.length = length - 1;
-            //console.log(actorsInLevel.length);
         }
         else {
             console.log("actor doesn't exist");
@@ -527,10 +590,6 @@ function levelAI(scene) {
                     }
                 }
             }
-
-            //set all duckling.userData.callable = false (need to setup a pool)
-            //if (duck)
-            //   grid.updateDucklingsInRadius(duck);
 
         }
 

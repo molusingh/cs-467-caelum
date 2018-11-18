@@ -29,6 +29,7 @@ function ducklingAI(scene, hatchling, egg) {
     this.update = update;
     this.init = init;
     this.spawn = spawn;
+    this.despawn = despawn;
     this.getActor = getActor;
     this.move = move;
 
@@ -38,7 +39,6 @@ function ducklingAI(scene, hatchling, egg) {
     var hatchingTimeoutId = null;
     var active = false;
     var ducklingMover;
-    //var ducklingMover = new ObjectMover(duckling);
     var target = null;
     var path = null;
     var currentState = null;
@@ -60,19 +60,21 @@ function ducklingAI(scene, hatchling, egg) {
         duckling = hatchling;
         egg.position.y = -100;
         duckling.position.y = .1
+
         grid.addActor(duckling);
-        //TO DO: remove egg!!
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
+
         bus.subscribe('moveduckling', move);
-        bus.subscribe("killDuckling", killDuckling);
+        bus.subscribe("kill", kill);
         bus.subscribe("eggEaten", eatEgg);
+        bus.subscribe("callSound", findTarget);
+        bus.publish("ducklingHatched", duckling);
         active = true;
         currentState = ducklingState.duckling;
         if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
-        //TO DO: Update grid with new entity!
 
     }
 
@@ -84,18 +86,41 @@ function ducklingAI(scene, hatchling, egg) {
     }
 
     // locates the specified target
-    function findTarget(targetType) {
-        return grid.getActorsInRadius(duckling.position, 100, targetType)[0];
+    function findTarget() {
+        var targetType = componentType.duck;
+        target = grid.getActorsInRadius(duckling.position, 100, targetType)[0];
+    }
+
+    function targetInRange() {
+        if (!target) {
+            return false;
+        }
+        if (Math.abs(target.position.x - duckling.position.x) > 100 ||
+            Math.abs(target.position.y - duckling.position.y) > 100 ||
+            Math.abs(target.position.z - duckling.position.z) > 100) {
+            target = null;
+            return false; // target got too far away
+        }
+        return true;
+    }
+
+    function isPredator(actorType) {
+        return actorType == componentType.fox || actorType == componentType.croq
+            || actorType == componentType.hawk;
     }
 
     // moves the duckling
     function move() {
+        var actorAtCurrent = grid.getActor(duckling.position);
+        if (isPredator(actorAtCurrent)) // duckling walked into predator
+        {
+            kill(duckling);
+            return;
+        }
         if (!active) {
             return;
         }
-        target = findTarget(componentType.duck);
-
-        if (target) // if duckling found target
+        if (targetInRange()) // if duckling found target and in range
         {
             path = findPath(duckling.position, target.position, isLegalMove);
         }
@@ -130,15 +155,16 @@ function ducklingAI(scene, hatchling, egg) {
             return;
         }
         if (path && isLegalMove(path.point)) {
-            var rotateMove = 'rotate' + path.move[0].toUpperCase()
-                + path.move.substring(1);
+            var rotateMove = 'rotate' + path.move[0].toUpperCase() +
+                path.move.substring(1);
             ducklingMover[rotateMove](); // always rotate to face
-            if (grid.getActor(path.point) == null) {
+            var actor = grid.getActor(path.point);
+            if (actor == null) {
                 ducklingMover[path.move]();
             }
         }
         grid.updateActor(duckling);
-        
+
         if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14) {
             setState(ducklingState.nested);
             toggleActive();
@@ -166,10 +192,11 @@ function ducklingAI(scene, hatchling, egg) {
         clearTimeout(hatchingTimeoutId);
     }
 
-    function killDuckling(ducklingKilled) {
-        if (ducklingKilled != duckling)
+    function kill(ducklingKilled) {
+        if (ducklingKilled != duckling) {
             return;
-
+        }
+        console.log("duckling killed");
         despawn();
         playDead();
         setTimeout(function () {

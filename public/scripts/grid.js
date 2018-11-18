@@ -36,7 +36,7 @@ function board() {
 
     function normalizeX(x) {
         //return ((x - originY) / 10);
-         return ((x - originY + 5) / 10);
+        return ((x - originY + 5) / 10);
     }
 
     function normalizeZ(z) {

@@ -22,8 +22,7 @@ global ducklingState
  * @param scene passed in scene object
  * @param duckling 3d duckling object
  */
-function ducklingAI(scene, hatchling, egg)
-{
+function ducklingAI(scene, hatchling, egg) {
     // public functions
     this.toggleActive = toggleActive;
     this.setActive = setActive;
@@ -46,18 +45,15 @@ function ducklingAI(scene, hatchling, egg)
     var randomDirection = null;
     setState(ducklingState.pool);
 
-    function spawn()
-    {
+    function spawn() {
         grid.placeActor(duckling);
     }
 
-    function getActor()
-    {
+    function getActor() {
         return duckling;
     }
 
-    function hatch()
-    {
+    function hatch() {
 
         hatchling.position.x = egg.position.x;
         hatchling.position.z = egg.position.z;
@@ -65,6 +61,7 @@ function ducklingAI(scene, hatchling, egg)
         egg.position.y = -100;
         duckling.position.y = .1
 
+        grid.removeActor(egg);
         grid.addActor(duckling);
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
@@ -76,55 +73,46 @@ function ducklingAI(scene, hatchling, egg)
         bus.publish("ducklingHatched", duckling);
         active = true;
         currentState = ducklingState.duckling;
-        if (true)
-        {
+        if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
 
     }
 
     // initialize the duckling
-    function init()
-    {
+    function init() {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        hatchingTimeoutId = setTimeout(function() { hatch(); }, egg.userData.hatchTime * 1000);
+        hatchingTimeoutId = setTimeout(function () { hatch(); }, egg.userData.hatchTime * 1000);
     }
 
     // locates the specified target
-    function findTarget()
-    {
+    function findTarget() {
         var targetType = componentType.duck;
         target = grid.getActorsInRadius(duckling.position, 100, targetType)[0];
     }
 
-    function targetInRange()
-    {
-        if (!target)
-        {
+    function targetInRange() {
+        if (!target) {
             return false;
         }
         if (Math.abs(target.position.x - duckling.position.x) > 100 ||
             Math.abs(target.position.y - duckling.position.y) > 100 ||
-            Math.abs(target.position.z - duckling.position.z) > 100)
-        {
+            Math.abs(target.position.z - duckling.position.z) > 100) {
             target = null;
             return false; // target got too far away
         }
         return true;
     }
 
-    function isPredator(actorType)
-    {
+    function isPredator(actorType) {
         return actorType == componentType.fox || actorType == componentType.croq ||
             actorType == componentType.hawk;
     }
 
     // moves the duckling
-    function move()
-    {
-        if (!active)
-        {
+    function move() {
+        if (!active) {
             return;
         }
         var actorAtCurrent = grid.getActor(duckling.position);
@@ -133,8 +121,7 @@ function ducklingAI(scene, hatchling, egg)
             kill(duckling);
             return;
         }
-        if (!active)
-        {
+        if (!active) {
             return;
         }
         if (targetInRange()) // if duckling found target and in range
@@ -167,48 +154,40 @@ function ducklingAI(scene, hatchling, egg)
             grid.updateActor(duckling);
             return;
         }
-        if (path.move == 'stay')
-        {
+        if (path.move == 'stay') {
             grid.updateActor(duckling);
             return;
         }
-        if (path && isLegalMove(path.point))
-        {
+        if (path && isLegalMove(path.point)) {
             var rotateMove = 'rotate' + path.move[0].toUpperCase() +
                 path.move.substring(1);
             ducklingMover[rotateMove](); // always rotate to face
             var actor = grid.getActor(path.point);
-            if (actor == null)
-            {
+            if (actor == null) {
                 ducklingMover[path.move]();
             }
         }
         grid.updateActor(duckling);
 
-        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14)
-        {
+        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14) {
             setState(ducklingState.nested);
             toggleActive();
         }
     }
 
-    function setActive(value)
-    {
+    function setActive(value) {
         active = value;
     }
 
-    function setState(newState)
-    {
+    function setState(newState) {
         currentState = newState;
     }
 
-    function toggleActive()
-    {
+    function toggleActive() {
         active = !active;
     }
 
-    function despawn()
-    {
+    function despawn() {
         grid.removeActor(duckling);
         duckling.position.y = -100;
         active = false;
@@ -217,23 +196,19 @@ function ducklingAI(scene, hatchling, egg)
         clearTimeout(hatchingTimeoutId);
     }
 
-    function kill(ducklingKilled)
-    {
-        if (ducklingKilled != duckling)
-        {
+    function kill(ducklingKilled) {
+        if (ducklingKilled != duckling) {
             return;
         }
         console.log("duckling killed");
         despawn();
         playDead();
-        setTimeout(function()
-        {
+        setTimeout(function () {
             bus.publish("ducklingDead", duckling);
         }, 1000);
     }
 
-    function eatEgg(eaten)
-    {
+    function eatEgg(eaten) {
         if (eaten !== egg)
             return;
 
@@ -243,24 +218,20 @@ function ducklingAI(scene, hatchling, egg)
         //show broken egg();
 
         //wait a second to show broken egg
-        setTimeout(function() { bus.publish("ducklingDead", duckling); }, 1000);
+        setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
     }
 
-    function playDead()
-    {
+    function playDead() {
         //show red pool of blood
     }
 
-    function update()
-    {
-        if (currentState === ducklingState.init)
-        {
+    function update() {
+        if (currentState === ducklingState.init) {
             init();
             currentState = ducklingState.egg;
         }
 
-        if (currentState === ducklingState.despawn)
-        {
+        if (currentState === ducklingState.despawn) {
             grid.removeActor(duckling);
             duckling.position.y = -100;
             active = false;
@@ -273,10 +244,8 @@ function ducklingAI(scene, hatchling, egg)
     }
 
     // returns true if specified move to target is legal
-    function isLegalMove(target)
-    {
-        if (!active)
-        {
+    function isLegalMove(target) {
+        if (!active) {
             return false;
         }
         var squareType = grid.getEnvOnlyInfo(target.z, target.x);
@@ -288,18 +257,15 @@ function ducklingAI(scene, hatchling, egg)
         ];
         return validSquares.find(validate) != undefined;
 
-        function validate(element)
-        {
+        function validate(element) {
             return element == squareType;
         }
     }
 
     // returns true if move in specified direction from start poiint is legal
-    function isValid(start, direction)
-    {
+    function isValid(start, direction) {
         var target = {};
-        switch (direction)
-        {
+        switch (direction) {
             case 'up':
                 target.z = start.z;
                 target.x = start.x - 10;
@@ -324,9 +290,8 @@ function ducklingAI(scene, hatchling, egg)
         }
         target.y = start.y;
         var actor = grid.getActor(target);
-        if (actor != null)
-        {
-           return false;
+        if (actor != null) {
+            return false;
         }
         return isLegalMove(target);
     }

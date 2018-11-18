@@ -54,7 +54,13 @@ function playerControls(scene, duck) {
     var croqs = [];
 
     // invis variables
-    invisTimeoutId = null;
+    var invisTimeoutId = null;
+
+    var skillLockTimeoutId = null;
+    var skillLockoutLength = 30;
+    var stunLock = false;
+    var speedLock = false;
+    var invisLock = false;
 
     //!!! Add if(active) to all core functions
     //in Mover, 
@@ -122,6 +128,7 @@ function playerControls(scene, duck) {
             stickCheck(nextPoint);
             bus.publish("moveUp");
             bus.publish("playerMove");
+
         }
     }
 
@@ -341,33 +348,39 @@ function playerControls(scene, duck) {
             return;
         }
 
-        foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
-        hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
-        croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
+        if (stunLock === true) {
+            return;
+        }
+        else {
+            foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
+            hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
+            croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
 
-console.log("foxes: " + foxes.length);
-console.log("hawks: " + hawks.length);
-console.log("croqs: " + croqs.length);
-        if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
-//            localStun = true;
-//            beginStun = clock.getElapsedTime();
+    console.log("foxes: " + foxes.length);
+    console.log("hawks: " + hawks.length);
+    console.log("croqs: " + croqs.length);
+            if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
+    //            localStun = true;
+    //            beginStun = clock.getElapsedTime();
+                bus.publish("superQuackSound");
+                bus.publish("stunSound");
 
-            bus.publish("stunSound");
+                for (i = 0; i < foxes.length; i++) {
+                    bus.publish("stunned", foxes[i]);
+                    
+                }
 
-            for (i = 0; i < foxes.length; i++) {
-                bus.publish("stunned", foxes[i]);
-                
+                for (i = 0; i < hawks.length; i++) {
+                    hawks[i].userData.stunStatus = true;
+                }
+
+                for (i = 0; i < croqs.length; i++) {
+                    //bus.publish("stunned", croqs[i]);
+                }
+
+                stunTimeoutId = setTimeout(function() { resetStunStatus(); }, stunLength * 1000);
             }
-
-            for (i = 0; i < hawks.length; i++) {
-                hawks[i].userData.stunStatus = true;
-            }
-
-            for (i = 0; i < croqs.length; i++) {
-                //bus.publish("stunned", croqs[i]);
-            }
-
-            stunTimeoutId = setTimeout(function() { resetStunStatus(); }, stunLength * 1000);
+            skillLockout("stun");
         }
     }
 
@@ -396,6 +409,16 @@ console.log("croqs: " + croqs.length);
         if (!active) {
             return;
         }
+
+        if (speedLock === true) {
+            return;
+        }
+        else {
+            bus.publish("speedBoostSound");
+            // code here
+            skillLockout("speed");
+        }
+
     }
 
     function invisibilitySkill() {
@@ -403,8 +426,49 @@ console.log("croqs: " + croqs.length);
             return;
         }
 
-        invisActive = true;
-        invisTimeoutId = setTimeout(function() { invisActive = false; }, invisLength * 1000);
+        if (invisLock === true) {
+            return;
+        }
+        else {
+            bus.publish("invisibilitySound");
+            invisActive = true;
+            invisTimeoutId = setTimeout(function() { invisActive = false; }, invisLength * 1000);
+            skillLockout("invis");
+        }
+    }
+
+    function skillLockout(skill) {
+        
+        if (skill == "stun") {
+            if (stunLock === false) {
+                stunLock = true;
+                skillLockTimeoutId = setTimeout(function() { skillLockout("stun"); }, skillLockoutLength * 1000);
+            }
+            else {
+                stunLock = false;
+            }
+        }
+
+        else if (skill == "speed") {
+            if (speedLock === false) {
+                speedLock = true;
+                skillLockTimeoutId = setTimeout(function() { skillLockout("speed"); }, skillLockoutLength * 1000);
+            }
+            else {
+                speedLock = false;
+            }
+        }
+
+        else if (skill == "invis") {
+            if (invisLock === false) {
+                invisLock = true;
+                skillLockTimeoutId = setTimeout(function() { skillLockout("invis"); }, skillLockoutLength * 1000);
+            }
+            else {
+                invisLock = false;
+            }
+        }
+
     }
     
     function kill(ducklingKilled)

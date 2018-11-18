@@ -131,7 +131,14 @@ function Predator(scene, predator, type)
         {
             return;
         }
-        path = getPath(componentType.duck);
+        // invis code
+        if (invisActive === true){
+            path = null;
+        }
+        else {
+            path = getPath(componentType.duck);
+        }
+
         if (path == null) // if no path to duck, go after duckling
         {
             path = getPath(componentType.duckling);

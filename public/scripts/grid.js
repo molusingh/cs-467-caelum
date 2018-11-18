@@ -453,7 +453,13 @@ function board() {
 
         }
 
-        var assetLocation = findValidSquare();
+
+        if (asset.userData.componentType === componentType.air) {
+            assetLocation = location;
+        }
+        else {
+            assetLocation = findValidSquare();
+        }
 
         if (validLocation === false) {
             console.log("failed: " + asset);

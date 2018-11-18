@@ -41,6 +41,8 @@ function playerControls(scene, duck) {
 
     var maxPos = 185;
 
+    var nextPoint = {};
+
     var duckMover = new ObjectMover(duck);
 
     // superquack variables
@@ -74,6 +76,12 @@ function playerControls(scene, duck) {
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
 
+    bus.subscribe("gridTest", gridTest);
+
+    function gridTest() {
+        grid.testSquareInfo(duck.position.z, duck.position.x);
+    }
+
 
     /* sounds for interface buttons
     $("#movementControls").click(playSound.click);
@@ -104,6 +112,9 @@ function playerControls(scene, duck) {
         var isLegal;
         isLegal = isLegalMove(duck);
         if (isLegal) {
+            nextPoint.z = duck.position.z;
+            nextPoint.x = duck.position.x - 10;
+            stickCheck(nextPoint);
             bus.publish("moveUp");
             bus.publish("playerMove");
         }
@@ -118,10 +129,12 @@ function playerControls(scene, duck) {
         var isLegal;
         isLegal = isLegalMove(duck);
         if (isLegal) {
+            nextPoint.z = duck.position.z;
+            nextPoint.x = duck.position.x + 10
+            stickCheck(nextPoint);
             bus.publish("moveDown");
             bus.publish("playerMove");
         }
-        //grid.printGrid(15, 25, 15, 25);
     }
 
     function duckLeft(object) {
@@ -133,6 +146,9 @@ function playerControls(scene, duck) {
         var isLegal
         isLegal = isLegalMove(duck);
         if (isLegal) {
+            nextPoint.z = duck.position.z + 10;
+            nextPoint.x = duck.position.x;
+            stickCheck(nextPoint);
             bus.publish("moveLeft");
             bus.publish("playerMove");
         }
@@ -147,8 +163,24 @@ function playerControls(scene, duck) {
         var isLegal
         isLegal = isLegalMove(duck);
         if (isLegal) {
+            nextPoint.z = duck.position.z - 10;
+            nextPoint.x = duck.position.x;
+            stickCheck(nextPoint);
             bus.publish("moveRight");
             bus.publish("playerMove");
+        }
+    }
+
+    function stickCheck(point) {
+        if (duck.userData.inAir === true) {
+            return;
+        }
+ 
+        var stickObject;
+
+        if (grid.getSquareInfo(point.z, point.x) == 11) {
+            stickObject = grid.getActorObject(point);
+            bus.publish("foundStick", stickObject);
         }
     }
 
@@ -166,15 +198,23 @@ function playerControls(scene, duck) {
         // get type of square duck is facing
         if (facing === 'up') {
             nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
+            nextPoint.z = duck.position.z;
+            nextPoint.x = duck.position.x - 10;
         }
         else if (facing === 'left') {
             nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
+            nextPoint.z = duck.position.z + 10;
+            nextPoint.x = duck.position.x;
         }
         else if (facing === 'down') {
             nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
+            nextPoint.z = duck.position.z;
+            nextPoint.x = duck.position.x + 10
         }
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
+            nextPoint.z = duck.position.z - 10;
+            nextPoint.x = duck.position.x;
         }
 
         // if duck isn't in water and the square it is facing is water, go ahead
@@ -196,10 +236,15 @@ function playerControls(scene, duck) {
             }
         }
 
-        // if duck is in water and the square it is facing is land, duckling, grass, or stick, go ahead
-        if (duck.userData.inWater === true && (nextSquare == 1 || nextSquare == 8 || nextSquare == 9 || nextSquare == 10)) {
+        // if duck is in water and the square it is facing is land, duckling, grass, stick, or nest go ahead
+        if (duck.userData.inWater === true && (nextSquare == 1 || nextSquare == 8 || nextSquare == 9 || nextSquare == 10 || nextSquare == 11 || nextSquare == 14)) {
+
             bus.publish("jumpSound");
             duck.userData.inWater = false;
+
+            if (nextSquare == 11) {
+                stickCheck(nextPoint);
+            }
 
             if (facing === 'up') {
                 bus.publish("moveUp");
@@ -214,6 +259,8 @@ function playerControls(scene, duck) {
                 bus.publish("moveRight");
             }
         }
+
+
     }
 
     function callSkill() {
@@ -323,15 +370,12 @@ function playerControls(scene, duck) {
         if (!active) {
             return;
         }
-
-
     }
 
     function invisibilitySkill() {
         if (!active) {
             return;
         }
-
     }
 
     function isLegalMove(object) {
@@ -363,10 +407,9 @@ function playerControls(scene, duck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
-        // console.log("NextSquare: " + nextSquare + " pos: " + duck.position.z);
 
-        // moving from land to land (1), duckling (8), grass (10), or stick (11)
-        if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11)) {
+        // moving from land to land (1), duckling (8), grass (10), stick (11), or nest (14)
+        if (duck.userData.inWater === false && (nextSquare == 1 || nextSquare == 8 || nextSquare == 10 || nextSquare == 11 || nextSquare == 14)) {
             return true;
         }
 

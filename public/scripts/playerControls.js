@@ -271,7 +271,7 @@ function playerControls(scene, duck) {
 
         // don't check anything if duck is in water or air
         if (duck.userData.inWater === false && duck.userData.inAir === false) {
-            console.log("duckling AI follow function here");
+            // console.log("duckling AI follow function here");
             bus.publish("callSound");
         }
     }

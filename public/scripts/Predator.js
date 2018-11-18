@@ -161,7 +161,6 @@ function Predator(scene, predator, type)
                     }
                 }
                 predatorMover[path.move]();
-
             }
         }
         grid.updateActor(predator);

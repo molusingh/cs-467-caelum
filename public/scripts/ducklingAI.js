@@ -71,6 +71,7 @@ function ducklingAI(scene, hatchling, egg)
         bus.subscribe('moveduckling', move);
         bus.subscribe("kill", kill);
         bus.subscribe("eggEaten", eatEgg);
+        bus.subscribe("callSound", findTarget);
         active = true;
         currentState = ducklingState.duckling;
         if (true)
@@ -90,21 +91,48 @@ function ducklingAI(scene, hatchling, egg)
     }
 
     // locates the specified target
-    function findTarget(targetType)
+    function findTarget()
     {
-        return grid.getActorsInRadius(duckling.position, 100, targetType)[0];
+        var targetType = componentType.duck;
+        target = grid.getActorsInRadius(duckling.position, 100, targetType)[0];
+    }
+
+    function targetInRange()
+    {
+        if (!target)
+        {
+            return false;
+        }
+        if (Math.abs(target.position.x - duckling.position.x) > 100 ||
+            Math.abs(target.position.y - duckling.position.y) > 100 ||
+            Math.abs(target.position.z - duckling.position.z) > 100)
+        {
+            target = null;
+            return false; // target got too far away
+        }
+        return true;
+    }
+    
+    function isPredator(actorType)
+    {
+        return actorType == componentType.fox || actorType == componentType.croq
+        || actorType == componentType.hawk;
     }
 
     // moves the duckling
     function move()
     {
+        var actorAtCurrent = grid.getActor(duckling.position);
+        if (isPredator(actorAtCurrent)) // duckling walked into predator
+        {
+            kill(duckling);
+            return;
+        }
         if (!active)
         {
             return;
         }
-        target = findTarget(componentType.duck);
-
-        if (target) // if duckling found target
+        if (targetInRange()) // if duckling found target and in range
         {
             path = findPath(duckling.position, target.position, isLegalMove);
         }
@@ -144,7 +172,8 @@ function ducklingAI(scene, hatchling, egg)
             var rotateMove = 'rotate' + path.move[0].toUpperCase() +
                 path.move.substring(1);
             ducklingMover[rotateMove](); // always rotate to face
-            if (grid.getActor(path.point) == null)
+            var actor = grid.getActor(path.point);
+            if (actor == null)
             {
                 ducklingMover[path.move]();
             }

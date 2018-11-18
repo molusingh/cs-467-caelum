@@ -75,6 +75,7 @@ function playerControls(scene, duck) {
     bus.subscribe("quackSkillRequested", superQuackSkill);
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
+    bus.subscribe("kill", kill);
 
     bus.subscribe("gridTest", gridTest);
 
@@ -270,7 +271,7 @@ function playerControls(scene, duck) {
 
         // don't check anything if duck is in water or air
         if (duck.userData.inWater === false && duck.userData.inAir === false) {
-            console.log("duckling AI follow function here");
+            // console.log("duckling AI follow function here");
             bus.publish("callSound");
         }
     }
@@ -376,6 +377,16 @@ function playerControls(scene, duck) {
         if (!active) {
             return;
         }
+    }
+    
+    function kill(ducklingKilled)
+    {
+        if (ducklingKilled != duck)
+        {
+            return;
+        }
+        active = false;
+        currentState = playerState.dead;
     }
 
     function isLegalMove(object) {

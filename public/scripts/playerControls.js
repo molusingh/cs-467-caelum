@@ -75,6 +75,7 @@ function playerControls(scene, duck) {
     bus.subscribe("quackSkillRequested", superQuackSkill);
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
+    bus.subscribe("kill", kill);
 
     bus.subscribe("gridTest", gridTest);
 
@@ -376,6 +377,16 @@ function playerControls(scene, duck) {
         if (!active) {
             return;
         }
+    }
+    
+    function kill(ducklingKilled)
+    {
+        if (ducklingKilled != duck)
+        {
+            return;
+        }
+        active = false;
+        currentState = playerState.dead;
     }
 
     function isLegalMove(object) {

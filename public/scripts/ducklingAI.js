@@ -61,19 +61,21 @@ function ducklingAI(scene, hatchling, egg) {
         duckling = hatchling;
         egg.position.y = -100;
         duckling.position.y = .1
+
         grid.addActor(duckling);
-        //TO DO: remove egg!!
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
+
         bus.subscribe('moveduckling', move);
         bus.subscribe("killDuckling", killDuckling);
         bus.subscribe("eggEaten", eatEgg);
+        bus.publish("ducklingHatched", duckling);
+
         active = true;
         currentState = ducklingState.duckling;
         if (true) {
             moveIntervalId = setInterval(move, 1000);
         }
-        //TO DO: Update grid with new entity!
 
     }
 
@@ -139,7 +141,7 @@ function ducklingAI(scene, hatchling, egg) {
             }
         }
         grid.updateActor(duckling);
-        
+
         if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14) {
             setState(ducklingState.nested);
             toggleActive();

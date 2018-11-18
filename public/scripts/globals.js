@@ -36,7 +36,7 @@ Object.freeze(predatorState);
 var componentType = {
 	"land": 1, "water": 2, "obstacle": 3, "fox": 4, "hawk": 5, "croq": 6,
 	"duck": 7, "duckling": 8, "egg": 9, "grass": 10, "stick": 11, "air": 12,
-	"none": 13, "nest": 14
+	"none": 13, "nest": 14, "eggShell": 15
 };
 Object.freeze(componentType);
 

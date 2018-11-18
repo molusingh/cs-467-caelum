@@ -175,7 +175,7 @@ function playerControls(scene, duck) {
         if (duck.userData.inAir === true) {
             return;
         }
- 
+
         var stickObject;
 
         if (grid.getSquareInfo(point.z, point.x) == 11) {
@@ -381,7 +381,6 @@ function playerControls(scene, duck) {
     function isLegalMove(object) {
 
         if (!active) {
-            console.log("dead");
             return false;
         }
 
@@ -419,14 +418,8 @@ function playerControls(scene, duck) {
         }
 
         // !!!!!temporary death sim, simulator to acutal!!!!
-        if (nextSquare == componentType.fox) {
+        if (nextSquare === componentType.fox || nextSquare === componentType.croq) {
             currentState = playerState.dead;
-            return true;
-        }
-
-        // !!!!!temporary win simulation, nothing like actual!!!!!
-        if (nextSquare == componentType.croq) {
-            currentState = playerState.won;
             return true;
         }
 

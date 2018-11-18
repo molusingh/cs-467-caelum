@@ -55,6 +55,22 @@ function levelAI(scene) {
         bus.subscribe("ducklingDead", addDead);
         bus.subscribe("ducklingNested", addNested);
         bus.subscribe("foundStick", foundStick);
+        bus.subscribe("ducklingHatched", breakShell);
+    }
+
+    function breakShell(duckling) {
+        /*
+        var eggShellLocation = grid.getNormalizeLocation(duckling.position);
+        var locations = [eggShellLocation];
+
+        var eggShell = {
+            count: 1,
+            locations: locations,
+            locationComponent: componentType.land,
+            componentType: componentType.eggShell
+        }
+        spawnPawn(eggShell);
+        */
     }
 
     function addNested() {
@@ -167,6 +183,16 @@ function levelAI(scene) {
         }
         createAssetPool(params);
 
+        var eggShell = scene.getObjectByName("eggShell");
+        var eggShellSize = 10;
+        params = {
+            count: eggShellSize,
+            original: eggShell,
+            scale: 1,
+            componentType: componentType.eggShell,
+        }
+        //createAssetPool(params);
+
     }
 
 
@@ -205,6 +231,10 @@ function levelAI(scene) {
                     instance = new ducklingAI(scene, asset, egg);
                     break;
                 case componentType.stick:
+                    //asset.userData.speed = config.getSpeed(componentType.hawk);
+                    instance = asset;
+                    break;
+                case componentType.eggShell:
                     //asset.userData.speed = config.getSpeed(componentType.hawk);
                     instance = asset;
                     break;
@@ -291,13 +321,11 @@ function levelAI(scene) {
             componentType: componentType.fox,
             locations: foxLocations,
             locationComponent: componentType.land,
-            componentType: componentType.fox
         }
 
         var hawkLocations = [(new THREE.Vector2(27, 25))]
         var hawks = {
             count: hawkCount,
-            componentType: componentType.hawk,
             locations: hawkLocations,
             //TO DO: air i.e. special case
             locationComponent: componentType.air,
@@ -312,7 +340,6 @@ function levelAI(scene) {
 
         var croqs = {
             count: croqCount,
-            componentType: componentType.croq,
             locations: croqLocations,
             locationComponent: componentType.water,
             componentType: componentType.croq
@@ -326,7 +353,6 @@ function levelAI(scene) {
 
         var ducklings = {
             count: ducklingCount,
-            componentType: componentType.duckling,
             locations: ducklingLocations,
             locationComponent: componentType.land,
             componentType: componentType.duckling
@@ -347,7 +373,6 @@ function levelAI(scene) {
 
         var sticks = {
             count: stickCount,
-            componentType: componentType.stick,
             locations: stickLocations,
             locationComponent: componentType.land,
             componentType: componentType.stick

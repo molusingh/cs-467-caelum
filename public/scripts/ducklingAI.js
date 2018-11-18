@@ -169,8 +169,9 @@ function ducklingAI(scene, hatchling, egg) {
         }
         grid.updateActor(duckling);
 
-        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14) {
-            setState(ducklingState.nested);
+        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == componentType.nest) {
+            //setState(ducklingState.nested);
+            bus.publish("ducklingNested");
             toggleActive();
         }
     }

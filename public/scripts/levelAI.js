@@ -69,12 +69,22 @@ function levelAI(scene) {
     function addNested() {
         ducklingsNested++;
         checkDucklings();
+        /*
+        console.log("*****************");
+        console.log("Nested: " + ducklingsNested);
+        console.log("Dead: " + ducklingsDead);
+        */
     }
 
     function addDead(actor) {
         removeActor(actor);
         ducklingsDead++;
         checkDucklings();
+        /*
+        console.log("*****************");
+        console.log("Nested: " + ducklingsNested);
+        console.log("Dead: " + ducklingsDead);
+        */
     }
 
     function checkDucklings() {

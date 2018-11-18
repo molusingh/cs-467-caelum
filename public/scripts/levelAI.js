@@ -11,7 +11,8 @@ function levelAI(scene) {
     var score;
     var actorsInLevel = [];
     var pawnsInLevel = [];
-    var assetPools = init2DArray(13);
+    //num of enums
+    var assetPools = init2DArray(16);
     var loader;
     var ducklingsSpawned = 0;
     var ducklingsDead = 0;
@@ -59,18 +60,10 @@ function levelAI(scene) {
     }
 
     function breakShell(duckling) {
-        /*
-        var eggShellLocation = grid.getNormalizeLocation(duckling.position);
-        var locations = [eggShellLocation];
 
-        var eggShell = {
-            count: 1,
-            locations: locations,
-            locationComponent: componentType.land,
-            componentType: componentType.eggShell
-        }
-        spawnPawn(eggShell);
-        */
+        var location = duckling.position;
+        placePawn(componentType.eggShell, location);
+
     }
 
     function addNested() {
@@ -191,7 +184,7 @@ function levelAI(scene) {
             scale: 1,
             componentType: componentType.eggShell,
         }
-        //createAssetPool(params);
+        createAssetPool(params);
 
     }
 
@@ -227,15 +220,14 @@ function levelAI(scene) {
                     instance = new Predator(scene, asset, predatorType.hawk);
                     break;
                 case componentType.duckling:
-                    //asset.userData.speed = config.getSpeed(componentType.hawk);
+                    //asset.userData.speed = config.getSpeed(componentType.duckling);
                     instance = new ducklingAI(scene, asset, egg);
                     break;
                 case componentType.stick:
-                    //asset.userData.speed = config.getSpeed(componentType.hawk);
                     instance = asset;
                     break;
                 case componentType.eggShell:
-                    //asset.userData.speed = config.getSpeed(componentType.hawk);
+                    asset.userData.available = true;
                     instance = asset;
                     break;
             }
@@ -244,6 +236,7 @@ function levelAI(scene) {
         }
 
     }
+
 
     function cloneAsset(params, asset, egg) {
 
@@ -404,6 +397,7 @@ function levelAI(scene) {
         }
     }
 
+    //series of pawns, at level load
     function spawnPawn(params) {
 
         for (var i = 0; i < params.count; i++) {
@@ -416,6 +410,32 @@ function levelAI(scene) {
             grid.placeActor(pawn);
 
         }
+    }
+
+    //specific pawn, during game play
+    function placePawn(type, location) {
+
+        var pawn;
+
+        for (var i = 0; i < assetPools[type].length; i++) {
+            var candidate = assetPools[type][i];
+            if (candidate.userData.available) {
+                pawn = candidate;
+                break;
+            }
+        }
+
+        if (pawn !== undefined) {
+            pawn.position.x = location.x;
+            pawn.position.y = location.y;
+            pawn.position.z = location.z;
+            pawn.userData.available = false;
+            pawnsInLevel.push(pawn);
+        }
+        else {
+            console.log("No pawn available");
+        }
+
     }
 
     function despawn() {
@@ -436,6 +456,9 @@ function levelAI(scene) {
         var allPawns = pawnsInLevel.length;
         for (var i = 0; i < allPawns; i++) {
             pawnsInLevel[i].position.y = -100;
+            if (pawnsInLevel[i].userData.componentType === componentType.eggShell) {
+                pawnsInLevel[i].userData.available = true;
+            }
         }
 
         pawnsInLevel = [];

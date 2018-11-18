@@ -288,10 +288,11 @@ function board() {
         envTable[x][y] = componentType;
     }
 
-    this.setEnvSquareInGameSpace = function (z, x) {
-        var normalizedX = normalizeZ(z);
-        var normalizedY = normalizeX(x);
-        envTable[normalizedX][normalizedY] = componentType;
+    this.setEnvSquareInGameSpace = function (z, x, componentType) {
+        var xAxis = normalizeZ(z);
+        var yAxis = normalizeX(x);
+
+        envTable[xAxis][yAxis] = componentType;
     }
 
     //testing function

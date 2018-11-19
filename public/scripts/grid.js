@@ -69,16 +69,20 @@ function board() {
         return envTable[x - 1][y - 1];
     }
 
-    function getActorSquareInfo(x, y) {
+    function getActorSquareInfo(x, y, self) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return null;
         }
+        var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
-
-            if (location.x === x && location.y === y) {
+            if (self)
+            {
+                selfFlag = actorTable[i].actor == self;
+            }
+            if (location.x === x && location.y === y && !selfFlag) {
                 return actorTable[i].actor.userData.componentType;
             }
         }
@@ -86,16 +90,20 @@ function board() {
         return null;
     }
 
-    function getActorObjectInSquare(x, y) {
+    function getActorObjectInSquare(x, y, self) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return null;
         }
+        var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
-
-            if (location.x === x && location.y === y) {
+            if (self)
+            {
+                selfFlag = actorTable[i].actor == self;
+            }
+            if (location.x === x && location.y === y && !selfFlag) {
                 return actorTable[i].actor;
             }
         }
@@ -103,16 +111,17 @@ function board() {
         return null;
     }
 
-    function getActorInfo(x, y) {
+    function getActorInfo(x, y, self) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return null;
         }
+        var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
-
-            if (location.x === x && location.y === y) {
+            selfFlag = actorTable[i].actor == self;
+            if (location.x === x && location.y === y && !selfFlag) {
                 return actorTable[i].actor;
             }
         }
@@ -172,20 +181,20 @@ function board() {
 
     }
 
-    this.getActor = function (point) {
+    this.getActor = function (point, self) {
         var normalizedX = ((originX - point.z + 5) / 10);
         var normalizedY = ((point.x - originY + 5) / 10);
 
         //get actor if found in location
-        return getActorSquareInfo(normalizedX, normalizedY);
+        return getActorSquareInfo(normalizedX, normalizedY, self);
     }
 
-    this.getActorObject = function (point) {
+    this.getActorObject = function (point, self) {
         var normalizedX = ((originX - point.z + 5) / 10);
         var normalizedY = ((point.x - originY + 5) / 10);
 
         //get actor if found in location
-        return getActorObjectInSquare(normalizedX, normalizedY);
+        return getActorObjectInSquare(normalizedX, normalizedY, self);
     }
 
     //use as a secondary check when hawk searches for duck or ducklings

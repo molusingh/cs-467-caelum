@@ -46,11 +46,21 @@ function playerControls(scene, duck) {
     var duckMover = new ObjectMover(duck);
 
     // superquack variables
-    var localStun = false;
-    var beginStun;
-    var foxes;
-    var hawks;
-    var croqs;
+//    var localStun = false;
+//    var beginStun;
+    var stunTimeoutId = null;
+    var foxes = [];
+    var hawks = [];
+    var croqs = [];
+
+    // invis variables
+    var invisTimeoutId = null;
+
+    var skillLockTimeoutId = null;
+    var skillLockoutLength = 30;
+    var stunLock = false;
+    var speedLock = false;
+    var invisLock = false;
 
     //!!! Add if(active) to all core functions
     //in Mover, 
@@ -118,6 +128,7 @@ function playerControls(scene, duck) {
             stickCheck(nextPoint);
             bus.publish("moveUp");
             bus.publish("playerMove");
+
         }
     }
 
@@ -179,9 +190,14 @@ function playerControls(scene, duck) {
 
         var stickObject;
 
-        if (grid.getSquareInfo(point.z, point.x) == 11) {
+        if (grid.getSquareInfo(point.z, point.x) == componentType.stick) {
             stickObject = grid.getActorObject(point);
             bus.publish("foundStick", stickObject);
+
+            var currentSticks = document.getElementById('sticksOutput');
+            var numSticks = currentSticks.innerHTML;
+            numSticks++;
+            currentSticks.innerHTML = numSticks;
         }
     }
 
@@ -282,6 +298,13 @@ function playerControls(scene, duck) {
             return;
         }
 
+        var currentSticks = document.getElementById('sticksOutput');
+        var numSticks = currentSticks.innerHTML;
+
+        if (numSticks < 4) {
+            return;
+        }
+
         var duckZ = duck.position.z;
         var duckX = duck.position.x;
 
@@ -313,6 +336,8 @@ function playerControls(scene, duck) {
                 }
 
                 bus.publish("nestSound");
+                numSticks = 0;
+                currentSticks.innerHTML = numSticks;
             }
         }
     }
@@ -323,27 +348,39 @@ function playerControls(scene, duck) {
             return;
         }
 
-        foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
-        hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
-        croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
+        if (stunLock === true) {
+            return;
+        }
+        else {
+            foxes = grid.getActorsInRadius(duck.position, callRadius, componentType.fox);
+            hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
+            croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
 
-        if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
-            localStun = true;
-            beginStun = clock.getElapsedTime();
+    console.log("foxes: " + foxes.length);
+    console.log("hawks: " + hawks.length);
+    console.log("croqs: " + croqs.length);
+            if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
+    //            localStun = true;
+    //            beginStun = clock.getElapsedTime();
+                bus.publish("superQuackSound");
+                bus.publish("stunSound");
 
-            bus.publish("stunSound");
+                for (i = 0; i < foxes.length; i++) {
+                    bus.publish("stunned", foxes[i]);
+                    
+                }
 
-            for (i = 0; i < foxes.length; i++) {
-                foxes[i].userData.stunStatus = true;
+                for (i = 0; i < hawks.length; i++) {
+                    hawks[i].userData.stunStatus = true;
+                }
+
+                for (i = 0; i < croqs.length; i++) {
+                    //bus.publish("stunned", croqs[i]);
+                }
+
+                stunTimeoutId = setTimeout(function() { resetStunStatus(); }, stunLength * 1000);
             }
-
-            for (i = 0; i < hawks.length; i++) {
-                hawks[i].userData.stunStatus = true;
-            }
-
-            for (i = 0; i < croqs.length; i++) {
-                croqs[i].userData.stunStatus = true;
-            }
+            skillLockout("stun");
         }
     }
 
@@ -372,12 +409,66 @@ function playerControls(scene, duck) {
         if (!active) {
             return;
         }
+
+        if (speedLock === true) {
+            return;
+        }
+        else {
+            bus.publish("speedBoostSound");
+            // code here
+            skillLockout("speed");
+        }
+
     }
 
     function invisibilitySkill() {
         if (!active) {
             return;
         }
+
+        if (invisLock === true) {
+            return;
+        }
+        else {
+            bus.publish("invisibilitySound");
+            invisActive = true;
+            invisTimeoutId = setTimeout(function() { invisActive = false; }, invisLength * 1000);
+            skillLockout("invis");
+        }
+    }
+
+    function skillLockout(skill) {
+        
+        if (skill == "stun") {
+            if (stunLock === false) {
+                stunLock = true;
+                skillLockTimeoutId = setTimeout(function() { skillLockout("stun"); }, skillLockoutLength * 1000);
+            }
+            else {
+                stunLock = false;
+            }
+        }
+
+        else if (skill == "speed") {
+            if (speedLock === false) {
+                speedLock = true;
+                skillLockTimeoutId = setTimeout(function() { skillLockout("speed"); }, skillLockoutLength * 1000);
+            }
+            else {
+                speedLock = false;
+            }
+        }
+
+        else if (skill == "invis") {
+            if (invisLock === false) {
+                invisLock = true;
+                skillLockTimeoutId = setTimeout(function() { skillLockout("invis"); }, skillLockoutLength * 1000);
+            }
+            else {
+                invisLock = false;
+            }
+        }
+
     }
     
     function kill(ducklingKilled)
@@ -484,12 +575,12 @@ function playerControls(scene, duck) {
 
         var elapsedTime = clock.getElapsedTime();
 
-        if (localStun === true) {
+/*        if (localStun === true) {
             // stunLength is global, modified by superquack level
             if (elapsedTime - beginStun > stunLength) {
                 resetStunStatus();
             }
         }
-    }
+*/    }
 
 }

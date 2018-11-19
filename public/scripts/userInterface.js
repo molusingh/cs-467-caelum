@@ -81,9 +81,9 @@ function UserInterface()
 	$("#menu").click(getPublishFunction("clickSound"));
 
 	// skill sounds
-	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
-	$("#speedButton").click(getPublishFunction("speedBoostSound"));
-	$("#quackButton").click(getPublishFunction("superQuackSound"));
+//	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
+//	$("#speedButton").click(getPublishFunction("speedBoostSound"));
+//	$("#quackButton").click(getPublishFunction("superQuackSound"));
 
 	/*
 	 * returns a function that publishes the specified event
@@ -198,7 +198,7 @@ function UserInterface()
 
 			case 81: // Q 
 				bus.publish("invisibilitySkillRequested");
-				bus.publish("invisibilitySound");
+			//	bus.publish("invisibilitySound");
 				break;
 
 			case 69: // E
@@ -208,7 +208,7 @@ function UserInterface()
 
 			case 82: // R
 				bus.publish("speedSkillRequested");
-				bus.publish("speedBoostSound");
+			//	bus.publish("speedBoostSound");
 				break;
 
 		}
@@ -220,7 +220,7 @@ function UserInterface()
 		{
 			case 38: // up
 			case 87: // W
-			keyDown = false;
+				keyDown = false;
 				break;
 					
 			case 37: // left

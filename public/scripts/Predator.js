@@ -43,7 +43,7 @@ function Predator(scene, predator, type)
 
     // private variables
     var hawkY = 35; // for hawk
-    var changeY = true; // for hawk
+    var changeY = false; // for hawk
     var moveIntervalId = null;
     var active = false;
     var predatorMover = new ObjectMover(predator);
@@ -188,16 +188,19 @@ function Predator(scene, predator, type)
         var actor = grid.getActorObject(predator.position, predator);
         if (actor != null) // must be duck or duckling
         {
-            changeY = !changeY;
             if (type == predatorType.hawk && changeY) // for hawk
             {
                 predator.position.y = actor.position.y; // move in y to target
-                changeY = !changeY;
             }
             if (predator.position.y == actor.position.y)
             {
                 bus.publish("kill", grid.getActorObject(path.point));
             }
+            changeY = !changeY;
+        }
+        else // actor is gone, reset changeY for hawk
+        {
+            changeY = false;
         }
         grid.updateActor(predator);
     }

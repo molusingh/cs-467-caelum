@@ -17,6 +17,8 @@ global bus
 global getRandomInt 
 global predatorState 
 global predatorType 
+global invisActive
+global stunLength
 */
 
 /*
@@ -52,9 +54,11 @@ function Predator(scene, predator, type)
     var stunTimeoutId = null;
     bus.subscribe("stunned", stun);
 
-    function stun() {
+    function stun()
+    {
         toggleActive();
-        stunTimeoutId = setTimeout(function() { toggleActive(); }, stunLength * 1000);
+        stunTimeoutId = setTimeout(function() { toggleActive(); }, 
+            stunLength * 1000);
     }
 
     function spawn()
@@ -137,10 +141,12 @@ function Predator(scene, predator, type)
             return;
         }
         // invis code
-        if (invisActive === true){
+        if (invisActive === true)
+        {
             path = null;
         }
-        else {
+        else
+        {
             path = getPath(componentType.duck);
         }
 
@@ -250,8 +256,7 @@ function Predator(scene, predator, type)
         else if (type == predatorType.hawk)
         {
             validSquares = [
-                componentType.air, componentType.land, componentType.grass,
-                componentType.water
+                componentType.air, componentType.land, componentType.water
             ];
         }
         else

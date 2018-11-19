@@ -12658,7 +12658,7 @@
 
 				if ( newValue === undefined ) {
 
-					console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
+					// console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
 					continue;
 
 				}

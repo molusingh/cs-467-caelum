@@ -7,8 +7,8 @@
  */
 function UserInterface()
 {
-
 	var keyDown = false;
+
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
@@ -34,6 +34,7 @@ function UserInterface()
 	// game state buttons
 	$("#restartButton").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
+	$("#startButton").click(getPublishFunction("mainMusic"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
 	$("#closeMenuButton").click(getPublishFunction("closeMenu"));
 	$("#howToPlayButton").click(getPublishFunction("openHowToPlay"));
@@ -80,13 +81,9 @@ function UserInterface()
 	$("#menu").click(getPublishFunction("clickSound"));
 
 	// skill sounds
-	$("#flyButton").click(getPublishFunction("flySound"));
-	// jump sound published in playercontrols.jumpSkill
-	$("#callButton").click(getPublishFunction("callSound"));
-	$("#nestButton").click(getPublishFunction("nestSound"));
-	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
-	$("#speedButton").click(getPublishFunction("speedBoostSound"));
-	$("#quackButton").click(getPublishFunction("superQuackSound"));
+//	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
+//	$("#speedButton").click(getPublishFunction("speedBoostSound"));
+//	$("#quackButton").click(getPublishFunction("superQuackSound"));
 
 	/*
 	 * returns a function that publishes the specified event
@@ -140,8 +137,8 @@ function UserInterface()
 	/*
 	 * Called when a key is pressed
 	 */
-	function onKeyDown(event)
-	{
+	function onKeyDown(event) {
+
 		switch (event.keyCode)
 		{
 			case 38: // up
@@ -192,30 +189,28 @@ function UserInterface()
 
 			case 51: // 3
 				bus.publish("call");
-				bus.publish("callSound");
 				break;
 
 			case 52: // 4
 				bus.publish("nest");
-				bus.publish("nestSound");
+				// sound published in playerControls.nestSkill
 				break;
 
 			case 81: // Q 
 				bus.publish("invisibilitySkillRequested");
-				bus.publish("invisibilitySound");
+			//	bus.publish("invisibilitySound");
 				break;
 
 			case 69: // E
 				bus.publish("quackSkillRequested");
-				bus.publish("superQuackSound");
+				// bus.publish("superQuackSound");
 				break;
 
 			case 82: // R
 				bus.publish("speedSkillRequested");
-				bus.publish("speedBoostSound");
+			//	bus.publish("speedBoostSound");
 				break;
 
-			// case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
 		}
 	}
 
@@ -225,7 +220,7 @@ function UserInterface()
 		{
 			case 38: // up
 			case 87: // W
-			keyDown = false;
+				keyDown = false;
 				break;
 					
 			case 37: // left

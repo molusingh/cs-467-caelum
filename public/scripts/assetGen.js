@@ -4,6 +4,7 @@ function assetGen(scene) {
     var landObjects = [];
     var landObstacles = [];
     var grassObjects = [];
+    var nestObjects = [];
 
     var shadowMat = new THREE.ShadowMaterial({
         color: 0xff0000, transparent: true, opacity: 0.5
@@ -18,6 +19,44 @@ function assetGen(scene) {
         recordLandInGrid();
         generateLandObstacles(40, 20);
         generateGrassObstacles(60, 20);
+    }
+
+    this.generateNest = function (z, x) {
+
+        var nest = scene.getObjectByName("nest");
+        var asset = new THREE.Object3D();
+        
+        var params = {
+            original: nest,
+            scale: 1,
+            componentType: componentType.nest,
+        }
+
+        var original = params.original;
+
+        original.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                var childClone = child.clone();
+                asset.add(childClone);
+            }
+
+            asset.scale.x = params.scale;
+            asset.scale.y = params.scale;
+            asset.scale.z = params.scale;
+            asset.userData.componentType = params.componentType;
+
+            asset.position.z = z;
+            asset.position.x = x;
+
+            scene.add(asset);
+            nestObjects.push(asset);
+        });
+
+        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);       
+        grid.setEnvSquareInGameSpace(z + 15, x - 5, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 5, x - 15, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 15, x - 15, componentType.nest);
     }
 
     this.cleanup = function () {
@@ -35,6 +74,11 @@ function assetGen(scene) {
             scene.remove(landObstacles[i]);
         }
         landObstacles.length = 0;
+
+        for (var i = 0; i < nestObjects.length; i++) {
+            scene.remove(nestObjects[i]);
+        }
+        nestObjects.length = 0;
     }
 
     //creates 4 points determining corners of 8x8 tile
@@ -432,5 +476,7 @@ function assetGen(scene) {
             }
         }
     }
+
+
 
 }

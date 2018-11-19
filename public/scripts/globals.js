@@ -15,7 +15,7 @@ Object.freeze(levelState);
 var playerState = { "init": 1, "ready": 2, "alive": 3, "dead": 4, "won": 5 };
 Object.freeze(playerState);
 
-var ducklingState = { "init": 1, "pool": 2, "egg": 3, "duckling": 4, "dead": 5, "despawn": 6 };
+var ducklingState = { "init": 1, "pool": 2, "egg": 3, "duckling": 4, "dead": 5, "despawn": 6, "nested": 7 };
 Object.freeze(ducklingState);
 
 var hawkState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };
@@ -27,12 +27,16 @@ Object.freeze(croqState);
 var foxState = { "init": 1, "pool": 2, "alive": 3, "stun": 4, "despawn": 5 };
 Object.freeze(foxState);
 
-var predatorType = { fox: "fox", croq: "croq", hawk: "hawk"};
+var predatorType = { fox: "fox", croq: "croq", hawk: "hawk" };
+Object.freeze(predatorType);
+
 var predatorState = { init: "init", pool: 'pool', alive: "alive", stun: 'stun', despawn: 'despawn' };
+Object.freeze(predatorState);
 
 var componentType = {
 	"land": 1, "water": 2, "obstacle": 3, "fox": 4, "hawk": 5, "croq": 6,
-	"duck": 7, "duckling": 8, "egg": 9, "grass": 10, "stick": 11, "air": 12, "none": 13
+	"duck": 7, "duckling": 8, "egg": 9, "grass": 10, "stick": 11, "air": 12,
+	"none": 13, "nest": 14, "eggShell": 15
 };
 Object.freeze(componentType);
 
@@ -42,6 +46,8 @@ var motionUnit = 1.0;
 var callRadius = 5.0;
 var callRadiusOffset = 5.0;
 var stunLength = 10;
+var invisLength = 10;
+var invisActive = false;
 
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max) + 1);
@@ -49,4 +55,3 @@ function getRandomInt(max) {
 
 var bus = new EventBus();
 var clock = new THREE.Clock();
-console.log("clock: " + clock);

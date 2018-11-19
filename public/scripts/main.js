@@ -62,7 +62,7 @@
       };
     }
     else {
-      console.log("full screen disabled");
+      // console.log("full screen disabled");
     }
   }
 

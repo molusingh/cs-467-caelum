@@ -89,7 +89,7 @@ function ducklingAI(scene, hatchling, egg)
     {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        hatchingTimeoutId = setTimeout(function() { hatch(); }, 
+        hatchingTimeoutId = setTimeout(function() { hatch(); },
             egg.userData.hatchTime * 1000);
     }
 
@@ -129,11 +129,16 @@ function ducklingAI(scene, hatchling, egg)
         {
             return;
         }
-        var actorAtCurrent = grid.getActor(duckling.position);
-        if (isPredator(actorAtCurrent)) // duckling walked into predator
+        var actorAtCurrent = grid.getActor(duckling.position, duckling);
+        if (isPredator(actorAtCurrent))  // predator at current location
         {
-            kill(duckling);
-            return;
+            var actor = grid.getActorObject(duckling.position, duckling);
+            if (duckling.position.y == actor.position.y)
+            {
+                kill(duckling); // duckling walked into predator
+                return;
+            }
+
         }
         if (!active)
         {
@@ -187,7 +192,7 @@ function ducklingAI(scene, hatchling, egg)
         }
         grid.updateActor(duckling);
 
-        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 
+        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) ==
             componentType.nest)
         {
             //setState(ducklingState.nested);

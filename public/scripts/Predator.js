@@ -120,7 +120,7 @@ function Predator(scene, predator, type)
     {
         if (invisActive)
         {
-            return false;
+            return null;
         }
         var targets = findTargets(targetType);
         var path = null;

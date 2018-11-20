@@ -197,6 +197,7 @@ function ducklingAI(scene, hatchling, egg)
         {
             //setState(ducklingState.nested);
             bus.publish("ducklingNested");
+            despawn();
             active = false;
         }
     }

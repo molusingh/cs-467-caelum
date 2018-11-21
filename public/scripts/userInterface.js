@@ -8,6 +8,7 @@
 function UserInterface()
 {
 	var keyDown = false;
+	var speedBoost = false;
 
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
@@ -19,6 +20,7 @@ function UserInterface()
 	bus.subscribe("endPickBoosts", getToggleDisplayFunction("boostsScreen"));
 	bus.subscribe("playerWins", getToggleDisplayFunction("winScreen"));
 	bus.subscribe("playerLoses", getToggleDisplayFunction("loseScreen"));
+	bus.subscribe("toggleSpeedBoost", toggleSpeedBoost);
 
 
 	// interface event callbacks
@@ -132,7 +134,14 @@ function UserInterface()
 		getToggleDisplayFunction("howToPlayScreen")();
 	}
 
-
+	function toggleSpeedBoost() {
+		if (speedBoost === false) {
+			speedBoost = true;
+		} 
+		else {
+			speedBoost = false;
+		}
+	}
 
 	/*
 	 * Called when a key is pressed
@@ -146,6 +155,9 @@ function UserInterface()
 				if (keyDown === false)
 				{
 					bus.publish("duckUp");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
 				}
 				break;
@@ -155,7 +167,11 @@ function UserInterface()
 				if (keyDown === false)
 				{
 					bus.publish("duckLeft");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
+
 				}
 				break;
 
@@ -164,6 +180,9 @@ function UserInterface()
 				if (keyDown === false)
 				{
 					bus.publish("duckDown");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
 				}
 				break;
@@ -173,6 +192,9 @@ function UserInterface()
 				if (keyDown === false)
 				{
 					bus.publish("duckRight");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
 				}
 				break;
@@ -211,13 +233,22 @@ function UserInterface()
 			//	bus.publish("speedBoostSound");
 				break;
 
+/*			case 32: // SPACEBAR
+				var currentSticks = document.getElementById('sticksOutput');
+            	var numSticks = currentSticks.innerHTML;
+            	numSticks++;
+            	currentSticks.innerHTML = numSticks;
+*/
 		}
 	}
 
 	function onKeyUp(event)
 	{
+
 		switch (event.keyCode)
 		{
+
+
 			case 38: // up
 			case 87: // W
 				keyDown = false;

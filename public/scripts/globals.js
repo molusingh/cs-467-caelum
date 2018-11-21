@@ -47,6 +47,7 @@ var callRadius = 5.0;
 var callRadiusOffset = 5.0;
 var stunLength = 10;
 var invisLength = 10;
+var speedLength = 10;
 var invisActive = false;
 
 function getRandomInt(max) {

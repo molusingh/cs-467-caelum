@@ -295,7 +295,8 @@ function levelAI(scene) {
         var foxCount = 2;
 
         //var hawkCount = config.getCount(componentType.hawk);
-        var hawkCount = 1;
+       var hawkCount = 1;
+
 
         //var croqCount = config.getCount(componentType.croq);
         var croqCount = 5;
@@ -520,6 +521,11 @@ function levelAI(scene) {
         envGenerator.cleanup();
         AIsActive = false;
         playerAI.reset();
+
+        ducklingsSpawned = 0;
+        ducklingsDead = 0;
+        ducklingsNested = 0;
+        bus.publish("levelChange");
     }
 
     function removeActor(actor) {

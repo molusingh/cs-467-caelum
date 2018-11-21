@@ -65,6 +65,7 @@ function ducklingAI(scene, hatchling, egg)
         egg.position.y = -100;
         duckling.position.y = .1
 
+        grid.removeActor(egg);
         grid.addActor(duckling);
         ducklingMover = new ObjectMover(duckling);
         duckling.userData.currentDirection = 'down';
@@ -88,7 +89,8 @@ function ducklingAI(scene, hatchling, egg)
     {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        hatchingTimeoutId = setTimeout(function() { hatch(); }, egg.userData.hatchTime * 1000);
+        hatchingTimeoutId = setTimeout(function() { hatch(); },
+            egg.userData.hatchTime * 1000);
     }
 
     // locates the specified target
@@ -127,11 +129,16 @@ function ducklingAI(scene, hatchling, egg)
         {
             return;
         }
-        var actorAtCurrent = grid.getActor(duckling.position);
-        if (isPredator(actorAtCurrent)) // duckling walked into predator
+        var actorAtCurrent = grid.getActor(duckling.position, duckling);
+        if (isPredator(actorAtCurrent))  // predator at current location
         {
-            kill(duckling);
-            return;
+            var actor = grid.getActorObject(duckling.position, duckling);
+            if (duckling.position.y == actor.position.y)
+            {
+                kill(duckling); // duckling walked into predator
+                return;
+            }
+
         }
         if (!active)
         {
@@ -185,10 +192,13 @@ function ducklingAI(scene, hatchling, egg)
         }
         grid.updateActor(duckling);
 
-        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) == 14)
+        if (grid.getEnvOnlyInfo(duckling.position.z, duckling.position.x) ==
+            componentType.nest)
         {
-            setState(ducklingState.nested);
-            toggleActive();
+            //setState(ducklingState.nested);
+            bus.publish("ducklingNested");
+            despawn();
+            active = false;
         }
     }
 
@@ -323,6 +333,11 @@ function ducklingAI(scene, hatchling, egg)
                 return false;
         }
         target.y = start.y;
+        var actor = grid.getActor(target);
+        if (actor != null)
+        {
+            return false;
+        }
         return isLegalMove(target);
     }
 }

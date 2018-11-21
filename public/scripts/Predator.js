@@ -17,6 +17,8 @@ global bus
 global getRandomInt 
 global predatorState 
 global predatorType 
+global invisActive
+global stunLength
 */
 
 /*
@@ -40,6 +42,8 @@ function Predator(scene, predator, type)
     var predId = getRandomInt(1000);
 
     // private variables
+    var hawkY = 35; // for hawk
+    var changeY = false; // for hawk
     var moveIntervalId = null;
     var active = false;
     var predatorMover = new ObjectMover(predator);
@@ -52,9 +56,11 @@ function Predator(scene, predator, type)
     var stunTimeoutId = null;
     bus.subscribe("stunned", stun);
 
-    function stun() {
+    function stun()
+    {
         toggleActive();
-        stunTimeoutId = setTimeout(function() { toggleActive(); }, stunLength * 1000);
+        stunTimeoutId = setTimeout(function() { toggleActive(); },
+            stunLength * 1000);
     }
 
     function spawn()
@@ -89,12 +95,12 @@ function Predator(scene, predator, type)
         }
         else if (type == predatorType.hawk)
         {
-            predator.position.y = 35;
+            predator.position.y = hawkY;
             predator.position.x = 5;
             predator.position.z = 5;
         }
 
-        target = findTarget(componentType.duck);
+        target = findTargets(componentType.duck)[0];
         bus.subscribe('movepredator', move);
         if (type != predatorType.hawk || true)
         {
@@ -104,24 +110,33 @@ function Predator(scene, predator, type)
         currentState = predatorState.alive;
     }
 
-    // locates the specified target
-    function findTarget(targetType)
+    // locates the specified targets
+    function findTargets(targetType)
     {
-        return grid.getActorsInRadius(predator.position, 100, targetType)[0];
+        return grid.getActorsInRadius(predator.position, 100, targetType);
     }
 
     function getPath(targetType)
     {
-        target = findTarget(targetType);
-
-        if (target) // if predator found target
-        {
-            return findPath(predator.position, target.position, isLegalMove);
-        }
-        else // otherwise no path
+        if (invisActive)
         {
             return null;
         }
+        var targets = findTargets(targetType);
+        var path = null;
+        if (targets) // if predator found targets
+        {
+            for (var i = 0; i < targets.length; ++i)
+            {
+                target = targets[i];
+                path = findPath(predator.position, target.position, isLegalMove);
+                if (path)
+                {
+                    break;
+                }
+            }
+        }
+        return path;
     }
 
     // moves the predator
@@ -131,14 +146,15 @@ function Predator(scene, predator, type)
         {
             return;
         }
-        // invis code
-        if (invisActive === true){
-            path = null;
+        if (type == predatorType.hawk) // for hawks
+        {
+            if (predator.position.y != hawkY) // if at different Y
+            {
+                predator.position.y = hawkY; // return to original Y for move
+                return;
+            }
         }
-        else {
-            path = getPath(componentType.duck);
-        }
-
+        path = getPath(componentType.duck); // moved invis to getPath function
         if (path == null) // if no path to duck, go after duckling
         {
             path = getPath(componentType.duckling);
@@ -161,26 +177,30 @@ function Predator(scene, predator, type)
                 validRandom = isValid(predator.position, randomDirection);
             }
             predatorMover[randomDirection]();
-            return;
         }
-        if (path.move == 'stay')
+        else if (path && isLegalMove(path.point)) // follow path
         {
-            return;
-        }
-        if (path && isLegalMove(path.point))
-        {
-            var rotateMove = 'rotate' + path.move[0].toUpperCase() +
-                path.move.substring(1);
-            predatorMover[rotateMove](); // always rotate to face
-            var actor = grid.getActor(path.point);
-            if (actor != null) // either duckling or duck
+            if (path.move != 'stay')
             {
-                if (predator.position.y == target.position.y)
-                {
-                    bus.publish("kill", grid.getActorObject(path.point));
-                }
+                predatorMover[path.move]();
             }
-            predatorMover[path.move]();
+        }
+        var actor = grid.getActorObject(predator.position, predator);
+        if (actor != null) // must be duck or duckling
+        {
+            if (type == predatorType.hawk && changeY) // for hawk
+            {
+                predator.position.y = actor.position.y; // move in y to target
+            }
+            if (predator.position.y == actor.position.y)
+            {
+                bus.publish("kill", grid.getActorObject(path.point));
+            }
+            changeY = !changeY;
+        }
+        else // actor is gone, reset changeY for hawk
+        {
+            changeY = false;
         }
         grid.updateActor(predator);
     }
@@ -245,8 +265,7 @@ function Predator(scene, predator, type)
         else if (type == predatorType.hawk)
         {
             validSquares = [
-                componentType.air, componentType.land, componentType.grass,
-                componentType.water
+                componentType.air, componentType.land, componentType.water
             ];
         }
         else

@@ -87,6 +87,7 @@ function playerControls(scene, duck) {
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
     bus.subscribe("kill", kill);
 
+
     bus.subscribe("gridTest", gridTest);
 
     function gridTest() {
@@ -300,8 +301,9 @@ function playerControls(scene, duck) {
 
         var currentSticks = document.getElementById('sticksOutput');
         var numSticks = currentSticks.innerHTML;
-
-        if (numSticks < 4) {
+// EDITED FOR DEBUGGING
+        //if (numSticks < 4) {
+        if (numSticks < 0) {    
             return;
         }
 
@@ -336,7 +338,7 @@ function playerControls(scene, duck) {
                 }
 
                 bus.publish("nestSound");
-                numSticks = 0;
+                numSticks -= 4;
                 currentSticks.innerHTML = numSticks;
             }
         }

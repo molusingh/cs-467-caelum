@@ -211,6 +211,12 @@ function UserInterface()
 			//	bus.publish("speedBoostSound");
 				break;
 
+			case 32: // SPACEBAR
+				var currentSticks = document.getElementById('sticksOutput');
+            	var numSticks = currentSticks.innerHTML;
+            	numSticks++;
+            	currentSticks.innerHTML = numSticks;
+
 		}
 	}
 

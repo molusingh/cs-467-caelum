@@ -292,13 +292,16 @@ function levelAI(scene) {
         var defaultLocation = new THREE.Vector2(20, 20);
 
         //var foxCount = config.getCount(componentType.fox);
-        var foxCount = 2;
+// DEBUG       var foxCount = 2;
+        var foxCount = 0;
 
         //var hawkCount = config.getCount(componentType.hawk);
-        var hawkCount = 1;
+// DEBUG       var hawkCount = 1;
+        var hawkCount = 0;
 
         //var croqCount = config.getCount(componentType.croq);
-        var croqCount = 5;
+// DEBUG       var croqCount = 5;
+        var croqCount = 0;
 
         //var ducklingCount = config.getCount(componentType.duckling);
         var ducklingCount = 4;

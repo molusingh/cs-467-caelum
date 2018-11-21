@@ -28,7 +28,9 @@ function gameAI(scene, clock) {
     var quackCost = 10;
     var speedCost = 10;
     var invisibilityCost = 10;
-    var savedThisLevel = 1;
+    var savedThisLevel = 0;
+    var currentSticks = document.getElementById('sticksOutput');
+    var numSticks = currentSticks.innerHTML;
 
 
 
@@ -51,6 +53,7 @@ function gameAI(scene, clock) {
         bus.subscribe("speedUpgrade", upgradeSpeed);
         bus.subscribe("quackUpgrade", upgradeQuack);
         bus.subscribe("ducklingNested", updateScore);
+        bus.subscribe("levelChange", startLevel);
 
     }
 
@@ -58,8 +61,8 @@ function gameAI(scene, clock) {
      * Updates score
      */
      function updateScore() {
-        score += savedThisLevel * 100;
         savedThisLevel++;
+        score += savedThisLevel * 100;
      }
 
     /*
@@ -104,6 +107,11 @@ function gameAI(scene, clock) {
             //show loading screen
         }
         currentState = gameState.level;
+
+        // reset number of sticks collected
+        savedThisLevel = 0;
+        numSticks = 0;
+        currentSticks.innerHTML = numSticks; 
     }
 
     function sendSettings() {
@@ -152,12 +160,6 @@ function gameAI(scene, clock) {
         else // move to boosts
         {
             bus.publish("pickBoosts");
-
-            // reset number of sticks collected
-            var currentSticks = document.getElementById('sticksOutput');
-            var numSticks = currentSticks.innerHTML;
-            numSticks = 0;
-            currentSticks.innerHTML = numSticks; 
 
             currentState = gameState.boosts;
         }

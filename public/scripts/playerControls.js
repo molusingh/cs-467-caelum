@@ -88,6 +88,7 @@ function playerControls(scene, duck) {
     bus.subscribe("kill", kill);
 
 
+
     bus.subscribe("gridTest", gridTest);
 
     function gridTest() {
@@ -301,9 +302,8 @@ function playerControls(scene, duck) {
 
         var currentSticks = document.getElementById('sticksOutput');
         var numSticks = currentSticks.innerHTML;
-// EDITED FOR DEBUGGING
-        //if (numSticks < 4) {
-        if (numSticks < 0) {    
+
+        if (numSticks < 4) {    
             return;
         }
 
@@ -417,7 +417,8 @@ function playerControls(scene, duck) {
         }
         else {
             bus.publish("speedBoostSound");
-            // code here
+            bus.publish("toggleSpeedBoost");
+            speedTimeoutId = setTimeout(function() { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
             skillLockout("speed");
         }
 

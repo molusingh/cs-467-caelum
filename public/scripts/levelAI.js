@@ -292,16 +292,14 @@ function levelAI(scene) {
         var defaultLocation = new THREE.Vector2(20, 20);
 
         //var foxCount = config.getCount(componentType.fox);
-// DEBUG       var foxCount = 2;
-        var foxCount = 0;
+        var foxCount = 2;
 
         //var hawkCount = config.getCount(componentType.hawk);
-// DEBUG       var hawkCount = 1;
-        var hawkCount = 0;
+       var hawkCount = 1;
+
 
         //var croqCount = config.getCount(componentType.croq);
-// DEBUG       var croqCount = 5;
-        var croqCount = 0;
+        var croqCount = 5;
 
         //var ducklingCount = config.getCount(componentType.duckling);
         var ducklingCount = 4;
@@ -523,6 +521,11 @@ function levelAI(scene) {
         envGenerator.cleanup();
         AIsActive = false;
         playerAI.reset();
+
+        ducklingsSpawned = 0;
+        ducklingsDead = 0;
+        ducklingsNested = 0;
+        bus.publish("levelChange");
     }
 
     function removeActor(actor) {

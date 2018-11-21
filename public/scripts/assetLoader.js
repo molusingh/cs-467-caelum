@@ -37,22 +37,6 @@ function assetLoader(scene) {
         color: 0xff0000, transparent: true, opacity: 0.5
     });
 
-    /*
-    var geometry2 = new THREE.BoxBufferGeometry(6, 8, 6);
-
-    var diffuseColor2 = new THREE.Color().setHSL(0.9, 0.5, 1 * 0.5 + 0.1);
-    var material2 = new THREE.MeshLambertMaterial({
-        color: diffuseColor2,
-    });
-
-    duck = new THREE.Mesh(geometry2, material2, shadowMat);
-    duck.castShadow = true;
-    duck.receiveShadow = true;
-    duck.position.x = -20;
-    duck.position.z = -10;
-    duck.position.y = 0;
-    scene.add(duck);
-    */
 
     var manager = new THREE.LoadingManager();
 

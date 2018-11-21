@@ -46,8 +46,8 @@ function playerControls(scene, duck) {
     var duckMover = new ObjectMover(duck);
 
     // superquack variables
-//    var localStun = false;
-//    var beginStun;
+    //    var localStun = false;
+    //    var beginStun;
     var stunTimeoutId = null;
     var foxes = [];
     var hawks = [];
@@ -356,18 +356,18 @@ function playerControls(scene, duck) {
             hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
             croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
 
-    console.log("foxes: " + foxes.length);
-    console.log("hawks: " + hawks.length);
-    console.log("croqs: " + croqs.length);
+            console.log("foxes: " + foxes.length);
+            console.log("hawks: " + hawks.length);
+            console.log("croqs: " + croqs.length);
             if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
-    //            localStun = true;
-    //            beginStun = clock.getElapsedTime();
+                //            localStun = true;
+                //            beginStun = clock.getElapsedTime();
                 bus.publish("superQuackSound");
                 bus.publish("stunSound");
 
                 for (i = 0; i < foxes.length; i++) {
                     bus.publish("stunned", foxes[i]);
-                    
+
                 }
 
                 for (i = 0; i < hawks.length; i++) {
@@ -378,7 +378,7 @@ function playerControls(scene, duck) {
                     //bus.publish("stunned", croqs[i]);
                 }
 
-                stunTimeoutId = setTimeout(function() { resetStunStatus(); }, stunLength * 1000);
+                stunTimeoutId = setTimeout(function () { resetStunStatus(); }, stunLength * 1000);
             }
             skillLockout("stun");
         }
@@ -432,17 +432,17 @@ function playerControls(scene, duck) {
         else {
             bus.publish("invisibilitySound");
             invisActive = true;
-            invisTimeoutId = setTimeout(function() { invisActive = false; }, invisLength * 1000);
+            invisTimeoutId = setTimeout(function () { invisActive = false; }, invisLength * 1000);
             skillLockout("invis");
         }
     }
 
     function skillLockout(skill) {
-        
+
         if (skill == "stun") {
             if (stunLock === false) {
                 stunLock = true;
-                skillLockTimeoutId = setTimeout(function() { skillLockout("stun"); }, skillLockoutLength * 1000);
+                skillLockTimeoutId = setTimeout(function () { skillLockout("stun"); }, skillLockoutLength * 1000);
             }
             else {
                 stunLock = false;
@@ -452,7 +452,7 @@ function playerControls(scene, duck) {
         else if (skill == "speed") {
             if (speedLock === false) {
                 speedLock = true;
-                skillLockTimeoutId = setTimeout(function() { skillLockout("speed"); }, skillLockoutLength * 1000);
+                skillLockTimeoutId = setTimeout(function () { skillLockout("speed"); }, skillLockoutLength * 1000);
             }
             else {
                 speedLock = false;
@@ -462,7 +462,7 @@ function playerControls(scene, duck) {
         else if (skill == "invis") {
             if (invisLock === false) {
                 invisLock = true;
-                skillLockTimeoutId = setTimeout(function() { skillLockout("invis"); }, skillLockoutLength * 1000);
+                skillLockTimeoutId = setTimeout(function () { skillLockout("invis"); }, skillLockoutLength * 1000);
             }
             else {
                 invisLock = false;
@@ -470,17 +470,15 @@ function playerControls(scene, duck) {
         }
 
     }
-    
-    function kill(ducklingKilled)
-    {
-        if (ducklingKilled != duck)
-        {
+
+    function kill(ducklingKilled) {
+        if (ducklingKilled != duck) {
             return;
         }
         setTimeout(callback, 1000);
         active = false;
-        function callback()
-        {
+        nestBuilder.cleanup();
+        function callback() {
             currentState = playerState.dead;
         }
 
@@ -565,6 +563,10 @@ function playerControls(scene, duck) {
 
     this.getActor = function () {
         return duck;
+    }
+
+    this.cleanup = function () {
+        nestBuilder.cleanup();
     }
 
 

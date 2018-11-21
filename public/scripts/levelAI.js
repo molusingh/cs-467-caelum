@@ -7,8 +7,6 @@ function levelAI(scene) {
     var currentState;
     setState(levelState.init);
 
-    //should come straight from playerControler?
-    var score;
     var actorsInLevel = [];
     var pawnsInLevel = [];
     //num of enums
@@ -19,10 +17,6 @@ function levelAI(scene) {
     var ducklingsNested = 0;
 
     var currentLevel = 1;
-    var invisibilityLevel = 0;
-    var speedLevel = 0;
-    var quackLevel = 0;
-
     var AIsActive = false;
 
     var envGenerator;
@@ -51,8 +45,6 @@ function levelAI(scene) {
     }
 
     function setupSubscriptions() {
-        //bus.subscribe("quackSkillRequested", processSuperquack());
-        //bus.subscribe("ducklingDead", test);
         bus.subscribe("ducklingDead", addDead);
         bus.subscribe("ducklingNested", addNested);
         bus.subscribe("foundStick", foundStick);
@@ -107,18 +99,6 @@ function levelAI(scene) {
     function loadAssets() {
         loader = new assetLoader(scene);
     }
-
-    /*
-    function processInvisibility() {
-        //if invisibility available
-        grid.setInvisibility(true);
-    }
-
-    function processSuperquack() {
-        //if quack available
-        grid.setSuperquack(true);
-    }
-    */
 
     function initAssetPools() {
 
@@ -295,13 +275,13 @@ function levelAI(scene) {
         var foxCount = 2;
 
         //var hawkCount = config.getCount(componentType.hawk);
-        var hawkCount = 1;
+        var hawkCount = 0;
 
         //var croqCount = config.getCount(componentType.croq);
         var croqCount = 5;
 
         //var ducklingCount = config.getCount(componentType.duckling);
-        var ducklingCount = 4;
+        var ducklingCount = 1;
         ducklingsSpawned = ducklingCount;
 
         //var stickCount = config.getCount(componentType.stick);
@@ -514,6 +494,7 @@ function levelAI(scene) {
     }
 
     function cleanup() {
+        actorsInLevel[0].cleanup();
         despawn();
         grid.reset();
         //object gets deleted, but scene elements remain otherwise

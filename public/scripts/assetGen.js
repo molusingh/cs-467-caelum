@@ -25,7 +25,7 @@ function assetGen(scene) {
 
         var nest = scene.getObjectByName("nest");
         var asset = new THREE.Object3D();
-        
+
         var params = {
             original: nest,
             scale: 1,
@@ -53,7 +53,7 @@ function assetGen(scene) {
             nestObjects.push(asset);
         });
 
-        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);       
+        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);
         grid.setEnvSquareInGameSpace(z + 15, x - 5, componentType.nest);
         grid.setEnvSquareInGameSpace(z + 5, x - 15, componentType.nest);
         grid.setEnvSquareInGameSpace(z + 15, x - 15, componentType.nest);
@@ -379,6 +379,7 @@ function assetGen(scene) {
             placeRandom(object);
 
         }
+        grass.position.y -= 100;
 
     }
 

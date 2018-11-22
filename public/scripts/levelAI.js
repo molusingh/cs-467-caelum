@@ -508,6 +508,11 @@ function levelAI(scene) {
         envGenerator.cleanup();
         AIsActive = false;
         playerAI.reset();
+
+        ducklingsSpawned = 0;
+        ducklingsDead = 0;
+        ducklingsNested = 0;
+        bus.publish("levelChange");
     }
 
     function removeActor(actor) {

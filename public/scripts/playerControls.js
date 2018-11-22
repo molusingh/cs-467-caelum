@@ -513,6 +513,8 @@ function playerControls(scene, duck) {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
 
+        console.log("NEXT: " + nextSquare);
+
         // moving from land to land, duckling, grass, egg, stick, or nest
         if (duck.userData.inWater === false && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
             return true;

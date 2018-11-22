@@ -61,28 +61,35 @@ function levelAI(scene) {
     function addNested() {
         ducklingsNested++;
         checkDucklings();
-        /*
+
         console.log("*****************");
+        console.log("Spawned: " + ducklingsSpawned);
         console.log("Nested: " + ducklingsNested);
         console.log("Dead: " + ducklingsDead);
-        */
+
     }
 
     function addDead(actor) {
         removeActor(actor);
         ducklingsDead++;
         checkDucklings();
-        /*
+
         console.log("*****************");
+        console.log("Spawned: " + ducklingsSpawned);
         console.log("Nested: " + ducklingsNested);
         console.log("Dead: " + ducklingsDead);
-        */
+
     }
 
     function checkDucklings() {
 
         if (ducklingsDead + ducklingsNested == ducklingsSpawned) {
-            currentState = levelState.end;
+            if (ducklingsNested === 0) {
+                currentState = levelState.loss;
+            }
+            else {
+                currentState = levelState.end;
+            }
             cleanup();
         }
     }
@@ -272,13 +279,13 @@ function levelAI(scene) {
         var defaultLocation = new THREE.Vector2(20, 20);
 
         //var foxCount = config.getCount(componentType.fox);
-        var foxCount = 2;
+        var foxCount = 0;
 
         //var hawkCount = config.getCount(componentType.hawk);
         var hawkCount = 0;
 
         //var croqCount = config.getCount(componentType.croq);
-        var croqCount = 5;
+        var croqCount = 1;
 
         //var ducklingCount = config.getCount(componentType.duckling);
         var ducklingCount = 1;

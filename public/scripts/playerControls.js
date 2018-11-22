@@ -129,6 +129,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x - 10;
             stickCheck(nextPoint);
             bus.publish("moveUp");
+            bus.publish("cameraKeyUp");
             bus.publish("playerMove");
 
         }
@@ -147,6 +148,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x + 10
             stickCheck(nextPoint);
             bus.publish("moveDown");
+            bus.publish("cameraKeyDown");
             bus.publish("playerMove");
         }
     }
@@ -164,6 +166,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x;
             stickCheck(nextPoint);
             bus.publish("moveLeft");
+            bus.publish("cameraKeyLeft");
             bus.publish("playerMove");
         }
     }
@@ -181,6 +184,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x;
             stickCheck(nextPoint);
             bus.publish("moveRight");
+            bus.publish("cameraKeyRight");
             bus.publish("playerMove");
         }
     }
@@ -244,15 +248,19 @@ function playerControls(scene, duck) {
 
             if (facing === 'up') {
                 bus.publish("moveUp");
+                bus.publish("cameraKeyUp");
             }
             else if (facing === 'left') {
                 bus.publish("moveLeft");
+                bus.publish("cameraKeyLeft");
             }
             else if (facing === 'down') {
                 bus.publish("moveDown");
+                bus.publish("cameraKeyDown");
             }
             else if (facing === 'right') {
                 bus.publish("moveRight");
+                bus.publish("cameraKeyRight");
             }
         }
 
@@ -268,15 +276,19 @@ function playerControls(scene, duck) {
 
             if (facing === 'up') {
                 bus.publish("moveUp");
+                bus.publish("cameraKeyUp");
             }
             else if (facing === 'left') {
                 bus.publish("moveLeft");
+                bus.publish("cameraKeyLeft");
             }
             else if (facing === 'down') {
                 bus.publish("moveDown");
+                bus.publish("cameraKeyDown");
             }
             else if (facing === 'right') {
                 bus.publish("moveRight");
+                bus.publish("cameraKeyRight");
             }
         }
 
@@ -529,7 +541,7 @@ function playerControls(scene, duck) {
         }
 
         // !!!!!temporary death sim, simulator to acutal!!!!
-        if (nextSquare === componentType.fox || nextSquare === componentType.croq) {
+        if (nextSquare === componentType.fox || (nextSquare === componentType.croq && duck.userData.inWater === true)) {
             currentState = playerState.dead;
             return true;
         }

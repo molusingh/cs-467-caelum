@@ -129,6 +129,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x - 10;
             stickCheck(nextPoint);
             bus.publish("moveUp");
+            bus.publish("cameraKeyUp");
             bus.publish("playerMove");
 
         }
@@ -147,6 +148,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x + 10
             stickCheck(nextPoint);
             bus.publish("moveDown");
+            bus.publish("cameraKeyDown");
             bus.publish("playerMove");
         }
     }
@@ -164,6 +166,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x;
             stickCheck(nextPoint);
             bus.publish("moveLeft");
+            bus.publish("cameraKeyLeft");
             bus.publish("playerMove");
         }
     }
@@ -181,6 +184,7 @@ function playerControls(scene, duck) {
             nextPoint.x = duck.position.x;
             stickCheck(nextPoint);
             bus.publish("moveRight");
+            bus.publish("cameraKeyRight");
             bus.publish("playerMove");
         }
     }
@@ -244,15 +248,19 @@ function playerControls(scene, duck) {
 
             if (facing === 'up') {
                 bus.publish("moveUp");
+                bus.publish("cameraKeyUp");
             }
             else if (facing === 'left') {
                 bus.publish("moveLeft");
+                bus.publish("cameraKeyLeft");
             }
             else if (facing === 'down') {
                 bus.publish("moveDown");
+                bus.publish("cameraKeyDown");
             }
             else if (facing === 'right') {
                 bus.publish("moveRight");
+                bus.publish("cameraKeyRight");
             }
         }
 
@@ -268,15 +276,19 @@ function playerControls(scene, duck) {
 
             if (facing === 'up') {
                 bus.publish("moveUp");
+                bus.publish("cameraKeyUp");
             }
             else if (facing === 'left') {
                 bus.publish("moveLeft");
+                bus.publish("cameraKeyLeft");
             }
             else if (facing === 'down') {
                 bus.publish("moveDown");
+                bus.publish("cameraKeyDown");
             }
             else if (facing === 'right') {
                 bus.publish("moveRight");
+                bus.publish("cameraKeyRight");
             }
         }
 
@@ -358,26 +370,21 @@ function playerControls(scene, duck) {
             hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
             croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
 
-            console.log("foxes: " + foxes.length);
-            console.log("hawks: " + hawks.length);
-            console.log("croqs: " + croqs.length);
+
             if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
-                //            localStun = true;
-                //            beginStun = clock.getElapsedTime();
                 bus.publish("superQuackSound");
                 bus.publish("stunSound");
 
                 for (i = 0; i < foxes.length; i++) {
                     bus.publish("stunned", foxes[i]);
-
                 }
 
                 for (i = 0; i < hawks.length; i++) {
-                    hawks[i].userData.stunStatus = true;
+                    bus.publish("stunned", hawks[i]);
                 }
 
                 for (i = 0; i < croqs.length; i++) {
-                    //bus.publish("stunned", croqs[i]);
+                    bus.publish("stunned", croqs[i]);
                 }
 
                 stunTimeoutId = setTimeout(function () { resetStunStatus(); }, stunLength * 1000);
@@ -388,19 +395,14 @@ function playerControls(scene, duck) {
 
     // called by update function after (stunLength) seconds has elapsed
     function resetStunStatus() {
-        localStun = false;
-
         while (foxes.length > 0) {
-            foxes[0].userData.stunStatus = false;
-            foxes.pop();
+            foxes.shift();
         }
         while (hawks.length > 0) {
-            hawks[0].userData.stunStatus = false;
-            hawks.pop();
+            hawks.shift();
         }
         while (croqs.length > 0) {
-            croqs[0].userData.stunStatus = false;
-            croqs.pop();
+            croqs.shift();
         }
 
         bus.publish("stopStunSound");
@@ -529,7 +531,7 @@ function playerControls(scene, duck) {
         }
 
         // !!!!!temporary death sim, simulator to acutal!!!!
-        if (nextSquare === componentType.fox || nextSquare === componentType.croq) {
+        if (nextSquare === componentType.fox || ((nextSquare === componentType.croq || nextSquare === componentType.hawk) && duck.userData.inWater === true)) {
             currentState = playerState.dead;
             return true;
         }

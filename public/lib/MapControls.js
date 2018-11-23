@@ -248,7 +248,8 @@ THREE.MapControls = function (object, domElement) {
 		document.removeEventListener('mousemove', onMouseMove, false);
 		document.removeEventListener('mouseup', onMouseUp, false);
 
-		window.removeEventListener('keydown', onKeyDown, false);
+		// removed for camera code JDA
+//		window.removeEventListener('keydown', onKeyDown, false);
 
 		//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
@@ -303,6 +304,49 @@ THREE.MapControls = function (object, domElement) {
 	var dollyStart = new THREE.Vector2();
 	var dollyEnd = new THREE.Vector2();
 	var dollyDelta = new THREE.Vector2();
+
+	//custom code to stop camera movement when running into obstacles
+	bus.subscribe("cameraKeyUp", cameraKeyUp);
+	bus.subscribe("cameraKeyDown", cameraKeyDown);
+	bus.subscribe("cameraKeyLeft", cameraKeyLeft);
+	bus.subscribe("cameraKeyRight", cameraKeyRight)
+// variables to disable pan at edge of map (JDA)
+	var minX = -165;
+	var maxX = 205;
+	var minZ = -170;
+	var maxZ = 175;
+
+	function cameraKeyUp() {
+		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+		
+		if (object.position.x < minX) return; 
+		pan(0, scope.keyPanSpeed);
+		scope.update();
+	}
+
+	function cameraKeyDown() {
+		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+		
+		if (object.position.x > maxX) return; 
+		pan(0, - scope.keyPanSpeed);
+		scope.update();
+	}
+
+	function cameraKeyLeft() {
+		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+		
+		if (object.position.z > maxZ) return; 
+		pan(scope.keyPanSpeed, 0);
+		scope.update();
+	}	
+
+	function cameraKeyRight() {
+		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+
+		if (object.position.z < minZ) return; 
+		pan(- scope.keyPanSpeed, 0);
+		scope.update();
+	}	
 
 	function getAutoRotationAngle() {
 
@@ -564,6 +608,7 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
+/* see custom camera controls at 308
 	function handleKeyDown(event) {
 
 // variables to disable pan at edge of map (JDA)
@@ -630,7 +675,7 @@ THREE.MapControls = function (object, domElement) {
 		}
 
 	}
-
+*/
 	function handleTouchStartRotate(event) {
 
 		// console.log( 'handleTouchStartRotate' );
@@ -945,7 +990,7 @@ THREE.MapControls = function (object, domElement) {
 		scope.dispatchEvent(endEvent);
 
 	}
-
+/* removed and changed to cameraKeyDown/Up/Left/Right see 308
 	function onKeyDown(event) {
 
 		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
@@ -953,7 +998,7 @@ THREE.MapControls = function (object, domElement) {
 		handleKeyDown(event);
 
 	}
-
+*/
 	function onTouchStart(event) {
 
 		if (scope.enabled === false) return;
@@ -1068,7 +1113,8 @@ THREE.MapControls = function (object, domElement) {
 	scope.domElement.addEventListener('touchend', onTouchEnd, false);
 	scope.domElement.addEventListener('touchmove', onTouchMove, false);
 
-	window.addEventListener('keydown', onKeyDown, false);
+	// removed for camera code JDA
+//	window.addEventListener('keydown', onKeyDown, false);
 
 	// force an update at start
 

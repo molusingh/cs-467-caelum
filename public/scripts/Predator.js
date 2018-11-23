@@ -56,11 +56,13 @@ function Predator(scene, predator, type)
     var stunTimeoutId = null;
     bus.subscribe("stunned", stun);
 
-    function stun()
+    function stun(object)
     {
-        toggleActive();
-        stunTimeoutId = setTimeout(function() { toggleActive(); },
-            stunLength * 1000);
+        if (object != predator) {
+            return;
+        } 
+            setActive(false);
+            stunTimeoutId = setTimeout(function() { setActive(true); }, stunLength * 1000);
     }
 
     function spawn()

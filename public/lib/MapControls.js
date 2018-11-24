@@ -42,18 +42,16 @@ THREE.MapControls = function (object, domElement) {
 
 	// How far you can orbit horizontally, upper and lower limits.
 	// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
-	this.minAzimuthAngle = - Infinity; // radians
+	this.minAzimuthAngle = - Infinity; // radian
 	this.maxAzimuthAngle = Infinity; // radians
-
-	// Set to true to enable damping (inertia)
-	// If damping is enabled, you must call controls.update() in your animation loop
+	// Set to true to enable damping (inertia	// If damping is enabled, you must call controls.update() in your animation loop
 	this.enableDamping = false;
-	this.dampingFactor = 0.25;
+	this.dampingFactor = 0.25
 
-	// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
-	// Set to false to disable zooming
+	// This option actually enables dollying in and out; left as "zom" for bacwards compatibility.
+	// Set to false to disable zoomin
 	this.enableZoom = true;
-	this.zoomSpeed = 1.0;
+	this.zoomSpeed = 1.0
 
 	// Set to false to disable rotating
 	this.enableRotate = true;
@@ -62,9 +60,9 @@ THREE.MapControls = function (object, domElement) {
 	// Set to false to disable panning
 	this.enablePan = true;
 	this.panSpeed = 1.0;
-	this.screenSpacePanning = false; // if true, pan in screen-space
-// Updated from 7.0 to simulate camera follow (JDA) 
-	this.keyPanSpeed = 17.5;	// pixels moved per arrow key push
+	this.screenSpacePanning = true; // if true, pan in screen-space
+	// Updated from 7.0 to simulate camera follow (JDA) 
+	this.keyPanSpeed = 28 / devicePixelRatio;
 
 	// Set to true to automatically rotate around the target
 	// If auto-rotate is enabled, you must call controls.update() in your animation loop
@@ -77,7 +75,7 @@ THREE.MapControls = function (object, domElement) {
 	// The four arrow keys
 	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
 
-// Added for WSAD panning in game (JDA) 
+	// Added for WSAD panning in game (JDA) 
 	this.WSADkeys = { LEFT: 65, UP: 87, RIGHT: 68, BOTTOM: 83 };
 
 	// Mouse buttons
@@ -249,7 +247,7 @@ THREE.MapControls = function (object, domElement) {
 		document.removeEventListener('mouseup', onMouseUp, false);
 
 		// removed for camera code JDA
-//		window.removeEventListener('keydown', onKeyDown, false);
+		//		window.removeEventListener('keydown', onKeyDown, false);
 
 		//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
 
@@ -310,7 +308,7 @@ THREE.MapControls = function (object, domElement) {
 	bus.subscribe("cameraKeyDown", cameraKeyDown);
 	bus.subscribe("cameraKeyLeft", cameraKeyLeft);
 	bus.subscribe("cameraKeyRight", cameraKeyRight)
-// variables to disable pan at edge of map (JDA)
+	// variables to disable pan at edge of map (JDA)
 	var minX = -165;
 	var maxX = 205;
 	var minZ = -170;
@@ -318,35 +316,35 @@ THREE.MapControls = function (object, domElement) {
 
 	function cameraKeyUp() {
 		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
-		
-		if (object.position.x < minX) return; 
+
+		if (object.position.x < minX) return;
 		pan(0, scope.keyPanSpeed);
 		scope.update();
 	}
 
 	function cameraKeyDown() {
 		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
-		
-		if (object.position.x > maxX) return; 
+
+		if (object.position.x > maxX) return;
 		pan(0, - scope.keyPanSpeed);
 		scope.update();
 	}
 
 	function cameraKeyLeft() {
 		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
-		
-		if (object.position.z > maxZ) return; 
+
+		if (object.position.z > maxZ) return;
 		pan(scope.keyPanSpeed, 0);
 		scope.update();
-	}	
+	}
 
 	function cameraKeyRight() {
 		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
 
-		if (object.position.z < minZ) return; 
+		if (object.position.z < minZ) return;
 		pan(- scope.keyPanSpeed, 0);
 		scope.update();
-	}	
+	}
 
 	function getAutoRotationAngle() {
 
@@ -608,74 +606,74 @@ THREE.MapControls = function (object, domElement) {
 
 	}
 
-/* see custom camera controls at 308
-	function handleKeyDown(event) {
-
-// variables to disable pan at edge of map (JDA)
-		var minX = -165;
-		var maxX = 205;
-		var minZ = -170;
-		var maxZ = 175;
-
-		switch (event.keyCode) {
-
-// if statements disable pan at camera location with duck at center at edge of map (JDA)
-			case scope.keys.UP:
-				if (object.position.x < minX) {break;}
-				pan(0, scope.keyPanSpeed);
-				scope.update();
-				break;
-
-// Added for WSAD panning in game (JDA) 
-			case scope.WSADkeys.UP:
-				if (object.position.x < minX) {break;}
-				pan(0, scope.keyPanSpeed);
-				scope.update();
-				break;
-
-			case scope.keys.BOTTOM:
-				if (object.position.x > maxX) {break;}
-				pan(0, - scope.keyPanSpeed);
-				scope.update();
-				break;
-
-// Added for WSAD panning in game (JDA) 
-			case scope.WSADkeys.BOTTOM:
-				if (object.position.x > maxX) {break;}
-				pan(0, - scope.keyPanSpeed);
-				scope.update();
-				break;
-
-			case scope.keys.LEFT:
-				if (object.position.z > maxZ) {break;}
-				pan(scope.keyPanSpeed, 0);
-				scope.update();
-				break;
-
-// Added for WSAD panning in game (JDA) 
-			case scope.WSADkeys.LEFT:
-				if (object.position.z > maxZ) {break;}
-				pan(scope.keyPanSpeed, 0);
-				scope.update();
-				break;
-
-			case scope.keys.RIGHT:
-				if (object.position.z < minZ) {break;}
-				pan(- scope.keyPanSpeed, 0);
-				scope.update();
-				break;
-
-// Added for WSAD panning in game (JDA) 
-			case scope.WSADkeys.RIGHT:
-				if (object.position.z < minZ) {break;}
-				pan(- scope.keyPanSpeed, 0);
-				scope.update();
-				break;
-
+	/* see custom camera controls at 308
+		function handleKeyDown(event) {
+	
+	// variables to disable pan at edge of map (JDA)
+			var minX = -165;
+			var maxX = 205;
+			var minZ = -170;
+			var maxZ = 175;
+	
+			switch (event.keyCode) {
+	
+	// if statements disable pan at camera location with duck at center at edge of map (JDA)
+				case scope.keys.UP:
+					if (object.position.x < minX) {break;}
+					pan(0, scope.keyPanSpeed);
+					scope.update();
+					break;
+	
+	// Added for WSAD panning in game (JDA) 
+				case scope.WSADkeys.UP:
+					if (object.position.x < minX) {break;}
+					pan(0, scope.keyPanSpeed);
+					scope.update();
+					break;
+	
+				case scope.keys.BOTTOM:
+					if (object.position.x > maxX) {break;}
+					pan(0, - scope.keyPanSpeed);
+					scope.update();
+					break;
+	
+	// Added for WSAD panning in game (JDA) 
+				case scope.WSADkeys.BOTTOM:
+					if (object.position.x > maxX) {break;}
+					pan(0, - scope.keyPanSpeed);
+					scope.update();
+					break;
+	
+				case scope.keys.LEFT:
+					if (object.position.z > maxZ) {break;}
+					pan(scope.keyPanSpeed, 0);
+					scope.update();
+					break;
+	
+	// Added for WSAD panning in game (JDA) 
+				case scope.WSADkeys.LEFT:
+					if (object.position.z > maxZ) {break;}
+					pan(scope.keyPanSpeed, 0);
+					scope.update();
+					break;
+	
+				case scope.keys.RIGHT:
+					if (object.position.z < minZ) {break;}
+					pan(- scope.keyPanSpeed, 0);
+					scope.update();
+					break;
+	
+	// Added for WSAD panning in game (JDA) 
+				case scope.WSADkeys.RIGHT:
+					if (object.position.z < minZ) {break;}
+					pan(- scope.keyPanSpeed, 0);
+					scope.update();
+					break;
+	
+			}
+	
 		}
-
-	}
-*/
+	*/
 	function handleTouchStartRotate(event) {
 
 		// console.log( 'handleTouchStartRotate' );
@@ -990,15 +988,15 @@ THREE.MapControls = function (object, domElement) {
 		scope.dispatchEvent(endEvent);
 
 	}
-/* removed and changed to cameraKeyDown/Up/Left/Right see 308
-	function onKeyDown(event) {
-
-		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
-
-		handleKeyDown(event);
-
-	}
-*/
+	/* removed and changed to cameraKeyDown/Up/Left/Right see 308
+		function onKeyDown(event) {
+	
+			if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+	
+			handleKeyDown(event);
+	
+		}
+	*/
 	function onTouchStart(event) {
 
 		if (scope.enabled === false) return;
@@ -1114,7 +1112,7 @@ THREE.MapControls = function (object, domElement) {
 	scope.domElement.addEventListener('touchmove', onTouchMove, false);
 
 	// removed for camera code JDA
-//	window.addEventListener('keydown', onKeyDown, false);
+	//	window.addEventListener('keydown', onKeyDown, false);
 
 	// force an update at start
 

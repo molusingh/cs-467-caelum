@@ -6,6 +6,8 @@ function assetGen(scene) {
     var grassObjects = [];
     var nestObjects = [];
 
+    var landColor;
+
     var shadowMat = new THREE.ShadowMaterial({
         color: 0xff0000, transparent: true, opacity: 0.5
     });
@@ -220,7 +222,8 @@ function assetGen(scene) {
 
     function createWater() {
         var geo = new THREE.PlaneBufferGeometry(400, 400, 40, 40);
-        var mat = new THREE.MeshLambertMaterial({ color: 0x0033ff, side: THREE.SingleSide });
+        var mat = new THREE.MeshLambertMaterial({ color: config.getWaterColor(), side: THREE.SingleSide });
+        //var mat = new THREE.MeshLambertMaterial({ color: 0x0033ff, side: THREE.SingleSide });
         var water = new THREE.Mesh(geo, mat);
         water.rotation.x = Math.PI / 2 * 3;
         water.position.y -= 3;
@@ -233,7 +236,8 @@ function assetGen(scene) {
     //extrudes 2d shape in Y to form 3d shape
     function create3DGeo(shape) {
         var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, depth: 3 });
-        var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+        var material = new THREE.MeshLambertMaterial({ color: landColor, wireframe: false });
+        //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
         var mesh = new THREE.Mesh(geo, material);
         mesh.scale.set(10, 10, 1);
         mesh.rotation.x = Math.PI / 2;
@@ -257,6 +261,8 @@ function assetGen(scene) {
         originZ = 210;
         originX = -120;
 
+        landColor = config.getLandColor();
+
         //per level
         var marginArray = [1, 1, 1, 1];
         var connectOverrides = [1, 1, 1, 1];
@@ -269,6 +275,7 @@ function assetGen(scene) {
                 var corners = generateRandomCorners(rangeArray);
                 var shape = create2DShape(corners);
                 var landSquare = create3DGeo(shape);
+
                 landSquare.position.z = originZ - (j * 8 * 10);
                 landSquare.position.x -= originX + (i * 8 * 10);
 
@@ -390,7 +397,8 @@ function assetGen(scene) {
 
         var cube = new THREE.CubeGeometry(1, 1, 1);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
-        var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+        //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+        var material = new THREE.MeshLambertMaterial({ color: landColor, wireframe: false });
 
         for (var i = 0; i < numOfObstacles; i++) {
 

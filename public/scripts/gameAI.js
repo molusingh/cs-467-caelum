@@ -60,10 +60,10 @@ function gameAI(scene, clock) {
     /*
      * Updates score
      */
-     function updateScore() {
+    function updateScore() {
         savedThisLevel++;
         score += savedThisLevel * 100;
-     }
+    }
 
     /*
      * Upgrades quack level
@@ -111,7 +111,7 @@ function gameAI(scene, clock) {
         // reset number of sticks collected
         savedThisLevel = 0;
         numSticks = 0;
-        currentSticks.innerHTML = numSticks; 
+        currentSticks.innerHTML = numSticks;
     }
 
     function sendSettings() {

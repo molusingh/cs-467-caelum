@@ -30,6 +30,9 @@ function assetLoader(scene) {
     var nest = new THREE.Object3D();
     nest.name = "nest";
 
+    var croqGetsDuck = new THREE.Object3D();
+    croqGetsDuck.name = "croqGetsDuck";
+
 
     var allAssetsLoaded = false;
 
@@ -291,6 +294,28 @@ function assetLoader(scene) {
 
         nest.add(object);
         scene.add(nest);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    var croqGetsDuckLoader = new THREE.FBXLoader(manager);
+    croqGetsDuckLoader.load('./geo/croqGetsDuck.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        croqGetsDuck.add(object);
+        scene.add(croqGetsDuck);
 
     }, undefined, function (e) {
         console.error(e);

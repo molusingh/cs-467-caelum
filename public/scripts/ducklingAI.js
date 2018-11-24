@@ -46,6 +46,7 @@ function ducklingAI(scene, hatchling, egg) {
     setState(ducklingState.pool);
 
     function spawn() {
+        var duckling = egg;
         grid.placeActor(duckling);
     }
 

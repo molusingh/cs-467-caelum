@@ -23,7 +23,6 @@ function levelAI(scene) {
     var levelAssetsLoaded = false;
 
     setupSubscriptions();
-    setupPublications();
     loadAssets();
     //rest takes place in update()
 
@@ -288,7 +287,7 @@ function levelAI(scene) {
         var croqCount = 1;
 
         //var ducklingCount = config.getCount(componentType.duckling);
-        var ducklingCount = 1;
+        var ducklingCount = 5;
         ducklingsSpawned = ducklingCount;
 
         //var stickCount = config.getCount(componentType.stick);

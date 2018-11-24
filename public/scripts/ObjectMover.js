@@ -140,7 +140,7 @@ function ObjectMover(object)
 				bus.publish("flySound");
 				object.userData.inAir = false;
 
-				if (belowObject.userData.componentType == componentType.stick)	{
+				if (belowObject != null && belowObject.userData.componentType == componentType.stick)	{
 					bus.publish("foundStick", belowObject);
 				}
 			}

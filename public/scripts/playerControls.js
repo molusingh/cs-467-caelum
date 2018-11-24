@@ -86,6 +86,7 @@ function playerControls(scene, duck) {
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
     bus.subscribe("kill", kill);
+    bus.subscribe("foundStick", stickCounter);
 
 
 
@@ -199,12 +200,14 @@ function playerControls(scene, duck) {
         if (grid.getSquareInfo(point.z, point.x) == componentType.stick) {
             stickObject = grid.getActorObject(point);
             bus.publish("foundStick", stickObject);
-
-            var currentSticks = document.getElementById('sticksOutput');
-            var numSticks = currentSticks.innerHTML;
-            numSticks++;
-            currentSticks.innerHTML = numSticks;
         }
+    }
+
+    function stickCounter() {
+        var currentSticks = document.getElementById('sticksOutput');
+        var numSticks = currentSticks.innerHTML;
+        numSticks++;
+        currentSticks.innerHTML = numSticks;
     }
 
     function jumpSkill(object) {

@@ -52,7 +52,7 @@ function gameAI(scene, clock) {
         bus.subscribe("invisiblityUpgrade", upgradeInvisibility);
         bus.subscribe("speedUpgrade", upgradeSpeed);
         bus.subscribe("quackUpgrade", upgradeQuack);
-        bus.subscribe("ducklingNested", updateScore);
+        bus.subscribe("updateScore", updateScore);
         bus.subscribe("levelChange", startLevel);
 
     }
@@ -63,6 +63,7 @@ function gameAI(scene, clock) {
      function updateScore() {
         savedThisLevel++;
         score += savedThisLevel * 100;
+console.log("saved: " + savedThisLevel);
      }
 
     /*

@@ -238,8 +238,7 @@ function UserInterface()
             	var numSticks = currentSticks.innerHTML;
             	numSticks++;
             	currentSticks.innerHTML = numSticks;
-*/
-		}
+*/		}
 	}
 
 	function onKeyUp(event)

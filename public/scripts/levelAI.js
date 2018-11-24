@@ -59,6 +59,7 @@ function levelAI(scene) {
 
     function addNested() {
         ducklingsNested++;
+        bus.publish("updateScore");
         checkDucklings();
 
         console.log("*****************");

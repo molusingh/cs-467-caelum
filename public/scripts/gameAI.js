@@ -63,6 +63,7 @@ function gameAI(scene, clock) {
      function updateScore() {
         savedThisLevel++;
         score += savedThisLevel * 100;
+        points += savedThisLevel * 100;
      }
 
     /*

@@ -25,9 +25,9 @@ function gameAI(scene, clock) {
     var quackLevel = 0;
     var speedLevel = 0;
     var invisibilityLevel = 0;
-    var quackCost = 10;
-    var speedCost = 10;
-    var invisibilityCost = 10;
+    var quackCost = 100;
+    var speedCost = 100;
+    var invisibilityCost = 100;
     var savedThisLevel = 0;
     var currentSticks = document.getElementById('sticksOutput');
     var numSticks = currentSticks.innerHTML;
@@ -75,6 +75,8 @@ function gameAI(scene, clock) {
         }
         points -= quackCost;
         ++quackLevel;
+        quackCost *= 2;
+        updateBoostsScreen();
     }
 
     /*
@@ -86,6 +88,8 @@ function gameAI(scene, clock) {
         }
         points -= speedCost;
         ++speedLevel;
+        speedCost *= 2;
+        updateBoostsScreen();
     }
 
     /*
@@ -97,6 +101,8 @@ function gameAI(scene, clock) {
         }
         points -= invisibilityCost;
         ++invisibilityLevel;
+        invisibilityCost *= 2;
+        updateBoostsScreen();
     }
 
 
@@ -161,7 +167,6 @@ function gameAI(scene, clock) {
         else // move to boosts
         {
             bus.publish("pickBoosts");
-
             currentState = gameState.boosts;
         }
     }
@@ -177,6 +182,33 @@ function gameAI(scene, clock) {
         $('#quackCostOutput').text(quackCost);
         $('#speedCostOutput').text(speedCost);
         $('#invisibilityCostOutput').text(invisibilityCost);
+        if (points < invisibilityCost || invisibilityLevel >= maxSkillLevel)
+        {
+            $('#upgradeInvisibilityButton').attr("disabled","disabled");
+        }
+        else
+        {
+            $('#upgradeInvisibilityButton').removeAttr("disabled");
+        }
+        
+        if (points < speedCost || speedLevel >= maxSkillLevel)
+        {
+            $('#upgradeSpeedButton').attr("disabled","disabled");
+        }
+        else
+        {
+            $('#upgradeSpeedButton').removeAttr("disabled");
+        }
+        
+        if (points < quackCost || quackLevel >= maxSkillLevel)
+        {
+            $('#upgradeQuackButton').attr("disabled","disabled");
+        }
+        else
+        {
+            $('#upgradeQuackButton').removeAttr("disabled");
+        }
+        
     }
 
     /*

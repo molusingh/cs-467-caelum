@@ -162,3 +162,11 @@ img {
     width: auto;
     font-weight: bold;
 }
+
+
+#restartButton2,
+#restartButton3 {
+    margin-top: 15%;
+    width: 35vmax;
+    height: auto;
+}

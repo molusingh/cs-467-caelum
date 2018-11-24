@@ -63,7 +63,8 @@ function gameAI(scene, clock) {
      function updateScore() {
         savedThisLevel++;
         score += savedThisLevel * 100;
-console.log("saved: " + savedThisLevel);
+        points += savedThisLevel * 100;
+
      }
 
     /*
@@ -200,11 +201,13 @@ console.log("saved: " + savedThisLevel);
             level.update();
             switch (level.getState()) {
                 case levelState.preGame:
+                    $('#loadingScreen').show();
                     sendSettings();
                     console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:
+                    $('#loadingScreen').hide();
                     //hide loading screen
                     level.setState(levelState.play);
                     break;

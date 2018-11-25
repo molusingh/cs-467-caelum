@@ -99,8 +99,6 @@ function Predator(scene, predator, type)
         else if (type == predatorType.hawk)
         {
             predator.position.y = hawkY;
-            predator.position.x = 5;
-            predator.position.z = 5;
         }
 
         target = findTargets(componentType.duck)[0];
@@ -132,6 +130,10 @@ function Predator(scene, predator, type)
             for (var i = 0; i < targets.length; ++i)
             {
                 target = targets[i];
+                if (target.userData.inAir && type != predatorType.hawk)
+                {
+                    return null;
+                }
                 path = findPath(predator.position, target.position, isLegalMove);
                 if (path)
                 {
@@ -199,7 +201,7 @@ function Predator(scene, predator, type)
             {
                 predator.position.y = actor.position.y; // move in y to target
             }
-            if (predator.position.y == actor.position.y)
+            if (Math.abs(predator.position.y - actor.position.y) < 0.1)
             {
                 bus.publish("kill", grid.getActorObject(path.point));
             }

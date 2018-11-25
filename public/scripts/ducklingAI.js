@@ -16,6 +16,7 @@ global findPath
 global bus
 global getRandomInt 
 global ducklingState
+global callRadius
 */
 
 /*
@@ -98,7 +99,7 @@ function ducklingAI(scene, hatchling, egg)
     function findTarget()
     {
         var targetType = componentType.duck;
-        target = grid.getActorsInRadius(duckling.position, 100, targetType)[0];
+        target = grid.getActorsInRadius(duckling.position, callRadius * 10, targetType)[0];
     }
 
     function targetInRange()
@@ -107,9 +108,9 @@ function ducklingAI(scene, hatchling, egg)
         {
             return false;
         }
-        if (Math.abs(target.position.x - duckling.position.x) > 100 ||
-            Math.abs(target.position.y - duckling.position.y) > 100 ||
-            Math.abs(target.position.z - duckling.position.z) > 100)
+        if (Math.abs(target.position.x - duckling.position.x) > callRadius * 10 ||
+            Math.abs(target.position.y - duckling.position.y) > callRadius * 10 ||
+            Math.abs(target.position.z - duckling.position.z) > callRadius * 10)
         {
             target = null;
             return false; // target got too far away

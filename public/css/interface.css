@@ -21,7 +21,7 @@ body {
     z-index: 10;
     color: transparent;
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: white;
+    -webkit-text-stroke-color: lightgrey;
     font-size: xx-large;
     font-size: 2vmax;
 }
@@ -161,4 +161,34 @@ img {
     height: auto;
     width: auto;
     font-weight: bold;
+}
+
+
+#restartButton2,
+#restartButton3 {
+    margin-top: 15%;
+    width: 35vmax;
+    height: auto;
+}
+
+/* reference: https://www.w3schools.com/howto/howto_css_loader.asp*/
+.loader {
+    position: absolute;
+    left: 42%;
+    border: 2vmax solid lightgrey; /* Light grey */
+    border-top: 2vmax solid grey; /* Blue */
+    border-radius: 50%;
+    width: 12vmax;
+    height: 12vmax;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#ducklingStatusLabels {
+    position: absolute;
+    right: 2%;
 }

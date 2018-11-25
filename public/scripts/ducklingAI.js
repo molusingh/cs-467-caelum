@@ -48,6 +48,7 @@ function ducklingAI(scene, hatchling, egg)
 
     function spawn()
     {
+        var duckling = egg;
         grid.placeActor(duckling);
     }
 
@@ -118,8 +119,8 @@ function ducklingAI(scene, hatchling, egg)
 
     function isPredator(actorType)
     {
-        return actorType == componentType.fox || actorType == componentType.croq 
-            || actorType == componentType.hawk;
+        return actorType == componentType.fox || actorType == componentType.croq ||
+            actorType == componentType.hawk;
     }
 
     // moves the duckling
@@ -130,7 +131,7 @@ function ducklingAI(scene, hatchling, egg)
             return;
         }
         var actorAtCurrent = grid.getActor(duckling.position, duckling);
-        if (isPredator(actorAtCurrent))  // predator at current location
+        if (isPredator(actorAtCurrent)) // predator at current location
         {
             var actor = grid.getActorObject(duckling.position, duckling);
             if (duckling.position.y == actor.position.y)
@@ -197,6 +198,7 @@ function ducklingAI(scene, hatchling, egg)
         {
             //setState(ducklingState.nested);
             bus.publish("ducklingNested");
+            setTimeout(despawn, 1000); // despawn after half a second
             active = false;
         }
     }
@@ -218,8 +220,12 @@ function ducklingAI(scene, hatchling, egg)
 
     function despawn()
     {
+        target = null;
+        path = null;
+        randomDirection = null;
         grid.removeActor(duckling);
         duckling.position.y = -100;
+        ducklingMover.rotateDown();
         active = false;
         currentState = ducklingState.pool;
         clearInterval(moveIntervalId);
@@ -232,7 +238,7 @@ function ducklingAI(scene, hatchling, egg)
         {
             return;
         }
-        console.log("duckling killed");
+        // console.log("duckling killed");
         despawn();
         playDead();
         setTimeout(function()

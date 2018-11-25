@@ -203,7 +203,15 @@ function Predator(scene, predator, type)
             }
             if (Math.abs(predator.position.y - actor.position.y) < 0.1)
             {
-                bus.publish("kill", grid.getActorObject(path.point));
+                if (actor.userData.componentType == componentType.egg)
+                {
+                    bus.publish("eggEaten", grid.getActorObject(path.point));
+                }
+                else
+                {
+                    bus.publish("kill", grid.getActorObject(path.point));
+                }
+                
             }
             changeY = !changeY;
         }

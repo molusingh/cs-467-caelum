@@ -36,6 +36,9 @@ function assetLoader(scene) {
     var duckFly = new THREE.Object3D();
     duckFly.name = "duckFly";
 
+    var blood = new THREE.Object3D();
+    blood.name = "blood";
+
     var allAssetsLoaded = false;
 
     var shadowMat = new THREE.ShadowMaterial({
@@ -44,10 +47,12 @@ function assetLoader(scene) {
 
 
     var manager = new THREE.LoadingManager();
+    var anim;
 
     manager.onLoad = function () {
         // console.log("STATIC ASSETS LOADED");
         allAssetsLoaded = true;
+        anim = new animation(scene);
     }
 
 
@@ -341,6 +346,29 @@ function assetLoader(scene) {
 
         duckFly.add(object);
         scene.add(duckFly);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    var bloodLoader = new THREE.FBXLoader(manager);
+    bloodLoader.load('./geo/duckfly.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+        //object.visible = false;
+
+        blood.add(object);
+        scene.add(blood);
 
     }, undefined, function (e) {
         console.error(e);

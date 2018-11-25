@@ -195,7 +195,8 @@ function levelAI(scene) {
             var instance;
             switch (params.componentType) {
                 case componentType.duck:
-                    instance = new playerControls(scene, asset);
+                    var flyingDuck = scene.getObjectByName("duckFly");
+                    instance = new playerControls(scene, asset, flyingDuck);
                     break;
                 case componentType.fox:
                     //asset.userData.speed = config.getSpeed(componentType.fox);
@@ -503,7 +504,7 @@ function levelAI(scene) {
             actorsInLevel.length = length - 1;
         }
         else {
-            console.log("actor doesn't exist");
+            //console.log("actor doesn't exist");
         }
     }
 

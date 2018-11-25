@@ -2,7 +2,7 @@
 /* global playerState*/
 /* global bus*/
 /* global soundLoader*/
-function playerControls(scene, duck) {
+function playerControls(scene, duck, flyingDuck) {
 
     /*
     -- subscribe
@@ -38,7 +38,6 @@ function playerControls(scene, duck) {
     duck.userData.inAir = false;
     duck.userData.inWater = false;
     duck.position.y = .1;
-    var flyingDuck = scene.getObjectByName("duckFly");
     flyingDuck.visible = false;
 
     var maxPos = 185;
@@ -493,10 +492,13 @@ function playerControls(scene, duck) {
 
     }
 
-    function kill(ducklingKilled) {
-        if (ducklingKilled != duck) {
+    function kill(victim) {
+        if (victim != duck) {
             return;
         }
+        var location = new THREE.Vector3(duck.position.x, duck.position.y, duck.position.z);
+        //bus.publish("showBlood", location);
+        duckling.position.y = -100;
         setTimeout(callback, 1000);
         active = false;
         nestBuilder.cleanup();

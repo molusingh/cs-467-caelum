@@ -244,7 +244,7 @@ function gameAI(scene, clock) {
                 case levelState.preGame:
                     $('#loadingScreen').show();
                     sendSettings();
-                    console.log("before BUILD");
+                    // console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:

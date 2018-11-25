@@ -80,13 +80,20 @@ function levelAI(scene) {
     function checkDucklings() {
 
         if (ducklingsDead + ducklingsNested == ducklingsSpawned) {
-            if (ducklingsNested === 0) {
-                currentState = levelState.loss;
+            setTimeout(callback, 250); // delay to end level
+            function callback()
+            {
+                if (ducklingsNested === 0) 
+                {
+                    currentState = levelState.loss;
+                }
+                else 
+                {
+                    currentState = levelState.end;
+                }
+                cleanup();
             }
-            else {
-                currentState = levelState.end;
-            }
-            cleanup();
+
         }
     }
 

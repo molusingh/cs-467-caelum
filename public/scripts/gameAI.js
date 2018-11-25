@@ -1,9 +1,12 @@
-/* global UserInterface*/
-/* global gameState*/
-/* global levelState*/
-/* global levelAI*/
-/* global bus*/
-/* global $*/
+/* 
+global UserInterface
+global gameState
+global levelState
+global levelAI
+global bus
+global $
+global config
+*/
 
 /*
  * Constructor for a gameAI object
@@ -209,7 +212,13 @@ function gameAI(scene, clock) {
         {
             $('#upgradeQuackButton').removeAttr("disabled");
         }
-        
+    }
+    
+    function updateGlobalSkills()
+    {
+        callRadius = 5 + quackLevel * 5;
+        speedLength = 10 + speedLevel * 10;
+        invisLength = 10 + invisibilityLevel * 10;
     }
 
     /*
@@ -226,6 +235,7 @@ function gameAI(scene, clock) {
         var elapsedTime = clock.getElapsedTime();
         $('#scoreOutput').text(score);
         $('#levelOutput').text(currentLevel);
+        updateGlobalSkills();
 
         // console.log("gameState:" + currentState);
 

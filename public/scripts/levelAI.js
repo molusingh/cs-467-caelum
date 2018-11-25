@@ -99,9 +99,6 @@ function levelAI(scene) {
         grid.removeActor(stick);
     }
 
-    function setupPublications() {
-    }
-
     function loadAssets() {
         loader = new assetLoader(scene);
     }
@@ -121,7 +118,7 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var fox = scene.getObjectByName("fox");
-        var foxSize = 10;
+        var foxSize = config.getPoolSize(componentType.fox);
         params = {
             count: foxSize,
             original: fox,
@@ -131,7 +128,7 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var croq = scene.getObjectByName("croq");
-        var croqSize = 10;
+        var croqSize = config.getPoolSize(componentType.croq);
         params = {
             count: croqSize,
             original: croq,
@@ -142,7 +139,7 @@ function levelAI(scene) {
 
         var duckling = scene.getObjectByName("duckling");
         var egg = scene.getObjectByName("egg");
-        var ducklingSize = 10;
+        var ducklingSize = config.getPoolSize(componentType.duckling);
         params = {
             count: ducklingSize,
             original: duckling,
@@ -153,7 +150,7 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var hawk = scene.getObjectByName("hawk");
-        var hawkSize = 10;
+        var hawkSize = config.getPoolSize(componentType.hawk);
         params = {
             count: hawkSize,
             original: hawk,
@@ -163,7 +160,7 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var stick = scene.getObjectByName("stick");
-        var stickSize = 12;
+        var stickSize = config.getPoolSize(componentType.stick);
         params = {
             count: stickSize,
             original: stick,
@@ -173,7 +170,7 @@ function levelAI(scene) {
         createAssetPool(params);
 
         var eggShell = scene.getObjectByName("eggShell");
-        var eggShellSize = 10;
+        var eggShellSize = config.getPoolSize(componentType.duckling);
         params = {
             count: eggShellSize,
             original: eggShell,
@@ -260,8 +257,8 @@ function levelAI(scene) {
             }
             else {
                 asset.userData.componentType = componentType.egg;
-                //asset.userData.hatchTime = config.getHatchTime();
-                asset.userData.hatchTime = 5;
+                asset.userData.hatchTime = config.getHatchTime();
+                //asset.userData.hatchTime = 5;
             }
 
             asset.position.y = -100;
@@ -274,24 +271,23 @@ function levelAI(scene) {
 
     function populateAssets() {
 
-        //rest to zer
         var defaultLocation = new THREE.Vector2(20, 20);
 
-        //var foxCount = config.getCount(componentType.fox);
-        var foxCount = 0;
+        var foxCount = config.getCount(componentType.fox);
+        //var foxCount = 0;
 
-        //var hawkCount = config.getCount(componentType.hawk);
-        var hawkCount = 0;
+        var hawkCount = config.getCount(componentType.hawk);
+        //var hawkCount = 0;
 
-        //var croqCount = config.getCount(componentType.croq);
-        var croqCount = 1;
+        var croqCount = config.getCount(componentType.croq);
+        //var croqCount = 1;
 
-        //var ducklingCount = config.getCount(componentType.duckling);
-        var ducklingCount = 5;
+        var ducklingCount = config.getCount(componentType.duckling);
+        //var ducklingCount = 5;
         ducklingsSpawned = ducklingCount;
 
-        //var stickCount = config.getCount(componentType.stick);
-        var stickCount = 12;
+        var stickCount = config.getCount(componentType.stick);
+        //var stickCount = 12;
 
         var duckCount = 1;
 
@@ -304,7 +300,7 @@ function levelAI(scene) {
             componentType: componentType.duck
         }
 
-        var foxLocations = [(new THREE.Vector2(25, 25)), (new THREE.Vector2(30, 30))]
+        var foxLocations = config.generateLocations(foxCount);
         var foxes = {
             count: foxCount,
             componentType: componentType.fox,
@@ -312,7 +308,7 @@ function levelAI(scene) {
             locationComponent: componentType.land,
         }
 
-        var hawkLocations = [(new THREE.Vector2(27, 25))]
+        var hawkLocations = config.generateLocations(hawkCount);
         var hawks = {
             count: hawkCount,
             locations: hawkLocations,
@@ -321,11 +317,7 @@ function levelAI(scene) {
             componentType: componentType.hawk
         }
 
-        var croqLocations = [(new THREE.Vector2(27, 25)),
-        (new THREE.Vector2(35, 35)),
-        (new THREE.Vector2(5, 5)),
-        (new THREE.Vector2(15, 5)),
-        (new THREE.Vector2(25, 10))]
+        var croqLocations = config.generateLocations(croqCount);
 
         var croqs = {
             count: croqCount,
@@ -334,11 +326,7 @@ function levelAI(scene) {
             componentType: componentType.croq
         }
 
-        var ducklingLocations = [(new THREE.Vector2(20, 25)),
-        (new THREE.Vector2(35, 15)),
-        (new THREE.Vector2(25, 5)),
-        (new THREE.Vector2(25, 15)),
-        (new THREE.Vector2(25, 10))]
+        var ducklingLocations = config.generateLocations(ducklingCount);
 
         var ducklings = {
             count: ducklingCount,
@@ -347,18 +335,7 @@ function levelAI(scene) {
             componentType: componentType.duckling
         }
 
-        var stickLocations = [(new THREE.Vector2(20, 25)),
-        (new THREE.Vector2(35, 15)),
-        (new THREE.Vector2(25, 5)),
-        (new THREE.Vector2(7, 15)),
-        (new THREE.Vector2(5, 12)),
-        (new THREE.Vector2(3, 35)),
-        (new THREE.Vector2(5, 25)),
-        (new THREE.Vector2(15, 15)),
-        (new THREE.Vector2(15, 25)),
-        (new THREE.Vector2(35, 35)),
-        (new THREE.Vector2(25, 15)),
-        (new THREE.Vector2(25, 10))]
+        var stickLocations = config.generateLocations(stickCount);
 
         var sticks = {
             count: stickCount,
@@ -384,7 +361,6 @@ function levelAI(scene) {
 
             var pos = actorsInLevel.length - 1;
 
-            //TO DO: could also move the spawning back to here from AIs
             actorsInLevel[pos].getActor().userData.locationComponent = params.locationComponent;
             actorsInLevel[pos].getActor().userData.location = params.locations[i];
 

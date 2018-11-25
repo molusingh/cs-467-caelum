@@ -15,7 +15,7 @@ function gameAI(scene, clock) {
     this.update = update;
 
     // private variables
-    var totalLevels = 10; // # of levels in the game
+    var totalLevels = config.getTotalLevels(); // # of levels in the game
     var currentState = gameState.start;
     var currentLevelDifficulty = 1; // not sure what determines this
     var currentLevel = 1;

@@ -19,6 +19,7 @@ function assetGen(scene) {
         createWater();
         generateLand();
         recordLandInGrid();
+        //these need to be dynamic
         generateLandObstacles(40, 20);
         generateGrassObstacles(60, 20);
     }

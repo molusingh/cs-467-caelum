@@ -61,11 +61,12 @@ function levelAI(scene) {
         ducklingsNested++;
         bus.publish("updateScore");
         checkDucklings();
-
+        /*
         console.log("*****************");
         console.log("Spawned: " + ducklingsSpawned);
         console.log("Nested: " + ducklingsNested);
         console.log("Dead: " + ducklingsDead);
+        */
 
     }
     
@@ -84,10 +85,12 @@ function levelAI(scene) {
         ducklingsDead++;
         checkDucklings();
 
+        /*
         console.log("*****************");
         console.log("Spawned: " + ducklingsSpawned);
         console.log("Nested: " + ducklingsNested);
         console.log("Dead: " + ducklingsDead);
+        */
 
     }
 

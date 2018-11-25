@@ -365,7 +365,7 @@ function assetLoader(scene) {
         object.scale.x = 3;
         object.scale.y = 3;
         object.scale.z = 3;
-        //object.visible = false;
+        object.visible = false;
 
         blood.add(object);
         scene.add(blood);

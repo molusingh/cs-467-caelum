@@ -521,6 +521,7 @@ function playerControls(scene, duck, flyingDuck) {
             blood.position.x = location.x;
             blood.position.y = 0.1;
             blood.position.z = location.z;
+            blood.visible = true;
             blood.scale.x = 3;
             blood.scale.y = 3;
             blood.scale.z = 3;

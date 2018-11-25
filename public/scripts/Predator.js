@@ -99,8 +99,6 @@ function Predator(scene, predator, type)
         else if (type == predatorType.hawk)
         {
             predator.position.y = hawkY;
-            predator.position.x = 5;
-            predator.position.z = 5;
         }
 
         target = findTargets(componentType.duck)[0];

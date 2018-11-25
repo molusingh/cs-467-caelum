@@ -21,7 +21,7 @@ function setup() {
     var landColor = new THREE.Vector3(60, 40, 20);
 
     bus.subscribe("levelChange", updateLevel);
-    bus.publish("playerLoses", resetLevels);
+    bus.subscribe("playerLoses", resetLevels);
 
     var levels = [];
     configLevel1();

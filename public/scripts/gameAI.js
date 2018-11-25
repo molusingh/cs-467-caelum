@@ -1,9 +1,12 @@
-/* global UserInterface*/
-/* global gameState*/
-/* global levelState*/
-/* global levelAI*/
-/* global bus*/
-/* global $*/
+/* 
+global UserInterface
+global gameState
+global levelState
+global levelAI
+global bus
+global $
+global config
+*/
 
 /*
  * Constructor for a gameAI object
@@ -150,8 +153,7 @@ function gameAI(scene, clock) {
         quackLevel = 0;
         speedLevel = 0;
         invisibilityLevel = 0;
-        bus.publish("playerLoses");
-        currentState = gameState.loss;
+        currentState = gameState.start;
     }
 
     /*
@@ -209,7 +211,13 @@ function gameAI(scene, clock) {
         {
             $('#upgradeQuackButton').removeAttr("disabled");
         }
-        
+    }
+    
+    function updateGlobalSkills()
+    {
+        stunLength = quackLevel * 10;
+        speedLength = speedLevel * 10;
+        invisLength = invisibilityLevel * 10;
     }
 
     /*
@@ -226,6 +234,7 @@ function gameAI(scene, clock) {
         var elapsedTime = clock.getElapsedTime();
         $('#scoreOutput').text(score);
         $('#levelOutput').text(currentLevel);
+        updateGlobalSkills();
 
         // console.log("gameState:" + currentState);
 
@@ -235,7 +244,7 @@ function gameAI(scene, clock) {
                 case levelState.preGame:
                     $('#loadingScreen').show();
                     sendSettings();
-                    console.log("before BUILD");
+                    // console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:
@@ -249,6 +258,7 @@ function gameAI(scene, clock) {
                     break;
                 case levelState.loss:
                     resetGame();
+                    bus.publish("playerLoses");
                     level.setState(levelState.preGame);
                     break;
                 default:

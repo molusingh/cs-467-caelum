@@ -61,7 +61,6 @@ function levelAI(scene) {
         ducklingsNested++;
         bus.publish("updateScore");
         checkDucklings();
-
         /*
         console.log("*****************");
         console.log("Spawned: " + ducklingsSpawned);
@@ -69,6 +68,16 @@ function levelAI(scene) {
         console.log("Dead: " + ducklingsDead);
         */
 
+    }
+    
+    function updateDucklingStatusLabels()
+    {
+        var roaming = ducklingsSpawned - ducklingsNested - ducklingsDead;
+        $('#roamingOutput').text(roaming);
+        $('#killedOutput').text(ducklingsDead);
+        $('#nestedOutput').text(ducklingsNested);
+        
+        
     }
 
     function addDead(actor) {
@@ -488,6 +497,7 @@ function levelAI(scene) {
         ducklingsDead = 0;
         ducklingsNested = 0;
         bus.publish("levelChange");
+        bus.publish("stopStunSound");
     }
 
     function removeActor(actor) {
@@ -519,6 +529,7 @@ function levelAI(scene) {
     this.update = function () {
 
         var elapsedTime = clock.getElapsedTime();
+        updateDucklingStatusLabels();
 
         if (currentState === levelState.init) {
             if (typeof loader != 'undefined') {
@@ -554,7 +565,6 @@ function levelAI(scene) {
 
             //get duck's state
             if (playerAI.getState() === playerState.dead) {
-                bus.publish("stopStunSound");
                 setState(levelState.loss);
                 cleanup();
             }

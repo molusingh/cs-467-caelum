@@ -12,6 +12,7 @@ function UserInterface()
 
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
+	bus.subscribe("start", getToggleDisplayFunction("loadingScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("closeMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("openHowToPlay", flipBetweenStartAndHowToPlay);

@@ -198,7 +198,7 @@ function ducklingAI(scene, hatchling, egg)
         {
             //setState(ducklingState.nested);
             bus.publish("ducklingNested");
-            despawn();
+            setTimeout(despawn, 1000); // despawn after half a second
             active = false;
         }
     }
@@ -238,7 +238,7 @@ function ducklingAI(scene, hatchling, egg)
         {
             return;
         }
-        console.log("duckling killed");
+        // console.log("duckling killed");
         despawn();
         playDead();
         setTimeout(function()

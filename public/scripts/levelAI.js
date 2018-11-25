@@ -61,37 +61,20 @@ function levelAI(scene) {
         ducklingsNested++;
         bus.publish("updateScore");
         checkDucklings();
-        /*
-        console.log("*****************");
-        console.log("Spawned: " + ducklingsSpawned);
-        console.log("Nested: " + ducklingsNested);
-        console.log("Dead: " + ducklingsDead);
-        */
-
     }
-    
-    function updateDucklingStatusLabels()
-    {
+
+    function updateDucklingStatusLabels() {
+
         var roaming = ducklingsSpawned - ducklingsNested - ducklingsDead;
-        $('#roamingOutput').text(roaming);
-        $('#killedOutput').text(ducklingsDead);
-        $('#nestedOutput').text(ducklingsNested);
-        
-        
+        var args = { roaming: roaming, nested: ducklingsNested, dead: ducklingsDead };
+        bus.publish("updateDucklingLabels", args);
+
     }
 
     function addDead(actor) {
         removeActor(actor);
         ducklingsDead++;
         checkDucklings();
-
-        /*
-        console.log("*****************");
-        console.log("Spawned: " + ducklingsSpawned);
-        console.log("Nested: " + ducklingsNested);
-        console.log("Dead: " + ducklingsDead);
-        */
-
     }
 
     function checkDucklings() {

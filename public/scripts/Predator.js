@@ -58,11 +58,12 @@ function Predator(scene, predator, type)
 
     function stun(object)
     {
-        if (object != predator) {
+        if (object != predator)
+        {
             return;
-        } 
-            setActive(false);
-            stunTimeoutId = setTimeout(function() { setActive(true); }, stunLength * 1000);
+        }
+        setActive(false);
+        stunTimeoutId = setTimeout(function() { setActive(true); }, stunLength * 1000);
     }
 
     function spawn()
@@ -161,6 +162,10 @@ function Predator(scene, predator, type)
         {
             path = getPath(componentType.duckling);
         }
+        if (path == null) // if no path to duckling, go after egg
+        {
+            path = getPath(componentType.egg);
+        }
         if (path == null) // if no path move randomly
         {
             var validRandom = isValid(predator.position, randomDirection);
@@ -168,7 +173,7 @@ function Predator(scene, predator, type)
             while (!validRandom) // until direction is valid
             {
                 ++count;
-                if (count > 10) // if object is stuck
+                if (count > 100) // if object is stuck
                 {
                     despawn();
                     console.log('stuck');
@@ -188,7 +193,7 @@ function Predator(scene, predator, type)
             }
         }
         var actor = grid.getActorObject(predator.position, predator);
-        if (actor != null) // must be duck or duckling
+        if (actor != null) // must be duck or duckling or egg
         {
             if (type == predatorType.hawk && changeY) // for hawk
             {
@@ -250,7 +255,7 @@ function Predator(scene, predator, type)
         }
         var actor = grid.getActor(target); // actor at current target
         if (actor != null && actor != componentType.duck &&
-            actor != componentType.duckling)
+            actor != componentType.duckling && actor != componentType.egg)
         {
             return false;
         }

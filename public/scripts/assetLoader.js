@@ -44,7 +44,7 @@ function assetLoader(scene) {
     var manager = new THREE.LoadingManager();
 
     manager.onLoad = function () {
-        console.log("STATIC ASSETS LOADED");
+        // console.log("STATIC ASSETS LOADED");
         allAssetsLoaded = true;
     }
 

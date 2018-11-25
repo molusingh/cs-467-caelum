@@ -33,6 +33,8 @@ function assetLoader(scene) {
     var croqGetsDuck = new THREE.Object3D();
     croqGetsDuck.name = "croqGetsDuck";
 
+    var duckFly = new THREE.Object3D();
+    duckFly.name = "duckFly";
 
     var allAssetsLoaded = false;
 
@@ -316,6 +318,29 @@ function assetLoader(scene) {
 
         croqGetsDuck.add(object);
         scene.add(croqGetsDuck);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    var duckflyLoader = new THREE.FBXLoader(manager);
+    duckflyLoader.load('./geo/duckfly.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 10;
+        object.scale.y = 10;
+        object.scale.z = 10;
+        //object.visible = false;
+
+        duckFly.add(object);
+        scene.add(duckFly);
 
     }, undefined, function (e) {
         console.error(e);

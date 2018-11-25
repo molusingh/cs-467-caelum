@@ -153,8 +153,7 @@ function gameAI(scene, clock) {
         quackLevel = 0;
         speedLevel = 0;
         invisibilityLevel = 0;
-        bus.publish("playerLoses");
-        currentState = gameState.loss;
+        currentState = gameState.start;
     }
 
     /*
@@ -259,6 +258,7 @@ function gameAI(scene, clock) {
                     break;
                 case levelState.loss:
                     resetGame();
+                    bus.publish("playerLoses");
                     level.setState(levelState.preGame);
                     break;
                 default:

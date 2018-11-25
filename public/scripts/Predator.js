@@ -173,7 +173,7 @@ function Predator(scene, predator, type)
             while (!validRandom) // until direction is valid
             {
                 ++count;
-                if (count > 10) // if object is stuck
+                if (count > 100) // if object is stuck
                 {
                     despawn();
                     console.log('stuck');

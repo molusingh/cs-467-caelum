@@ -12658,7 +12658,7 @@
 
 				if ( newValue === undefined ) {
 
-					console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
+					// console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
 					continue;
 
 				}
@@ -21778,7 +21778,7 @@
 				session.addEventListener( 'inputsourceschange', function () {
 
 					inputSources = session.getInputSources();
-					console.log( inputSources );
+					// console.log( inputSources );
 
 				} );
 
@@ -21957,7 +21957,7 @@
 
 	function WebGLRenderer( parameters ) {
 
-		console.log( 'THREE.WebGLRenderer', REVISION );
+		// console.log( 'THREE.WebGLRenderer', REVISION );
 
 		parameters = parameters || {};
 
@@ -45960,7 +45960,7 @@
 
 	Curve.create = function ( construct, getPoint ) {
 
-		console.log( 'THREE.Curve.create() has been deprecated' );
+		// console.log( 'THREE.Curve.create() has been deprecated' );
 
 		construct.prototype = Object.create( Curve.prototype );
 		construct.prototype.constructor = construct;
@@ -46819,7 +46819,7 @@
 		shadowCameraVisible: {
 			set: function () {
 
-				console.warn( 'THREE.Light: .shadowCameraVisible has been removed. Use new THREE.CameraHelper( light.shadow.camera ) instead.' );
+				// console.warn( 'THREE.Light: .shadowCameraVisible has been removed. Use new THREE.CameraHelper( light.shadow.camera ) instead.' );
 
 			}
 		},

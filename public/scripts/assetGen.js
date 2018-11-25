@@ -4,6 +4,9 @@ function assetGen(scene) {
     var landObjects = [];
     var landObstacles = [];
     var grassObjects = [];
+    var nestObjects = [];
+
+    var landColor;
 
     var shadowMat = new THREE.ShadowMaterial({
         color: 0xff0000, transparent: true, opacity: 0.5
@@ -16,41 +19,47 @@ function assetGen(scene) {
         createWater();
         generateLand();
         recordLandInGrid();
-        generateLandObstacles(40, 20);
-        generateGrassObstacles(60, 20);
+        //these need to be dynamic
+        generateLandObstacles(config.getCount(componentType.obstacle));
+        generateGrassObstacles(config.getCount(componentType.grass));
     }
 
-    this.generateNest = function(z, x) {
-        var nest = new THREE.Object3D();
-        nest.name = "nest";
-        var manager = new THREE.LoadingManager();
+    this.generateNest = function (z, x) {
 
-            //load nest 
-        var nestLoader = new THREE.FBXLoader(manager);
-        nestLoader.load('./geo/stick.fbx', function (object) {
-            object.traverse(function (child) {
+        var nest = scene.getObjectByName("nest");
+        var asset = new THREE.Object3D();
 
-                if (child instanceof THREE.Mesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                    child.shadowMaterial = shadowMat;
-                }
+        var params = {
+            original: nest,
+            scale: 1,
+            componentType: componentType.nest,
+        }
 
-            });
-            object.scale.x = 2;
-            object.scale.y = 2;
-            object.scale.z = 2;
+        var original = params.original;
 
-            nest.add(object);
-            scene.add(nest);
+        original.traverse(function (child) {
 
-            }, undefined, function (e) {
-                    console.error(e);
-            });
+            if (child instanceof THREE.Mesh) {
+                var childClone = child.clone();
+                asset.add(childClone);
+            }
 
-            nest.position.z = z;
-            nest.position.x = x;
+            asset.scale.x = params.scale;
+            asset.scale.y = params.scale;
+            asset.scale.z = params.scale;
+            asset.userData.componentType = params.componentType;
 
+            asset.position.z = z;
+            asset.position.x = x;
+
+            scene.add(asset);
+            nestObjects.push(asset);
+        });
+
+        grid.setEnvSquareInGameSpace(z + 5, x - 5, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 15, x - 5, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 5, x - 15, componentType.nest);
+        grid.setEnvSquareInGameSpace(z + 15, x - 15, componentType.nest);
     }
 
     this.cleanup = function () {
@@ -68,6 +77,11 @@ function assetGen(scene) {
             scene.remove(landObstacles[i]);
         }
         landObstacles.length = 0;
+
+        for (var i = 0; i < nestObjects.length; i++) {
+            scene.remove(nestObjects[i]);
+        }
+        nestObjects.length = 0;
     }
 
     //creates 4 points determining corners of 8x8 tile
@@ -209,7 +223,8 @@ function assetGen(scene) {
 
     function createWater() {
         var geo = new THREE.PlaneBufferGeometry(400, 400, 40, 40);
-        var mat = new THREE.MeshLambertMaterial({ color: 0x0033ff, side: THREE.SingleSide });
+        var mat = new THREE.MeshLambertMaterial({ color: config.getWaterColor(), side: THREE.SingleSide });
+        //var mat = new THREE.MeshLambertMaterial({ color: 0x0033ff, side: THREE.SingleSide });
         var water = new THREE.Mesh(geo, mat);
         water.rotation.x = Math.PI / 2 * 3;
         water.position.y -= 3;
@@ -222,7 +237,8 @@ function assetGen(scene) {
     //extrudes 2d shape in Y to form 3d shape
     function create3DGeo(shape) {
         var geo = new THREE.ExtrudeBufferGeometry(shape, { bevelEnabled: false, depth: 3 });
-        var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+        var material = new THREE.MeshLambertMaterial({ color: landColor, wireframe: false });
+        //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
         var mesh = new THREE.Mesh(geo, material);
         mesh.scale.set(10, 10, 1);
         mesh.rotation.x = Math.PI / 2;
@@ -246,6 +262,8 @@ function assetGen(scene) {
         originZ = 210;
         originX = -120;
 
+        landColor = config.getLandColor();
+
         //per level
         var marginArray = [1, 1, 1, 1];
         var connectOverrides = [1, 1, 1, 1];
@@ -258,6 +276,7 @@ function assetGen(scene) {
                 var corners = generateRandomCorners(rangeArray);
                 var shape = create2DShape(corners);
                 var landSquare = create3DGeo(shape);
+
                 landSquare.position.z = originZ - (j * 8 * 10);
                 landSquare.position.x -= originX + (i * 8 * 10);
 
@@ -335,8 +354,7 @@ function assetGen(scene) {
 
 
     //creates 1x1 - 3x3 obstacles on land, continuous
-    function generateGrassObstacles(minimum, random) {
-        var numOfGrassPatches = getRandomInt(random) + minimum;
+    function generateGrassObstacles(numOfGrassPatches) {
 
         var grass = scene.getObjectByName("grass");
         var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
@@ -368,17 +386,18 @@ function assetGen(scene) {
             placeRandom(object);
 
         }
+        grass.position.y -= 100;
 
     }
 
 
     //creates 1x1 - 3x3 obstacles on land, continuous
-    function generateLandObstacles(minimum, random) {
-        var numOfObstacles = getRandomInt(random) + minimum;
+    function generateLandObstacles(numOfObstacles) {
 
         var cube = new THREE.CubeGeometry(1, 1, 1);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));
-        var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+        //var material = new THREE.MeshLambertMaterial({ color: 0x996633, wireframe: false });
+        var material = new THREE.MeshLambertMaterial({ color: landColor, wireframe: false });
 
         for (var i = 0; i < numOfObstacles; i++) {
 

@@ -62,7 +62,7 @@
       };
     }
     else {
-      console.log("full screen disabled");
+      // console.log("full screen disabled");
     }
   }
 
@@ -123,7 +123,7 @@
 
   function buildScene() {
     var scene = new THREE.Scene();
-    scene.background = new THREE.Color("#fff");
+    scene.background = new THREE.Color("#0077BE");
     return scene;
   }
 
@@ -225,7 +225,7 @@
   }
 
   function resizeCanvas() {
-    console.log("container: " + container.clientWidth + " " + container.clientHeight);
+    // console.log("container: " + container.clientWidth + " " + container.clientHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);

@@ -17,6 +17,8 @@ global bus
 global getRandomInt 
 global predatorState 
 global predatorType 
+global invisActive
+global stunLength
 */
 
 /*
@@ -36,7 +38,12 @@ function Predator(scene, predator, type)
     this.getActor = getActor;
     this.move = move;
 
+    var id = getRandomInt(10000);
+    var predId = getRandomInt(1000);
+
     // private variables
+    var hawkY = 35; // for hawk
+    var changeY = false; // for hawk
     var moveIntervalId = null;
     var active = false;
     var predatorMover = new ObjectMover(predator);
@@ -46,6 +53,18 @@ function Predator(scene, predator, type)
     var randomDirection = null;
     predator.userData.currentDirection = 'down';
     setState(predatorState.pool);
+    var stunTimeoutId = null;
+    bus.subscribe("stunned", stun);
+
+    function stun(object)
+    {
+        if (object != predator)
+        {
+            return;
+        }
+        setActive(false);
+        stunTimeoutId = setTimeout(function() { setActive(true); }, stunLength * 1000);
+    }
 
     function spawn()
     {
@@ -54,7 +73,11 @@ function Predator(scene, predator, type)
 
     function despawn()
     {
-        currentState = predatorState.despawn;
+        //currentState = predatorState.despawn;
+        predator.position.y = -100;
+        active = false;
+        currentState = predatorState.pool;
+        clearInterval(moveIntervalId);
     }
 
     function getActor()
@@ -75,12 +98,10 @@ function Predator(scene, predator, type)
         }
         else if (type == predatorType.hawk)
         {
-            predator.position.y = 35;
-            predator.position.x = 5;
-            predator.position.z = 5;
+            predator.position.y = hawkY;
         }
 
-        target = findTarget(componentType.duck);
+        target = findTargets(componentType.duck)[0];
         bus.subscribe('movepredator', move);
         if (type != predatorType.hawk || true)
         {
@@ -90,40 +111,73 @@ function Predator(scene, predator, type)
         currentState = predatorState.alive;
     }
 
-    // locates the specified target
-    function findTarget(targetType)
+    // locates the specified targets
+    function findTargets(targetType)
     {
-        return grid.getActorsInRadius(predator.position, 100, targetType)[0];
+        return grid.getActorsInRadius(predator.position, 100, targetType);
+    }
+
+    function getPath(targetType)
+    {
+        if (invisActive)
+        {
+            return null;
+        }
+        var targets = findTargets(targetType);
+        var path = null;
+        if (targets) // if predator found targets
+        {
+            for (var i = 0; i < targets.length; ++i)
+            {
+                target = targets[i];
+                if (target.userData.inAir && type != predatorType.hawk)
+                {
+                    return null;
+                }
+                path = findPath(predator.position, target.position, isLegalMove);
+                if (path)
+                {
+                    break;
+                }
+            }
+        }
+        return path;
     }
 
     // moves the predator
     function move()
     {
-        console.log("PRED: " + predator.position.z + " " + predator.position.x + " " + predator.position.y);
         if (!active)
         {
             return;
         }
-        target = findTarget(componentType.duck);
-
-        if (target) // if predator found target
+        if (type == predatorType.hawk) // for hawks
         {
-            path = findPath(predator.position, target.position, isLegalMove);
+            if (predator.position.y != hawkY) // if at different Y
+            {
+                predator.position.y = hawkY; // return to original Y for move
+                return;
+            }
         }
-        else // otherwise no path
+        path = getPath(componentType.duck); // moved invis to getPath function
+        if (path == null) // if no path to duck, go after duckling
         {
-            path = null;
+            path = getPath(componentType.duckling);
+        }
+        if (path == null) // if no path to duckling, go after egg
+        {
+            path = getPath(componentType.egg);
         }
         if (path == null) // if no path move randomly
         {
-            // console.log("no path found, moving randomly");
             var validRandom = isValid(predator.position, randomDirection);
             var count = 0;
             while (!validRandom) // until direction is valid
             {
                 ++count;
-                if (count > 10) // if object is stuck
+                if (count > 100) // if object is stuck
                 {
+                    despawn();
                     console.log('stuck');
                     return;
                 }
@@ -132,22 +186,38 @@ function Predator(scene, predator, type)
                 validRandom = isValid(predator.position, randomDirection);
             }
             predatorMover[randomDirection]();
-            return;
         }
-        if (path.move == 'stay')
+        else if (path && isLegalMove(path.point)) // follow path
         {
-            return;
-        }
-        if (path && isLegalMove(path.point))
-        {
-            var rotateMove = 'rotate' + path.move[0].toUpperCase() +
-                path.move.substring(1);
-            predatorMover[rotateMove](); // always rotate to face
-            if (grid.getActor(path.point) == null || componentType.duck 
-                || componentType.duckling)
+            if (path.move != 'stay')
             {
                 predatorMover[path.move]();
             }
+        }
+        var actor = grid.getActorObject(predator.position, predator);
+        if (actor != null) // must be duck or duckling or egg
+        {
+            if (type == predatorType.hawk && changeY) // for hawk
+            {
+                predator.position.y = actor.position.y; // move in y to target
+            }
+            if (Math.abs(predator.position.y - actor.position.y) < 0.1)
+            {
+                if (actor.userData.componentType == componentType.egg)
+                {
+                    bus.publish("eggEaten", grid.getActorObject(path.point));
+                }
+                else
+                {
+                    bus.publish("kill", grid.getActorObject(path.point));
+                }
+                
+            }
+            changeY = !changeY;
+        }
+        else // actor is gone, reset changeY for hawk
+        {
+            changeY = false;
         }
         grid.updateActor(predator);
     }
@@ -193,6 +263,12 @@ function Predator(scene, predator, type)
         {
             return false;
         }
+        var actor = grid.getActor(target); // actor at current target
+        if (actor != null && actor != componentType.duck &&
+            actor != componentType.duckling && actor != componentType.egg)
+        {
+            return false;
+        }
         var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         var validSquares;
         if (type == predatorType.fox)
@@ -205,7 +281,9 @@ function Predator(scene, predator, type)
         }
         else if (type == predatorType.hawk)
         {
-            validSquares = [componentType.air, componentType.land];
+            validSquares = [
+                componentType.air, componentType.land, componentType.water
+            ];
         }
         else
         {

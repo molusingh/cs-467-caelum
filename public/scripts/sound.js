@@ -27,7 +27,7 @@ bus.subscribe("toggleSound", playSound.toggleSound);
 function soundLoader() {
 
 	var sound;
-	var stunSound;
+	var stunSound = new Audio("./sound/stunned.mp3");
 	var mainMusic;
 
 
@@ -187,7 +187,6 @@ function soundLoader() {
 
 	this.stunned = function() {
 		if (enableSound) {
-			stunSound = new Audio("./sound/stunned.mp3");
 			stunSound.loop = true;
 			stunSound.play();
 		}

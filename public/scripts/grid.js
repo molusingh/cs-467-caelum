@@ -69,16 +69,19 @@ function board() {
         return envTable[x - 1][y - 1];
     }
 
-    function getActorSquareInfo(x, y) {
+    function getActorSquareInfo(x, y, self) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return null;
         }
+        var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
-
-            if (location.x === x && location.y === y) {
+            if (self) {
+                selfFlag = actorTable[i].actor == self;
+            }
+            if (location.x === x && location.y === y && !selfFlag) {
                 return actorTable[i].actor.userData.componentType;
             }
         }
@@ -86,16 +89,37 @@ function board() {
         return null;
     }
 
-    function getActorInfo(x, y) {
+    function getActorObjectInSquare(x, y, self) {
         //check for invalid requests
         if (x > 40 || y > 40 || x < 1 || y < 1) {
             //TO DO: convert to component.illegal
             return null;
         }
+        var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
+            if (self) {
+                selfFlag = actorTable[i].actor == self;
+            }
+            if (location.x === x && location.y === y && !selfFlag) {
+                return actorTable[i].actor;
+            }
+        }
 
-            if (location.x === x && location.y === y) {
+        return null;
+    }
+
+    function getActorInfo(x, y, self) {
+        //check for invalid requests
+        if (x > 40 || y > 40 || x < 1 || y < 1) {
+            //TO DO: convert to component.illegal
+            return null;
+        }
+        var selfFlag = false;
+        for (var i = 0; i < actorTable.length; i++) {
+            var location = actorTable[i].location;
+            selfFlag = actorTable[i].actor == self;
+            if (location.x === x && location.y === y && !selfFlag) {
                 return actorTable[i].actor;
             }
         }
@@ -154,16 +178,21 @@ function board() {
         return getNormalizedSquareInfo(normalizedX, normalizedY);
 
     }
-    
-    this.getActor = function (point)
-    {
+
+    this.getActor = function (point, self) {
         var normalizedX = ((originX - point.z + 5) / 10);
         var normalizedY = ((point.x - originY + 5) / 10);
 
         //get actor if found in location
-        return getActorSquareInfo(normalizedX, normalizedY);
+        return getActorSquareInfo(normalizedX, normalizedY, self);
+    }
 
-        
+    this.getActorObject = function (point, self) {
+        var normalizedX = ((originX - point.z + 5) / 10);
+        var normalizedY = ((point.x - originY + 5) / 10);
+
+        //get actor if found in location
+        return getActorObjectInSquare(normalizedX, normalizedY, self);
     }
 
     //use as a secondary check when hawk searches for duck or ducklings
@@ -244,8 +273,36 @@ function board() {
         actorTable[actorTable.length] = actorInfo;
     }
 
+    this.removeActor = function (actor) {
+        var location = -1;
+
+        var length = actorTable.length;
+
+        for (i = 0; i < length; i++) {
+            if (actorTable[i].actor == actor) {
+                location = i;
+                break;
+            }
+        }
+
+        if (location >= 0) {
+            for (i = location; i < length - 1; i++) {
+                actorTable[i] = actorTable[i + 1];
+            }
+
+            actorTable.length = length - 1;
+        }
+    }
+
     this.setEnvSquare = function (x, y, componentType) {
         envTable[x][y] = componentType;
+    }
+
+    this.setEnvSquareInGameSpace = function (z, x, componentType) {
+        var xAxis = normalizeZ(z);
+        var yAxis = normalizeX(x);
+
+        envTable[xAxis][yAxis] = componentType;
     }
 
     //testing function
@@ -406,11 +463,16 @@ function board() {
 
         }
 
-        var assetLocation = findValidSquare();
 
-        if (validLocation === false) {
-            console.log("failed: " + asset);
-            return;
+        if (asset.userData.componentType === componentType.hawk) {
+            assetLocation = location;
+        }
+        else {
+            assetLocation = findValidSquare();
+            if (validLocation === false) {
+                console.log("failed: " + asset);
+                return;
+            }
         }
 
         var originY = -200;
@@ -424,7 +486,6 @@ function board() {
         asset.position.y = .1;
 
         this.addActor(asset);
-        //grid.printGrid(0, 8, 0, 8);
 
     }
 }

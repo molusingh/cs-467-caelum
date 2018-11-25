@@ -5,12 +5,13 @@
 /*
  * Simply create instance of object to activate user interface
  */
-function UserInterface()
-{
+function UserInterface() {
 	var keyDown = false;
+	var speedBoost = false;
 
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
+	bus.subscribe("start", getToggleDisplayFunction("loadingScreen"));
 	bus.subscribe("openMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("closeMenu", getToggleDisplayFunction("menu"));
 	bus.subscribe("openHowToPlay", flipBetweenStartAndHowToPlay);
@@ -19,6 +20,8 @@ function UserInterface()
 	bus.subscribe("endPickBoosts", getToggleDisplayFunction("boostsScreen"));
 	bus.subscribe("playerWins", getToggleDisplayFunction("winScreen"));
 	bus.subscribe("playerLoses", getToggleDisplayFunction("loseScreen"));
+	bus.subscribe("toggleSpeedBoost", toggleSpeedBoost);
+	bus.subscribe("updateDucklingLabels", updateDucklingStatusLabels);
 
 
 	// interface event callbacks
@@ -33,6 +36,8 @@ function UserInterface()
 
 	// game state buttons
 	$("#restartButton").click(restart);
+	$("#restartButton2").click(restart);
+	$("#restartButton3").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
 	$("#startButton").click(getPublishFunction("mainMusic"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
@@ -56,7 +61,7 @@ function UserInterface()
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
 	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
 	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
-	
+
 	// skill purchase buttons
 	$("#upgradeInvisibilityButton").click(getPublishFunction("invisiblityUpgrade"));
 	$("#upgradeSpeedButton").click(getPublishFunction("speedUpgrade"));
@@ -68,30 +73,28 @@ function UserInterface()
 	$("#quackButton").click(getPublishFunction("quack"));
 
 	// mouse click sound publishers
-		// includes skillButtons, movementControls, and actionButtons
+	// includes skillButtons, movementControls, and actionButtons
 	$("#gameControls").click(getPublishFunction("clickSound"));
-		// start button at title
+	// start button at title
 	$("#startButton").click(getPublishFunction("clickSound"));
-		// how to play button at title
+	// how to play button at title
 	$("#howToPlayButton").click(getPublishFunction("clickSound"));
 	$("#closeHowToPlayButton").click(getPublishFunction("clickSound"));
-		// menu button
+	// menu button
 	$("#menuButton").click(getPublishFunction("clickSound"));
-		// all buttons in menu
+	// all buttons in menu
 	$("#menu").click(getPublishFunction("clickSound"));
 
 	// skill sounds
-	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
-	$("#speedButton").click(getPublishFunction("speedBoostSound"));
-	$("#quackButton").click(getPublishFunction("superQuackSound"));
+	//	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
+	//	$("#speedButton").click(getPublishFunction("speedBoostSound"));
+	//	$("#quackButton").click(getPublishFunction("superQuackSound"));
 
 	/*
 	 * returns a function that publishes the specified event
 	 */
-	function getPublishFunction(eventType)
-	{
-		return function()
-		{
+	function getPublishFunction(eventType) {
+		return function () {
 			bus.publish(eventType);
 		};
 	}
@@ -99,17 +102,13 @@ function UserInterface()
 	/*
 	 * Returns a function that toggles the display for the specified ID
 	 */
-	function getToggleDisplayFunction(elementID)
-	{
+	function getToggleDisplayFunction(elementID) {
 		var id = '#' + elementID;
-		return function()
-		{
-			if ($(id).css("display") == "none")
-			{
+		return function () {
+			if ($(id).css("display") == "none") {
 				$(id).show();
 			}
-			else
-			{
+			else {
 				$(id).hide();
 			}
 		};
@@ -118,68 +117,81 @@ function UserInterface()
 	/*
 	 * Restarts the game
 	 */
-	function restart()
-	{
+	function restart() {
 		location.reload();
 	}
 
 	/*
 	 * toggles the displays for the how to play and start screen
 	 */
-	function flipBetweenStartAndHowToPlay(event)
-	{
+	function flipBetweenStartAndHowToPlay(event) {
 		getToggleDisplayFunction("startScreen")();
 		getToggleDisplayFunction("howToPlayScreen")();
 	}
 
-
+	function toggleSpeedBoost() {
+		if (speedBoost === false) {
+			speedBoost = true;
+		}
+		else {
+			speedBoost = false;
+		}
+	}
 
 	/*
 	 * Called when a key is pressed
 	 */
 	function onKeyDown(event) {
 
-		switch (event.keyCode)
-		{
+		switch (event.keyCode) {
 			case 38: // up
 			case 87: // W
-				if (keyDown === false)
-				{
+				if (keyDown === false) {
 					bus.publish("duckUp");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
 				}
 				break;
-					
+
 			case 37: // left
 			case 65: // A
-				if (keyDown === false)
-				{
+				if (keyDown === false) {
 					bus.publish("duckLeft");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
+
 				}
 				break;
 
 			case 40: // down
 			case 83: // S
-				if (keyDown === false)
-				{
+				if (keyDown === false) {
 					bus.publish("duckDown");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
 				}
 				break;
 
 			case 39: // right
 			case 68: // D
-				if (keyDown === false)
-				{
+				if (keyDown === false) {
 					bus.publish("duckRight");
+					if (speedBoost === true) {
+						return;
+					}
 					keyDown = true;
 				}
 				break;
 
 			case 49: // 1 
 				bus.publish("flyToggle");
-				
+
 				break;
 
 			case 50: // 2
@@ -198,7 +210,7 @@ function UserInterface()
 
 			case 81: // Q 
 				bus.publish("invisibilitySkillRequested");
-				bus.publish("invisibilitySound");
+				//	bus.publish("invisibilitySound");
 				break;
 
 			case 69: // E
@@ -208,22 +220,27 @@ function UserInterface()
 
 			case 82: // R
 				bus.publish("speedSkillRequested");
-				bus.publish("speedBoostSound");
+				//	bus.publish("speedBoostSound");
 				break;
 
-			// case 32: /*SPACEBAR*/ grid.testSquareInfo(duck.position.z, duck.position.x); break;
-		}
+/*			case 32: // SPACEBAR
+				var currentSticks = document.getElementById('sticksOutput');
+            	var numSticks = currentSticks.innerHTML;
+            	numSticks++;
+            	currentSticks.innerHTML = numSticks;
+*/		}
 	}
 
-	function onKeyUp(event)
-	{
-		switch (event.keyCode)
-		{
+	function onKeyUp(event) {
+
+		switch (event.keyCode) {
+
+
 			case 38: // up
 			case 87: // W
-			keyDown = false;
+				keyDown = false;
 				break;
-					
+
 			case 37: // left
 			case 65: // A
 				keyDown = false;
@@ -240,4 +257,13 @@ function UserInterface()
 				break;
 		}
 	}
+
+	function updateDucklingStatusLabels(args) {
+
+		$('#roamingOutput').text(args.roaming);
+		$('#killedOutput').text(args.dead);
+		$('#nestedOutput').text(args.nested);
+
+	}
+
 }

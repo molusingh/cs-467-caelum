@@ -13,6 +13,7 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 	<title>Mama Duck Redemption</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico' />
 	<link rel="stylesheet" type="text/css" href="css/interface.css">
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 
@@ -54,16 +55,65 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 				Mama Duck has lost her hatchlings! Help her find redemption by
 				finding them and avoiding dangerous predators.
 			</p>
+			<p> CONTROLS </p>
+			<style>
+				td {
+					padding-right: 100px;
+				}
+			</style>
+			<table align="center">
+				<tr align="left">
+					<td>UP: W or Arrow Up</td>
+					<td>FLY: 1</td>
+					<td>INVISIBILITY: Q</td>
+				</tr>
+				<tr align="left">
+					<td>DOWN: S or Arrow Down</td>
+					<td>JUMP: 2</td>
+					<td>SUPERQUACK: E</td>
+				</tr>
+				<tr align="left">
+					<td>LEFT: A or Arrow Left</td>
+					<td>CALL: 3</td>
+					<td>SPEED BOOST: R</td>
+				</tr>
+				<tr align="left">
+					<td>RIGHT: D or Arrow Right</td>
+					<td>NEST: 4</td>
+				</tr>
+			</table>
+			<p> Use FLY to soar over obstacles and predators, but watch out for the hawk!</p>
+			<p> To enter or exit the water, face the direction you want to go and use JUMP.</p>
+			<p> CALL the ducklings and if they are within 5 squares they will follow you. </p>
+			<p> Collect 4 sticks to create a NEST. </p>
+			<p> Lead the ducklings to your nest to save them. You score 100 points per duckling saved multiplied by the number of ducklings saved that level.</p>
+			<p> Predators can eat you and your ducklings!</p>
+			<p> Foxes can't go on water. Croqs can't go on land. Hawks can't go in grass. Use this to your advantage! </p>
+			<p> Skills can be used once each every 30 seconds.</p>
+			<p> Use INVISIBILITY to keep predators from following you.</p>
+			<p> Use SUPERQUACK to stun predators for a short time.</p>
+			<p> Use SPEED BOOST and you can hold a movement button down to warp in that direction.</p>
 			<button id="closeHowToPlayButton">Return</button> </br>
 		</div>
 	</div>
 
+	<div id="loadingScreen" class="gameScreens">
+		<h1>Loading</h1>
+		<div class="loader"></div>
+	</div>
+	
 	<div id="loseScreen" class="gameScreens">
 		<img src="./images/interface/youlose.png">
+		<button id="restartButton2">
+			<img src="./images/interface/restart.png">
+		</button> </br>
 	</div>
 
 	<div id="winScreen" class="gameScreens">
 		<img src="./images/interface/youwin.png">
+		<button id="restartButton3">
+			<img src="./images/interface/restart.png">
+		</button> </br>
 	</div>
 
 	<div id="boostsScreen" class="gameScreens">
@@ -87,6 +137,13 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 			Level: <span id="levelOutput">null</span> &ensp;
 			Score: <span id="scoreOutput">null</span> &ensp;
 			Sticks: <span id="sticksOutput">0</span>
+			<div id="ducklingStatusLabels">
+				Roaming: <span id="roamingOutput">null</span> <br>
+				Killed: <span id="killedOutput">null</span> <br>
+				Nested: <span id="nestedOutput">null</span> <br>
+			</div>
+			<br> 
+
 		</div>
 		<div id="gameControls">
 			<div id="skillButtons">
@@ -138,11 +195,12 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 	<script src="lib/GLTFLoader.js"></script>
 	<script src="lib/FBXLoader.js"></script>
 	<script src="lib/inflate.min.js"></script>
-	<script src="https://unpkg.com/tinyqueue@2.0.0/tinyqueue.min.js"></script> 
+	<script src="https://unpkg.com/tinyqueue@2.0.0/tinyqueue.min.js"></script>
 
 	<!-- game scripts -->
 	<script src="scripts/event.js"></script>
 	<script src="scripts/globals.js"></script>
+	<script src="scripts/config.js"></script>
 	<script src="scripts/ObjectMover.js"></script>
 	<script src="scripts/userInterface.js"></script>
 	<script src="scripts/playerControls.js"></script>
@@ -166,7 +224,6 @@ Authors: Jon Austin, Igor Choromanski, Anmolbir Mann
 
 	<!--
 		<script src="js/Detector.js"></script>
-        <script src="js/libs/stats.min.js"></script>
 		-->
 
 </body>

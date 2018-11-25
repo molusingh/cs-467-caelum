@@ -132,6 +132,10 @@ function Predator(scene, predator, type)
             for (var i = 0; i < targets.length; ++i)
             {
                 target = targets[i];
+                if (target.userData.inAir && type != predatorType.hawk)
+                {
+                    return null;
+                }
                 path = findPath(predator.position, target.position, isLegalMove);
                 if (path)
                 {

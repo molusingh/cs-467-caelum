@@ -123,7 +123,7 @@
 
   function buildScene() {
     var scene = new THREE.Scene();
-    scene.background = new THREE.Color("#fff");
+    scene.background = new THREE.Color("#0077BE");
     return scene;
   }
 

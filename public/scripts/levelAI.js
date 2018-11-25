@@ -68,6 +68,16 @@ function levelAI(scene) {
         console.log("Dead: " + ducklingsDead);
 
     }
+    
+    function updateDucklingStatusLabels()
+    {
+        var roaming = ducklingsSpawned - ducklingsNested - ducklingsDead;
+        $('#roamingOutput').text(roaming);
+        $('#killedOutput').text(ducklingsDead);
+        $('#nestedOutput').text(ducklingsNested);
+        
+        
+    }
 
     function addDead(actor) {
         removeActor(actor);
@@ -521,6 +531,7 @@ function levelAI(scene) {
     this.update = function () {
 
         var elapsedTime = clock.getElapsedTime();
+        updateDucklingStatusLabels();
 
         if (currentState === levelState.init) {
             if (typeof loader != 'undefined') {

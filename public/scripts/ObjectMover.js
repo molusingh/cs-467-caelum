@@ -15,8 +15,7 @@ function ObjectMover(object)
 	this.rotateRight = rotateRight;
 	this.flyToggle = flyToggle;
 
-	function up()
-	{
+	function up() {
 		rotateUp();
 		if (object.position.x >= -maxPosition) // if within bounds
 		{
@@ -25,8 +24,7 @@ function ObjectMover(object)
 		}
 	}
 
-	function rotateUp()
-	{
+	function rotateUp() {
 		switch (object.userData.currentDirection)
 		{
 			case 'left':
@@ -42,8 +40,7 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'up';
 	}
 
-	function left()
-	{
+	function left()	{
 		rotateLeft();
 		if (object.position.z <= maxPosition) // if within bounds
 		{
@@ -52,8 +49,7 @@ function ObjectMover(object)
 		}
 	}
 
-	function rotateLeft()
-	{
+	function rotateLeft() {
 		switch (object.userData.currentDirection)
 		{
 			case 'down':
@@ -69,8 +65,7 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'left';
 	}
 
-	function down()
-	{
+	function down() {
 		rotateDown();
 		if (object.position.x <= maxPosition) // if within bounds
 		{
@@ -79,8 +74,7 @@ function ObjectMover(object)
 		}
 	}
 
-	function rotateDown()
-	{
+	function rotateDown() {
 		switch (object.userData.currentDirection)
 		{
 			case 'right':
@@ -96,8 +90,7 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'down';
 	}
 
-	function right()
-	{
+	function right() {
 		rotateRight();
 		if (object.position.z >= -maxPosition) // if within bounds
 		{
@@ -106,8 +99,7 @@ function ObjectMover(object)
 		}
 	}
 
-	function rotateRight()
-	{
+	function rotateRight() {
 		switch (object.userData.currentDirection)
 		{
 			case 'up':
@@ -123,63 +115,48 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'right';
 	}
 
-	function flyToggle()
-	{
+	function flyToggle() {
 		var currentSquareInfo;
-		currentSquareInfo = grid.getEnvInfo(object.position.z, object.position.x);
-		var actorInfo = grid.getSquareInfo(object.position.z, object.position.x);
+		var point = {};
+		point.z = object.position.z;
+		point.x = object.position.x;
+		currentSquareInfo = grid.getEnvOnlyInfo(point.z, point.x);
 
 		// landing
 		if (object.userData.inAir == true)
 		{
-			// duck landing logic
-			if (actorInfo == "7")
-			{
-				// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
-				if (currentSquareInfo != 3 && currentSquareInfo != 4 && 
-					currentSquareInfo != 5 && currentSquareInfo != 6 && 
-					currentSquareInfo != 9)
-				{
-					object.position.y -= duckFlightHeight;
-					// if we land in water, toggle flag
-					if (currentSquareInfo == 2)
-					{
-						object.userData.inWater = true;
-					}
-					bus.publish("flySound");
-					object.userData.inAir = false;
-				}
+			// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
+			if (currentSquareInfo != componentType.obstacle && currentSquareInfo != componentType.fox && 
+				currentSquareInfo != componentType.hawk && currentSquareInfo != componentType.croq && 
+				currentSquareInfo != componentType.egg)	{
 
+				var belowObject = grid.getActorObject(point, object);
+				object.position.y -= duckFlightHeight;
+				
+				// if we land in water, toggle flag
+				if (currentSquareInfo == componentType.water) {
+					object.userData.inWater = true;
+				}
+				bus.publish("flySound");
+				object.userData.inAir = false;
+
+				if (belowObject != null && belowObject.userData.componentType == componentType.stick)	{
+					bus.publish("foundStick", belowObject);
+				}
 			}
-			// hawk landing logic
-			else if (actorInfo == "5")
-			{
-				object.position.y -= hawkFlightHeight;
-			}
-			grid.updateActor(object);
 		}
+
 		// takeoff
 		else
 		{
-			// duck takeoff logic
-			if (actorInfo == "7")
-			{
-				object.position.y += duckFlightHeight;
-				// if we take off from water, toggle flag
-				if (currentSquareInfo == 2)
-				{
-					object.userData.inWater = false;
-				}
-				bus.publish("flySound");
-			}
-			// hawk takeoff logic
-			else if (actorInfo == "5")
-			{
-				object.position.y += hawkFlightHeight;
-			}
-
+			object.position.y += duckFlightHeight;
 			object.userData.inAir = true;
-			grid.updateActor(object);
+			// if we take off from water, toggle flag
+			if (currentSquareInfo == 2)
+			{
+				object.userData.inWater = false;
+			}
+			bus.publish("flySound");
 		}
 	}
 }

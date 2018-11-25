@@ -59,6 +59,7 @@ function levelAI(scene) {
 
     function addNested() {
         ducklingsNested++;
+        bus.publish("updateScore");
         checkDucklings();
 
         console.log("*****************");
@@ -554,6 +555,7 @@ function levelAI(scene) {
 
             //get duck's state
             if (playerAI.getState() === playerState.dead) {
+                bus.publish("stopStunSound");
                 setState(levelState.loss);
                 cleanup();
             }

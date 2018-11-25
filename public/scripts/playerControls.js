@@ -86,6 +86,7 @@ function playerControls(scene, duck) {
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
     bus.subscribe("kill", kill);
+    bus.subscribe("foundStick", stickCounter);
 
 
 
@@ -199,12 +200,14 @@ function playerControls(scene, duck) {
         if (grid.getSquareInfo(point.z, point.x) == componentType.stick) {
             stickObject = grid.getActorObject(point);
             bus.publish("foundStick", stickObject);
-
-            var currentSticks = document.getElementById('sticksOutput');
-            var numSticks = currentSticks.innerHTML;
-            numSticks++;
-            currentSticks.innerHTML = numSticks;
         }
+    }
+
+    function stickCounter() {
+        var currentSticks = document.getElementById('sticksOutput');
+        var numSticks = currentSticks.innerHTML;
+        numSticks++;
+        currentSticks.innerHTML = numSticks;
     }
 
     function jumpSkill(object) {
@@ -315,7 +318,7 @@ function playerControls(scene, duck) {
         var currentSticks = document.getElementById('sticksOutput');
         var numSticks = currentSticks.innerHTML;
 
-        if (numSticks < 4) {
+        if (numSticks < 4) {    
             return;
         }
 
@@ -420,7 +423,7 @@ function playerControls(scene, duck) {
         else {
             bus.publish("speedBoostSound");
             bus.publish("toggleSpeedBoost");
-            speedTimeoutId = setTimeout(function () { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
+            speedTimeoutId = setTimeout(function() { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
             skillLockout("speed");
         }
 
@@ -517,6 +520,8 @@ function playerControls(scene, duck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
+
+        // console.log("NEXT: " + nextSquare);
 
         // moving from land to land, duckling, grass, egg, stick, or nest
         if (duck.userData.inWater === false && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {

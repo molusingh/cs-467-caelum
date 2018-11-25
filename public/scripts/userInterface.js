@@ -35,6 +35,8 @@ function UserInterface()
 
 	// game state buttons
 	$("#restartButton").click(restart);
+	$("#restartButton2").click(restart);
+	$("#restartButton3").click(restart);
 	$("#startButton").click(getPublishFunction("start"));
 	$("#startButton").click(getPublishFunction("mainMusic"));
 	$("#menuButton").click(getPublishFunction("openMenu"));
@@ -238,8 +240,7 @@ function UserInterface()
             	var numSticks = currentSticks.innerHTML;
             	numSticks++;
             	currentSticks.innerHTML = numSticks;
-*/
-		}
+*/		}
 	}
 
 	function onKeyUp(event)

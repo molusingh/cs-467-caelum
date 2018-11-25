@@ -46,12 +46,12 @@ THREE.MapControls = function (object, domElement) {
 	this.maxAzimuthAngle = Infinity; // radian
 	// Set to true to enable damping (inertia	// If damping is enabled, you must call controls.update() in your animation loop
 	this.enableDamping = false;
-	this.dampingFactor = 0.25
+	this.dampingFactor = 0.25;
 
 	// This option actually enables dollying in and out; left as "zom" for bacwards compatibility.
 	// Set to false to disable zoomin
 	this.enableZoom = true;
-	this.zoomSpeed = 1.0
+	this.zoomSpeed = 1.0;
 
 	// Set to false to disable rotating
 	this.enableRotate = true;

@@ -25,9 +25,9 @@ function gameAI(scene, clock) {
     var quackLevel = 0;
     var speedLevel = 0;
     var invisibilityLevel = 0;
-    var quackCost = 10;
-    var speedCost = 10;
-    var invisibilityCost = 10;
+    var quackCost = 100;
+    var speedCost = 100;
+    var invisibilityCost = 100;
     var savedThisLevel = 0;
     var currentSticks = document.getElementById('sticksOutput');
     var numSticks = currentSticks.innerHTML;
@@ -52,7 +52,7 @@ function gameAI(scene, clock) {
         bus.subscribe("invisiblityUpgrade", upgradeInvisibility);
         bus.subscribe("speedUpgrade", upgradeSpeed);
         bus.subscribe("quackUpgrade", upgradeQuack);
-        bus.subscribe("ducklingNested", updateScore);
+        bus.subscribe("updateScore", updateScore);
         bus.subscribe("levelChange", startLevel);
 
     }
@@ -63,7 +63,9 @@ function gameAI(scene, clock) {
     function updateScore() {
         savedThisLevel++;
         score += savedThisLevel * 100;
-    }
+        points += savedThisLevel * 100;
+
+     }
 
     /*
      * Upgrades quack level
@@ -74,6 +76,8 @@ function gameAI(scene, clock) {
         }
         points -= quackCost;
         ++quackLevel;
+        quackCost *= 2;
+        updateBoostsScreen();
     }
 
     /*
@@ -85,6 +89,8 @@ function gameAI(scene, clock) {
         }
         points -= speedCost;
         ++speedLevel;
+        speedCost *= 2;
+        updateBoostsScreen();
     }
 
     /*
@@ -96,6 +102,8 @@ function gameAI(scene, clock) {
         }
         points -= invisibilityCost;
         ++invisibilityLevel;
+        invisibilityCost *= 2;
+        updateBoostsScreen();
     }
 
 
@@ -160,7 +168,6 @@ function gameAI(scene, clock) {
         else // move to boosts
         {
             bus.publish("pickBoosts");
-
             currentState = gameState.boosts;
         }
     }
@@ -176,6 +183,33 @@ function gameAI(scene, clock) {
         $('#quackCostOutput').text(quackCost);
         $('#speedCostOutput').text(speedCost);
         $('#invisibilityCostOutput').text(invisibilityCost);
+        if (points < invisibilityCost || invisibilityLevel >= maxSkillLevel)
+        {
+            $('#upgradeInvisibilityButton').attr("disabled","disabled");
+        }
+        else
+        {
+            $('#upgradeInvisibilityButton').removeAttr("disabled");
+        }
+        
+        if (points < speedCost || speedLevel >= maxSkillLevel)
+        {
+            $('#upgradeSpeedButton').attr("disabled","disabled");
+        }
+        else
+        {
+            $('#upgradeSpeedButton').removeAttr("disabled");
+        }
+        
+        if (points < quackCost || quackLevel >= maxSkillLevel)
+        {
+            $('#upgradeQuackButton').attr("disabled","disabled");
+        }
+        else
+        {
+            $('#upgradeQuackButton').removeAttr("disabled");
+        }
+        
     }
 
     /*
@@ -199,11 +233,13 @@ function gameAI(scene, clock) {
             level.update();
             switch (level.getState()) {
                 case levelState.preGame:
+                    $('#loadingScreen').show();
                     sendSettings();
                     console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:
+                    $('#loadingScreen').hide();
                     //hide loading screen
                     level.setState(levelState.play);
                     break;

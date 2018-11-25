@@ -30,6 +30,14 @@ function assetLoader(scene) {
     var nest = new THREE.Object3D();
     nest.name = "nest";
 
+    var croqGetsDuck = new THREE.Object3D();
+    croqGetsDuck.name = "croqGetsDuck";
+
+    var duckFly = new THREE.Object3D();
+    duckFly.name = "duckFly";
+
+    var blood = new THREE.Object3D();
+    blood.name = "blood";
 
     var allAssetsLoaded = false;
 
@@ -37,28 +45,14 @@ function assetLoader(scene) {
         color: 0xff0000, transparent: true, opacity: 0.5
     });
 
-    /*
-    var geometry2 = new THREE.BoxBufferGeometry(6, 8, 6);
-
-    var diffuseColor2 = new THREE.Color().setHSL(0.9, 0.5, 1 * 0.5 + 0.1);
-    var material2 = new THREE.MeshLambertMaterial({
-        color: diffuseColor2,
-    });
-
-    duck = new THREE.Mesh(geometry2, material2, shadowMat);
-    duck.castShadow = true;
-    duck.receiveShadow = true;
-    duck.position.x = -20;
-    duck.position.z = -10;
-    duck.position.y = 0;
-    scene.add(duck);
-    */
 
     var manager = new THREE.LoadingManager();
+    //var anim;
 
     manager.onLoad = function () {
-        console.log("STATIC ASSETS LOADED");
+        // console.log("STATIC ASSETS LOADED");
         allAssetsLoaded = true;
+        //anim = new animation(scene);
     }
 
 
@@ -307,6 +301,74 @@ function assetLoader(scene) {
 
         nest.add(object);
         scene.add(nest);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    var croqGetsDuckLoader = new THREE.FBXLoader(manager);
+    croqGetsDuckLoader.load('./geo/croqGetsDuck.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 1;
+        object.scale.y = 1;
+        object.scale.z = 1;
+
+        croqGetsDuck.add(object);
+        scene.add(croqGetsDuck);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    var duckflyLoader = new THREE.FBXLoader(manager);
+    duckflyLoader.load('./geo/duckfly.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 10;
+        object.scale.y = 10;
+        object.scale.z = 10;
+        //object.visible = false;
+
+        duckFly.add(object);
+        scene.add(duckFly);
+
+    }, undefined, function (e) {
+        console.error(e);
+    });
+
+    var bloodLoader = new THREE.FBXLoader(manager);
+    bloodLoader.load('./geo/blood.fbx', function (object) {
+        object.traverse(function (child) {
+
+            if (child instanceof THREE.Mesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                child.shadowMaterial = shadowMat;
+            }
+
+        });
+        object.scale.x = 3;
+        object.scale.y = 3;
+        object.scale.z = 3;
+        object.visible = false;
+
+        blood.add(object);
+        scene.add(blood);
 
     }, undefined, function (e) {
         console.error(e);

@@ -15,7 +15,12 @@ bus.subscribe("superQuackSound", playSound.superQuack);
 
 bus.subscribe("stunSound", playSound.stunned);
 bus.subscribe("stopStunSound", playSound.stopStunSound);
+bus.subscribe("levelChange", playSound.stopStunSound);
 
+bus.subscribe("ducklingHatched", playSound.crack);
+bus.subscribe("ducklingNested", playSound.ducklingNest);
+bus.subscribe("kill", playSound.enemyChomp);
+bus.subscribe("pickBoosts", playSound.levelEnd); // plays on level end
 bus.subscribe("playerLoses", playSound.duckDeath);
 bus.subscribe("playerWins", playSound.win);
 
@@ -27,8 +32,8 @@ bus.subscribe("toggleSound", playSound.toggleSound);
 function soundLoader() {
 
 	var sound;
-	var stunSound;
-	var mainMusic;
+	var stunSound = new Audio("./sound/stunned.mp3");
+	var mainMusic = new Audio("./sound/mainMusic.mp3");
 
 
 	this.toggleSound = function () {
@@ -150,16 +155,16 @@ function soundLoader() {
 		}
 	}
 
-	this.duckling = function() {
+	this.ducklingDeath = function() {
 		if (enableSound) {
-			sound = new Audio("./sound/duckling.mp3");
+			sound = new Audio("./sound/ducklingDeath.mp3");
 			sound.play();
 		}
 	}
 
-	this.ducklingDeath = function() {
+	this.ducklingNest = function() {
 		if (enableSound) {
-			sound = new Audio("./sound/ducklingDeath.mp3");
+			sound = new Audio("./sound/ducklingNest.mp3");
 			sound.play();
 		}
 	}
@@ -187,7 +192,6 @@ function soundLoader() {
 
 	this.stunned = function() {
 		if (enableSound) {
-			stunSound = new Audio("./sound/stunned.mp3");
 			stunSound.loop = true;
 			stunSound.play();
 		}
@@ -217,9 +221,8 @@ function soundLoader() {
 	}
 
 	this.mainMusic = function () {
-		mainMusic = new Audio("./sound/mainMusic.mp3");
 		mainMusic.loop = true;
-		mainMusic.volume = 0.5;
+		mainMusic.volume = 0.25;
 		//mainMusic.play();
 		// paused by default for dev sanity
 		mainMusic.pause();

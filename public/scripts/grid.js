@@ -78,8 +78,7 @@ function board() {
         var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
-            if (self)
-            {
+            if (self) {
                 selfFlag = actorTable[i].actor == self;
             }
             if (location.x === x && location.y === y && !selfFlag) {
@@ -99,8 +98,7 @@ function board() {
         var selfFlag = false;
         for (var i = 0; i < actorTable.length; i++) {
             var location = actorTable[i].location;
-            if (self)
-            {
+            if (self) {
                 selfFlag = actorTable[i].actor == self;
             }
             if (location.x === x && location.y === y && !selfFlag) {
@@ -276,7 +274,8 @@ function board() {
     }
 
     this.removeActor = function (actor) {
-        var location = 0;
+        var location = -1;
+
         var length = actorTable.length;
 
         for (i = 0; i < length; i++) {
@@ -286,11 +285,13 @@ function board() {
             }
         }
 
-        for (i = location; i < length - 1; i++) {
-            actorTable[i] = actorTable[i + 1];
-        }
+        if (location >= 0) {
+            for (i = location; i < length - 1; i++) {
+                actorTable[i] = actorTable[i + 1];
+            }
 
-        actorTable.length = length - 1;
+            actorTable.length = length - 1;
+        }
     }
 
     this.setEnvSquare = function (x, y, componentType) {

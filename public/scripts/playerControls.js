@@ -2,7 +2,7 @@
 /* global playerState*/
 /* global bus*/
 /* global soundLoader*/
-function playerControls(scene, duck) {
+function playerControls(scene, duck, flyingDuck) {
 
     /*
     -- subscribe
@@ -38,6 +38,7 @@ function playerControls(scene, duck) {
     duck.userData.inAir = false;
     duck.userData.inWater = false;
     duck.position.y = .1;
+    flyingDuck.visible = false;
 
     var maxPos = 185;
 
@@ -46,8 +47,8 @@ function playerControls(scene, duck) {
     var duckMover = new ObjectMover(duck);
 
     // superquack variables
-//    var localStun = false;
-//    var beginStun;
+    //    var localStun = false;
+    //    var beginStun;
     var stunTimeoutId = null;
     var foxes = [];
     var hawks = [];
@@ -78,7 +79,7 @@ function playerControls(scene, duck) {
     bus.subscribe("moveUp", duckMover.up);
     bus.subscribe("rotateUp", duckMover.rotateUp);
     bus.subscribe("duckUp", duckUp);
-    bus.subscribe("flyToggle", duckMover.flyToggle);
+    bus.subscribe("flyToggle", fly);
     bus.subscribe("jump", jumpSkill);
     bus.subscribe("call", callSkill);
     bus.subscribe("nest", nestSkill);
@@ -86,6 +87,7 @@ function playerControls(scene, duck) {
     bus.subscribe("speedSkillRequested", speedBoostSkill);
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
     bus.subscribe("kill", kill);
+    bus.subscribe("foundStick", stickCounter);
 
 
 
@@ -93,6 +95,18 @@ function playerControls(scene, duck) {
 
     function gridTest() {
         grid.testSquareInfo(duck.position.z, duck.position.x);
+    }
+
+    function fly() {
+        duckMover.flyToggle();
+        if (duck.userData.inAir) {
+            duck.visible = false;
+            flyingDuck.visible = true;
+        }
+        else {
+            flyingDuck.visible = false;
+            duck.visible = true;
+        }
     }
 
 
@@ -199,12 +213,14 @@ function playerControls(scene, duck) {
         if (grid.getSquareInfo(point.z, point.x) == componentType.stick) {
             stickObject = grid.getActorObject(point);
             bus.publish("foundStick", stickObject);
-
-            var currentSticks = document.getElementById('sticksOutput');
-            var numSticks = currentSticks.innerHTML;
-            numSticks++;
-            currentSticks.innerHTML = numSticks;
         }
+    }
+
+    function stickCounter() {
+        var currentSticks = document.getElementById('sticksOutput');
+        var numSticks = currentSticks.innerHTML;
+        numSticks++;
+        currentSticks.innerHTML = numSticks;
     }
 
     function jumpSkill(object) {
@@ -315,7 +331,7 @@ function playerControls(scene, duck) {
         var currentSticks = document.getElementById('sticksOutput');
         var numSticks = currentSticks.innerHTML;
 
-        if (numSticks < 4) {    
+        if (numSticks < 4) {
             return;
         }
 
@@ -370,6 +386,7 @@ function playerControls(scene, duck) {
             hawks = grid.getActorsInRadius(duck.position, callRadius, componentType.hawk);
             croqs = grid.getActorsInRadius(duck.position, callRadius, componentType.croq);
 
+
             if (foxes.length > 0 || hawks.length > 0 || croqs.length > 0) {
                 bus.publish("superQuackSound");
                 bus.publish("stunSound");
@@ -386,7 +403,7 @@ function playerControls(scene, duck) {
                     bus.publish("stunned", croqs[i]);
                 }
 
-                stunTimeoutId = setTimeout(function() { resetStunStatus(); }, stunLength * 1000);
+                stunTimeoutId = setTimeout(function () { resetStunStatus(); }, stunLength * 1000);
             }
             skillLockout("stun");
         }
@@ -419,7 +436,7 @@ function playerControls(scene, duck) {
         else {
             bus.publish("speedBoostSound");
             bus.publish("toggleSpeedBoost");
-            speedTimeoutId = setTimeout(function() { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
+            speedTimeoutId = setTimeout(function () { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
             skillLockout("speed");
         }
 
@@ -436,17 +453,17 @@ function playerControls(scene, duck) {
         else {
             bus.publish("invisibilitySound");
             invisActive = true;
-            invisTimeoutId = setTimeout(function() { invisActive = false; }, invisLength * 1000);
+            invisTimeoutId = setTimeout(function () { invisActive = false; }, invisLength * 1000);
             skillLockout("invis");
         }
     }
 
     function skillLockout(skill) {
-        
+
         if (skill == "stun") {
             if (stunLock === false) {
                 stunLock = true;
-                skillLockTimeoutId = setTimeout(function() { skillLockout("stun"); }, skillLockoutLength * 1000);
+                skillLockTimeoutId = setTimeout(function () { skillLockout("stun"); }, skillLockoutLength * 1000);
             }
             else {
                 stunLock = false;
@@ -456,7 +473,7 @@ function playerControls(scene, duck) {
         else if (skill == "speed") {
             if (speedLock === false) {
                 speedLock = true;
-                skillLockTimeoutId = setTimeout(function() { skillLockout("speed"); }, skillLockoutLength * 1000);
+                skillLockTimeoutId = setTimeout(function () { skillLockout("speed"); }, skillLockoutLength * 1000);
             }
             else {
                 speedLock = false;
@@ -466,7 +483,7 @@ function playerControls(scene, duck) {
         else if (skill == "invis") {
             if (invisLock === false) {
                 invisLock = true;
-                skillLockTimeoutId = setTimeout(function() { skillLockout("invis"); }, skillLockoutLength * 1000);
+                skillLockTimeoutId = setTimeout(function () { skillLockout("invis"); }, skillLockoutLength * 1000);
             }
             else {
                 invisLock = false;
@@ -474,21 +491,57 @@ function playerControls(scene, duck) {
         }
 
     }
-    
-    function kill(ducklingKilled)
-    {
-        if (ducklingKilled != duck)
-        {
+
+    function kill(victim) {
+        if (victim != duck) {
             return;
         }
+        var location = new THREE.Vector3(duck.position.x, duck.position.y, duck.position.z);
+        //bus.publish("showBlood", location);
+        placeBlood(location);
+        victim.position.y = -100;
         setTimeout(callback, 1000);
         active = false;
-        function callback()
-        {
+        nestBuilder.cleanup();
+        function callback() {
             currentState = playerState.dead;
         }
 
     }
+
+    function placeBlood(location) {
+
+        var poolOfBlood = scene.getObjectByName("blood");
+        placeBlood(location);
+
+        function placeBlood(location) {
+            var blood = new THREE.Object3D();
+            clone(poolOfBlood, blood);
+
+            blood.position.x = location.x;
+            blood.position.y = 0.1;
+            blood.position.z = location.z;
+            blood.visible = true;
+            blood.scale.x = 3;
+            blood.scale.y = 3;
+            blood.scale.z = 3;
+
+            //setTimeout(function () { scene.remove(blood); }, 1000);
+        }
+
+        function clone(original, asset) {
+
+            original.traverse(function (child) {
+
+                if (child instanceof THREE.Mesh) {
+                    var childClone = child.clone();
+                    asset.add(childClone);
+                }
+                scene.add(asset);
+            });
+        }
+    }
+
 
     function isLegalMove(object) {
 
@@ -519,6 +572,8 @@ function playerControls(scene, duck) {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
 
+        // console.log("NEXT: " + nextSquare);
+
         // moving from land to land, duckling, grass, egg, stick, or nest
         if (duck.userData.inWater === false && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
             return true;
@@ -529,7 +584,7 @@ function playerControls(scene, duck) {
             return true;
         }
 
-        // !!!!!temporary death sim, simulator to acutal!!!!
+        // we run into ground predator and die 
         if (nextSquare === componentType.fox || ((nextSquare === componentType.croq || nextSquare === componentType.hawk) && duck.userData.inWater === true)) {
             currentState = playerState.dead;
             return true;
@@ -571,6 +626,10 @@ function playerControls(scene, duck) {
         return duck;
     }
 
+    this.cleanup = function () {
+        nestBuilder.cleanup();
+    }
+
 
     this.update = function () {
 
@@ -578,6 +637,16 @@ function playerControls(scene, duck) {
             return;
 
         var elapsedTime = clock.getElapsedTime();
+
+        if (duck.userData.inAir) {
+            flyingDuck.position.x = duck.position.x;
+            flyingDuck.position.y = duck.position.y;
+            flyingDuck.position.z = duck.position.z;
+            flyingDuck.rotation.x = duck.rotation.x;
+            flyingDuck.rotation.y = duck.rotation.y;
+            flyingDuck.rotation.z = duck.rotation.z;
+
+        }
 
 /*        if (localStun === true) {
             // stunLength is global, modified by superquack level

@@ -489,6 +489,7 @@ function levelAI(scene) {
         ducklingsDead = 0;
         ducklingsNested = 0;
         bus.publish("levelChange");
+        bus.publish("stopStunSound");
     }
 
     function removeActor(actor) {
@@ -555,7 +556,6 @@ function levelAI(scene) {
 
             //get duck's state
             if (playerAI.getState() === playerState.dead) {
-                bus.publish("stopStunSound");
                 setState(levelState.loss);
                 cleanup();
             }

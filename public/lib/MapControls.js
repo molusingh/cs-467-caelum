@@ -43,7 +43,7 @@ THREE.MapControls = function (object, domElement) {
 	// How far you can orbit horizontally, upper and lower limits.
 	// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
 	this.minAzimuthAngle = - Infinity; // radian
-	this.maxAzimuthAngle = Infinity; // radians
+	this.maxAzimuthAngle = Infinity; // radian
 	// Set to true to enable damping (inertia	// If damping is enabled, you must call controls.update() in your animation loop
 	this.enableDamping = false;
 	this.dampingFactor = 0.25
@@ -62,7 +62,7 @@ THREE.MapControls = function (object, domElement) {
 	this.panSpeed = 1.0;
 	this.screenSpacePanning = true; // if true, pan in screen-space
 	// Updated from 7.0 to simulate camera follow (JDA) 
-	this.keyPanSpeed = 28 / devicePixelRatio;
+	this.keyPanSpeed = 35 / devicePixelRatio;
 
 	// Set to true to automatically rotate around the target
 	// If auto-rotate is enabled, you must call controls.update() in your animation loop

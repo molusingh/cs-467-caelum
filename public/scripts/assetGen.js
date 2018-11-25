@@ -20,8 +20,8 @@ function assetGen(scene) {
         generateLand();
         recordLandInGrid();
         //these need to be dynamic
-        generateLandObstacles(40, 20);
-        generateGrassObstacles(60, 20);
+        generateLandObstacles(config.getCount(componentType.obstacle));
+        generateGrassObstacles(config.getCount(componentType.grass));
     }
 
     this.generateNest = function (z, x) {
@@ -354,8 +354,7 @@ function assetGen(scene) {
 
 
     //creates 1x1 - 3x3 obstacles on land, continuous
-    function generateGrassObstacles(minimum, random) {
-        var numOfGrassPatches = getRandomInt(random) + minimum;
+    function generateGrassObstacles(numOfGrassPatches) {
 
         var grass = scene.getObjectByName("grass");
         var material = new THREE.MeshLambertMaterial({ color: 0x006600, wireframe: false });
@@ -393,8 +392,7 @@ function assetGen(scene) {
 
 
     //creates 1x1 - 3x3 obstacles on land, continuous
-    function generateLandObstacles(minimum, random) {
-        var numOfObstacles = getRandomInt(random) + minimum;
+    function generateLandObstacles(numOfObstacles) {
 
         var cube = new THREE.CubeGeometry(1, 1, 1);
         cube.applyMatrix(new THREE.Matrix4().makeTranslation(0.5, 0.5, -0.5));

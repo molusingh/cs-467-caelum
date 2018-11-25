@@ -315,7 +315,7 @@ function playerControls(scene, duck) {
         var currentSticks = document.getElementById('sticksOutput');
         var numSticks = currentSticks.innerHTML;
 
-        if (numSticks < 4) {    
+        if (numSticks < 4) {
             return;
         }
 
@@ -420,7 +420,7 @@ function playerControls(scene, duck) {
         else {
             bus.publish("speedBoostSound");
             bus.publish("toggleSpeedBoost");
-            speedTimeoutId = setTimeout(function() { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
+            speedTimeoutId = setTimeout(function () { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
             skillLockout("speed");
         }
 
@@ -517,8 +517,6 @@ function playerControls(scene, duck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
-
-        console.log("NEXT: " + nextSquare);
 
         // moving from land to land, duckling, grass, egg, stick, or nest
         if (duck.userData.inWater === false && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {

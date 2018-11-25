@@ -25,7 +25,6 @@ function setup() {
 
     var levels = [];
     configLevel1();
-    /*
     configLevel2();
     configLevel3();
     configLevel4();
@@ -35,7 +34,6 @@ function setup() {
     configLevel8();
     configLevel9();
     configLevel10();
-    */
 
     function setupPoolSizes() {
         poolSizes = getArray();
@@ -81,9 +79,14 @@ function setup() {
 
     function getCount(componentType) {
         var settings = levels[currentLevel - 1];
-        var random = getRandomInRange(settings.min[componentType], settings.max[componentType]);
+        var random = getRandomInRange(settings.min[componentType], settings.max[componentType]) - 1;
         //make sure we're not providing a count that's larger than our pool
-        return Math.min(random, poolSizes[componentType]);
+        if (poolSizes[componentType] > 0) {
+            return Math.min(random, poolSizes[componentType]);
+        }
+        else {
+            return random;
+        }
     }
 
     function getLandColor() {
@@ -147,10 +150,348 @@ function setup() {
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
         level.minHatchTime = 5;
         level.maxHatchTime = 15;
 
         levels.push(level);
     }
 
+    function configLevel2() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel3() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel4() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel5() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel6() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel7() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel8() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel9() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
+
+    function configLevel10() {
+
+        var level = createBaseLevel();
+
+        level.min[componentType.duckling] = 3;
+        level.max[componentType.duckling] = 4;
+
+        level.min[componentType.hawk] = 0;
+        level.max[componentType.hawk] = 0;
+
+        level.min[componentType.fox] = 1;
+        level.max[componentType.fox] = 2;
+
+        level.min[componentType.croq] = 3;
+        level.max[componentType.croq] = 5;
+
+        level.min[componentType.grass] = 4;
+        level.max[componentType.grass] = 4;
+
+        level.min[componentType.obstacle] = 4;
+        level.max[componentType.obstacle] = 4;
+
+        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
+
+        level.min[componentType.obstacle] = 60;
+        level.max[componentType.obstacle] = 80;
+
+        level.min[componentType.grass] = 60;
+        level.max[componentType.grass] = 80;
+
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
+
+        levels.push(level);
+    }
 }

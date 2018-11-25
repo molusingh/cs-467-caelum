@@ -42,7 +42,7 @@ function Predator(scene, predator, type)
     var predId = getRandomInt(1000);
 
     // private variables
-    var hawkY = 35; // for hawk
+    var hawkY = 55; // for hawk
     var changeY = false; // for hawk
     var moveIntervalId = null;
     var active = false;
@@ -211,7 +211,7 @@ function Predator(scene, predator, type)
                 {
                     bus.publish("kill", grid.getActorObject(path.point));
                 }
-                
+
             }
             changeY = !changeY;
         }

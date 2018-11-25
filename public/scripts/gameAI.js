@@ -215,9 +215,9 @@ function gameAI(scene, clock) {
     
     function updateGlobalSkills()
     {
-        callRadius = 5 + quackLevel * 5;
-        speedLength = 10 + speedLevel * 10;
-        invisLength = 10 + invisibilityLevel * 10;
+        stunLength = quackLevel * 10;
+        speedLength = speedLevel * 10;
+        invisLength = invisibilityLevel * 10;
     }
 
     /*

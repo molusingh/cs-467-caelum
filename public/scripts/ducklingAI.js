@@ -215,6 +215,14 @@ function ducklingAI(scene, hatchling, egg) {
             return;
         }
         // console.log("duckling killed");
+        var location = new THREE.Vector3(
+            ducklingKilled.position.x,
+            ducklingKilled.position.y,
+            ducklingKilled.position.z);
+        anim = new animation(scene);
+        anim.placeBlood(location);
+        ducklingKilled.position.y = -100;
+
         despawn();
         playDead();
         setTimeout(function () {
@@ -236,8 +244,6 @@ function ducklingAI(scene, hatchling, egg) {
     }
 
     function playDead() {
-        bus.publish("showBlood", duckling.position);
-        duckling.position.y = -100;
     }
 
     function update() {

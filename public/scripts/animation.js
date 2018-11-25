@@ -1,5 +1,7 @@
 function animation(scene) {
 
+    this.placeBlood = placeBlood;
+
     var poolOfBlood = scene.getObjectByName("blood");
     bus.subscribe("showBlood", placeBlood);
 

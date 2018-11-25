@@ -203,7 +203,7 @@ function Predator(scene, predator, type)
             {
                 predator.position.y = actor.position.y; // move in y to target
             }
-            if (predator.position.y == actor.position.y)
+            if (Math.abs(predator.position.y - actor.position.y) < 0.1)
             {
                 bus.publish("kill", grid.getActorObject(path.point));
             }

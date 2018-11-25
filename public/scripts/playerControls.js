@@ -498,7 +498,7 @@ function playerControls(scene, duck, flyingDuck) {
         }
         var location = new THREE.Vector3(duck.position.x, duck.position.y, duck.position.z);
         //bus.publish("showBlood", location);
-        //placeBlood(location);
+        placeBlood(location);
         victim.position.y = -100;
         setTimeout(callback, 1000);
         active = false;
@@ -519,11 +519,11 @@ function playerControls(scene, duck, flyingDuck) {
             clone(poolOfBlood, blood);
 
             blood.position.x = location.x;
-            blood.position.y = 0;
+            blood.position.y = 0.1;
             blood.position.z = location.z;
             blood.scale.x = 3;
-            blood.scale.x = 3;
-            blood.scale.x = 3;
+            blood.scale.y = 3;
+            blood.scale.z = 3;
 
             //setTimeout(function () { scene.remove(blood); }, 1000);
         }
@@ -540,7 +540,6 @@ function playerControls(scene, duck, flyingDuck) {
             });
         }
     }
-
 
 
     function isLegalMove(object) {

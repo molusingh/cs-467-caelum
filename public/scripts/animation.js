@@ -10,7 +10,6 @@ function animation(scene) {
         blood.position.x = location.x;
         blood.position.y = 0;
         blood.position.z = location.z;
-        blood.scale.x = 5;
 
         setTimeout(function () { scene.remove(blood); }, 1000);
     }

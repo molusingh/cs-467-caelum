@@ -16,6 +16,7 @@ global findPath
 global bus
 global getRandomInt 
 global ducklingState
+global callRadius
 */
 
 /*
@@ -91,7 +92,7 @@ function ducklingAI(scene, hatchling, egg) {
     // locates the specified target
     function findTarget() {
         var targetType = componentType.duck;
-        target = grid.getActorsInRadius(duckling.position, 100, targetType)[0];
+        target = grid.getActorsInRadius(duckling.position, callRadius * 10, targetType)[0];
     }
 
     function targetInRange() {

@@ -42,7 +42,7 @@ function Predator(scene, predator, type)
     var predId = getRandomInt(1000);
 
     // private variables
-    var hawkY = 35; // for hawk
+    var hawkY = 55; // for hawk
     var changeY = false; // for hawk
     var moveIntervalId = null;
     var active = false;
@@ -203,7 +203,15 @@ function Predator(scene, predator, type)
             }
             if (Math.abs(predator.position.y - actor.position.y) < 0.1)
             {
-                bus.publish("kill", grid.getActorObject(path.point));
+                if (actor.userData.componentType == componentType.egg)
+                {
+                    bus.publish("eggEaten", grid.getActorObject(path.point));
+                }
+                else
+                {
+                    bus.publish("kill", grid.getActorObject(path.point));
+                }
+
             }
             changeY = !changeY;
         }

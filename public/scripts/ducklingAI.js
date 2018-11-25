@@ -46,6 +46,7 @@ function ducklingAI(scene, hatchling, egg)
     var currentState = null;
     var randomDirection = null;
     setState(ducklingState.pool);
+    bus.subscribe("eggEaten", eatEgg);
 
     function spawn()
     {
@@ -74,7 +75,6 @@ function ducklingAI(scene, hatchling, egg)
 
         bus.subscribe('moveduckling', move);
         bus.subscribe("kill", kill);
-        bus.subscribe("eggEaten", eatEgg);
         bus.subscribe("callSound", findTarget);
         bus.publish("ducklingHatched", duckling);
         active = true;
@@ -108,9 +108,9 @@ function ducklingAI(scene, hatchling, egg)
         {
             return false;
         }
-        if (Math.abs(target.position.x - duckling.position.x) > callRadius * 10 ||
-            Math.abs(target.position.y - duckling.position.y) > callRadius * 10 ||
-            Math.abs(target.position.z - duckling.position.z) > callRadius * 10)
+        if (Math.abs(target.position.x - duckling.position.x) > 100 ||
+            Math.abs(target.position.y - duckling.position.y) > 100 ||
+            Math.abs(target.position.z - duckling.position.z) > 100)
         {
             target = null;
             return false; // target got too far away
@@ -240,6 +240,14 @@ function ducklingAI(scene, hatchling, egg)
             return;
         }
         // console.log("duckling killed");
+        var location = new THREE.Vector3(
+            ducklingKilled.position.x,
+            ducklingKilled.position.y,
+            ducklingKilled.position.z);
+        anim = new animation(scene);
+        anim.placeBlood(location);
+        ducklingKilled.position.y = -100;
+
         despawn();
         playDead();
         setTimeout(function()
@@ -263,9 +271,7 @@ function ducklingAI(scene, hatchling, egg)
     }
 
     function playDead()
-    {
-        //show red pool of blood
-    }
+    {}
 
     function update()
     {

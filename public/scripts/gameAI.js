@@ -160,7 +160,7 @@ function gameAI(scene, clock) {
      * Ends the current level and enters boost screen
      */
     function finishLevel() {
-        console.log("got to FINISH");
+        // console.log("got to FINISH");
         ++currentLevel;
         if (currentLevel > totalLevels) // if completed last level, player wins
         {

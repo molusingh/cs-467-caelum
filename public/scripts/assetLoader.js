@@ -47,12 +47,12 @@ function assetLoader(scene) {
 
 
     var manager = new THREE.LoadingManager();
-    var anim;
+    //var anim;
 
     manager.onLoad = function () {
         // console.log("STATIC ASSETS LOADED");
         allAssetsLoaded = true;
-        anim = new animation(scene);
+        //anim = new animation(scene);
     }
 
 
@@ -352,7 +352,7 @@ function assetLoader(scene) {
     });
 
     var bloodLoader = new THREE.FBXLoader(manager);
-    bloodLoader.load('./geo/duckfly.fbx', function (object) {
+    bloodLoader.load('./geo/blood.fbx', function (object) {
         object.traverse(function (child) {
 
             if (child instanceof THREE.Mesh) {
@@ -362,9 +362,9 @@ function assetLoader(scene) {
             }
 
         });
-        object.scale.x = 1;
-        object.scale.y = 1;
-        object.scale.z = 1;
+        object.scale.x = 3;
+        object.scale.y = 3;
+        object.scale.z = 3;
         //object.visible = false;
 
         blood.add(object);

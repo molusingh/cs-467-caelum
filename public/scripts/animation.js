@@ -1,15 +1,16 @@
 function animation(scene) {
 
     var poolOfBlood = scene.getObjectByName("blood");
-    bus.subscribe("showBlood", showBlood);
+    bus.subscribe("showBlood", placeBlood);
 
-    function showBlood(location) {
+    function placeBlood(location) {
         var blood = new THREE.Object3D();
         clone(poolOfBlood, blood);
 
         blood.position.x = location.x;
-        blood.position.y = location.y;
+        blood.position.y = 0;
         blood.position.z = location.z;
+        blood.scale.x = 5;
 
         setTimeout(function () { scene.remove(blood); }, 1000);
     }

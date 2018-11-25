@@ -498,7 +498,8 @@ function playerControls(scene, duck, flyingDuck) {
         }
         var location = new THREE.Vector3(duck.position.x, duck.position.y, duck.position.z);
         //bus.publish("showBlood", location);
-        duckling.position.y = -100;
+        //placeBlood(location);
+        victim.position.y = -100;
         setTimeout(callback, 1000);
         active = false;
         nestBuilder.cleanup();
@@ -507,6 +508,40 @@ function playerControls(scene, duck, flyingDuck) {
         }
 
     }
+
+    function placeBlood(location) {
+
+        var poolOfBlood = scene.getObjectByName("blood");
+        placeBlood(location);
+
+        function placeBlood(location) {
+            var blood = new THREE.Object3D();
+            clone(poolOfBlood, blood);
+
+            blood.position.x = location.x;
+            blood.position.y = 0;
+            blood.position.z = location.z;
+            blood.scale.x = 3;
+            blood.scale.x = 3;
+            blood.scale.x = 3;
+
+            //setTimeout(function () { scene.remove(blood); }, 1000);
+        }
+
+        function clone(original, asset) {
+
+            original.traverse(function (child) {
+
+                if (child instanceof THREE.Mesh) {
+                    var childClone = child.clone();
+                    asset.add(childClone);
+                }
+                scene.add(asset);
+            });
+        }
+    }
+
+
 
     function isLegalMove(object) {
 

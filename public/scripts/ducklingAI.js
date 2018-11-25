@@ -238,7 +238,7 @@ function ducklingAI(scene, hatchling, egg)
         {
             return;
         }
-        console.log("duckling killed");
+        // console.log("duckling killed");
         despawn();
         playDead();
         setTimeout(function()

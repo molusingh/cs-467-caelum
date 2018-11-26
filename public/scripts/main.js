@@ -15,7 +15,7 @@
   var ambientLight = new THREE.AmbientLight(0x222222);
   scene.add(ambientLight);
   // var debug = addDebugger();
-  var pan = addPanControls();
+  //var pan = addPanControls();
   addScreenChangeHandler(300, "orientationchange");
   addScreenChangeHandler(0, "resize");
   addFullScreenControls();
@@ -23,6 +23,7 @@
   var game = new gameAI(scene, clock);
   update();
   var fullScreen = false;
+  bus.subscribe("updateCam", updateCam);
 
 
   function addDebugger() {
@@ -52,6 +53,11 @@
     var shadowHelper = new THREE.CameraHelper(light.shadow.camera);
     scene.add(shadowHelper);
     */
+  }
+
+  function updateCam(pos) {
+    camera.position.set(pos.x, 150, pos.z);
+    camera.lookAt(pos);
   }
 
   function addFullScreenControls() {
@@ -146,12 +152,8 @@
 
   function buildCamera({ width, height }) {
     var aspectRatio = width / height;
-    //var fieldOfView = 20;
-    //var fieldOfView = 70;
     var fieldOfView = 50;
     var nearPlane = 0.25;
-    //var farPlane = 600;
-    //var farPlane = 200;
     var farPlane = 400;
     var camera = new THREE.PerspectiveCamera(
       fieldOfView,
@@ -159,8 +161,9 @@
       nearPlane,
       farPlane
     );
-    //camera.position.set(20, 500, 0);
-    camera.position.set(20, 150, 0);
+    camera.position.set(0, 150, 0);
+    camera.up = new THREE.Vector3(0, 0, 1);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     return camera;
   }
@@ -278,7 +281,7 @@
     var elapsedTime = clock.getElapsedTime();
 
     game.update();
-    pan.update();
+    //pan.update();
 
     renderer.render(scene, camera);
   }

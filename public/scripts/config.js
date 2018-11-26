@@ -203,8 +203,8 @@ function setup() {
 
         var level = createBaseLevel();
 
-        level.min[componentType.duckling] = 3;
-        level.max[componentType.duckling] = 4;
+        level.min[componentType.duckling] = 10;
+        level.max[componentType.duckling] = 10;
 
         level.min[componentType.hawk] = 0;
         level.max[componentType.hawk] = 0;
@@ -230,8 +230,10 @@ function setup() {
         level.min[componentType.grass] = 60;
         level.max[componentType.grass] = 80;
 
-        level.minHatchTime = 5;
-        level.maxHatchTime = 15;
+        //level.minHatchTime = 5;
+        //level.maxHatchTime = 15;
+        level.minHatchTime = 999;
+        level.maxHatchTime = 999;
 
         levels.push(level);
     }

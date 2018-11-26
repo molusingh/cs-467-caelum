@@ -44,7 +44,7 @@ function playerControls(scene, duck, flyingDuck) {
 
     var nextPoint = {};
 
-    var duckMover = new ObjectMover(duck);
+    var duckMover = new ObjectMover(duck, true);
 
     // superquack variables
     //    var localStun = false;

@@ -45,7 +45,6 @@ function playerControls(scene, duck, flyingDuck) {
     var nextPoint = {};
 
     var duckMover = new ObjectMover(duck, true);
-    setTimeout(function () { duckMover.updateCam(); 500 });
 
     // superquack variables
     //    var localStun = false;
@@ -586,6 +585,8 @@ function playerControls(scene, duck, flyingDuck) {
 
     this.spawn = function () {
         grid.placeActor(duck);
+        duckMover.updateCam();
+        //setTimeout(function () { duckMover.updateCam(); 500 });
     }
 
     this.getActor = function () {

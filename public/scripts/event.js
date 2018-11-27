@@ -4,7 +4,8 @@
  * Constructor for an event bus 
  * two public functions publish and subscribe
  */
-function EventBus() {
+function EventBus()
+{
     var events = []; // private variable
 
     // public functions
@@ -16,10 +17,12 @@ function EventBus() {
      * @param eventType (string): event to trigger
      * @param args (array): arguments to pass to callbacks
      */
-    function publish(eventType, args) {
+    function publish(eventType, args)
+    {
         event = findEvent(eventType);
-        if (!event) {
-            console.log("Event '" + eventType + "' has no subscribers!");
+        if (!event)
+        {
+            // console.log("Event '" + eventType + "' has no subscribers!");
             return;
         }
         event.callbacks.forEach(executeCallback);
@@ -28,7 +31,8 @@ function EventBus() {
          * executes the specified callback uses the provided arguments
          * @param callback (function): callback to execute
          */
-        function executeCallback(callback) {
+        function executeCallback(callback)
+        {
             callback(args);
         }
     }
@@ -39,9 +43,11 @@ function EventBus() {
      * @param eventType (string): event to subscribe to
      * @param callback function to subscribe to specified event
      */
-    function subscribe(eventType, callback) {
+    function subscribe(eventType, callback)
+    {
         event = findEvent(eventType);
-        if (event == undefined) {
+        if (event == undefined)
+        {
             event = new Event(eventType);
             events.push(event);
         }
@@ -53,11 +59,13 @@ function EventBus() {
      * returns undefined if not found
      * @param eventType (string): event to find
      */
-    function findEvent(eventType) {
+    function findEvent(eventType)
+    {
         // console.log(events);
         return events.find(search);
 
-        function search(element) {
+        function search(element)
+        {
             return element.type == eventType;
         }
     }
@@ -66,7 +74,8 @@ function EventBus() {
      * Constructor for a new event
      * @param eventType (string): the type of event
      */
-    function Event(eventType) {
+    function Event(eventType)
+    {
         this.type = eventType;
         this.callbacks = [];
         this.addCallback = addCallback;
@@ -75,7 +84,8 @@ function EventBus() {
          * adds a callback function to the event
          * @param callback (function): callback to add
          */
-        function addCallback(callback) {
+        function addCallback(callback)
+        {
             this.callbacks.push(callback);
         }
     }

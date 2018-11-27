@@ -98,6 +98,10 @@ function ducklingAI(scene, hatchling, egg)
     // locates the specified target
     function findTarget()
     {
+        if (!active)
+        {
+            return;
+        }
         var targetType = componentType.duck;
         target = grid.getActorsInRadius(duckling.position, callRadius * 10, targetType)[0];
     }

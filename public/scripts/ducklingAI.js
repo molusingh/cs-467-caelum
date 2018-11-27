@@ -203,9 +203,12 @@ function ducklingAI(scene, hatchling, egg) {
         randomDirection = null;
         grid.removeActor(duckling);
         duckling.position.y = -100;
-        ducklingMover.rotateDown();
         active = false;
         currentState = ducklingState.pool;
+        //check to see if egg hatched
+        if (ducklingMover === undefined)
+            return;
+        ducklingMover.rotateDown();
         clearInterval(moveIntervalId);
         clearTimeout(hatchingTimeoutId);
     }
@@ -245,8 +248,11 @@ function ducklingAI(scene, hatchling, egg) {
         anim.breakEgg(location);
         egg.position.y = -100;
 
+        despawn();
+        bus.publish("ducklingDead", duckling);
+
         //wait a second to show broken egg
-        setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
+        //setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
     }
 
     function playDead() { }

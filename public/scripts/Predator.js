@@ -183,8 +183,10 @@ function Predator(scene, predator, type) {
             }
             if (Math.abs(predator.position.y - actor.position.y) < 0.1) {
                 if (actor.userData.componentType == componentType.egg) {
-                    //bus.publish("eggEaten", grid.getActorObject(path.point));
-                    var egg = grid.getActorObject(path.point);
+                    bus.publish("eggEaten", actor);
+                    /* 
+                    var egg = grid.getActorObject(path.point, true);
+                    console.log("EGG: " + egg.userData.componentType);
                     var location = new THREE.Vector3(
                         egg.position.x,
                         egg.position.y,
@@ -192,7 +194,7 @@ function Predator(scene, predator, type) {
                     anim = new animation(scene);
                     anim.breakEgg(location);
                     egg.position.y = -100;
-
+                    */
                 }
                 else {
                     bus.publish("kill", grid.getActorObject(path.point));

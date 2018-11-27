@@ -135,7 +135,7 @@ function setup() {
         level.min[componentType.hawk] = 0;
         level.max[componentType.hawk] = 0;
 
-        level.min[componentType.fox] = 4;
+        level.min[componentType.fox] = 2;
         level.max[componentType.fox] = 5;
 
         level.min[componentType.croq] = 3;

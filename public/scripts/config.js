@@ -141,9 +141,6 @@ function setup() {
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
@@ -174,9 +171,6 @@ function setup() {
 
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
-
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
 
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;

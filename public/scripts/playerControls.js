@@ -45,6 +45,7 @@ function playerControls(scene, duck, flyingDuck) {
     var nextPoint = {};
 
     var duckMover = new ObjectMover(duck, true);
+    setTimeout(function () { duckMover.updateCam(); 500 });
 
     // superquack variables
     //    var localStun = false;
@@ -88,7 +89,6 @@ function playerControls(scene, duck, flyingDuck) {
     bus.subscribe("invisibilitySkillRequested", invisibilitySkill);
     bus.subscribe("kill", kill);
     bus.subscribe("foundStick", stickCounter);
-
 
 
     bus.subscribe("gridTest", gridTest);

@@ -13,6 +13,7 @@ function ObjectMover(object, isDuck) {
 	this.right = right;
 	this.rotateRight = rotateRight;
 	this.flyToggle = flyToggle;
+	this.updateCam = updateCam;
 
 	function updateCam() {
 		if (!isDuck)

@@ -58,6 +58,7 @@
   function updateCam(pos) {
     camera.position.set(pos.x, 150, pos.z);
     camera.lookAt(pos);
+    camera.rotation.z += -Math.PI / 2;
   }
 
   function addFullScreenControls() {
@@ -140,7 +141,6 @@
     var DPR = window.devicePixelRatio ? window.devicePixelRatio : 1;
     renderer.setPixelRatio(DPR);
     renderer.setSize(width, height);
-
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
     renderer.shadowMap.enabled = true;
@@ -164,6 +164,7 @@
     camera.position.set(0, 150, 0);
     camera.up = new THREE.Vector3(0, 0, 1);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.rotation.z += -Math.PI / 2;
 
     return camera;
   }

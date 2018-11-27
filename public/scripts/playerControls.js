@@ -98,6 +98,10 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function fly() {
+        if (!active)
+        {
+            return;
+        }
         duckMover.flyToggle();
         if (duck.userData.inAir) {
             duck.visible = false;

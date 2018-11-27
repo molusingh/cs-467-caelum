@@ -175,10 +175,10 @@ function Predator(scene, predator, type)
             while (!validRandom) // until direction is valid
             {
                 ++count;
-                if (count > 100) // if object is stuck
+                if (count > 1000) // if object is stuck
                 {
                     despawn();
-                    console.log('stuck');
+                    console.log('stuck predator, type: ' + type);
                     return;
                 }
                 var directions = ['up', 'down', 'left', 'right'];
@@ -205,7 +205,18 @@ function Predator(scene, predator, type)
             {
                 if (actor.userData.componentType == componentType.egg)
                 {
-                    bus.publish("eggEaten", grid.getActorObject(path.point));
+                    bus.publish("eggEaten", actor);
+                    /* 
+                    var egg = grid.getActorObject(path.point, true);
+                    console.log("EGG: " + egg.userData.componentType);
+                    var location = new THREE.Vector3(
+                        egg.position.x,
+                        egg.position.y,
+                        egg.position.z);
+                    anim = new animation(scene);
+                    anim.breakEgg(location);
+                    egg.position.y = -100;
+                    */
                 }
                 else
                 {

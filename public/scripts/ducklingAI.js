@@ -98,6 +98,10 @@ function ducklingAI(scene, hatchling, egg)
     // locates the specified target
     function findTarget()
     {
+        if (!active)
+        {
+            return;
+        }
         var targetType = componentType.duck;
         target = grid.getActorsInRadius(duckling.position, callRadius * 10, targetType)[0];
     }
@@ -164,7 +168,7 @@ function ducklingAI(scene, hatchling, egg)
                 ++count;
                 if (count > 10) // if object is stuck
                 {
-                    console.log('stuck');
+                    // console.log('stuck');
                     grid.updateActor(duckling);
                     return;
                 }
@@ -226,9 +230,12 @@ function ducklingAI(scene, hatchling, egg)
         randomDirection = null;
         grid.removeActor(duckling);
         duckling.position.y = -100;
-        ducklingMover.rotateDown();
         active = false;
         currentState = ducklingState.pool;
+        //check to see if egg hatched
+        if (ducklingMover === undefined)
+            return;
+        ducklingMover.rotateDown();
         clearInterval(moveIntervalId);
         clearTimeout(hatchingTimeoutId);
     }
@@ -264,14 +271,22 @@ function ducklingAI(scene, hatchling, egg)
         //egg will never hatch
         clearTimeout(hatchingTimeoutId);
 
-        //show broken egg();
+        var location = new THREE.Vector3(
+            egg.position.x,
+            egg.position.y,
+            egg.position.z);
+        anim = new animation(scene);
+        anim.breakEgg(location);
+        egg.position.y = -100;
+
+        despawn();
+        bus.publish("ducklingDead", duckling);
 
         //wait a second to show broken egg
-        setTimeout(function() { bus.publish("ducklingDead", duckling); }, 1000);
+        //setTimeout(function () { bus.publish("ducklingDead", duckling); }, 1000);
     }
 
-    function playDead()
-    {}
+    function playDead() {}
 
     function update()
     {

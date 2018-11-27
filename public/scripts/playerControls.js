@@ -44,7 +44,8 @@ function playerControls(scene, duck, flyingDuck) {
 
     var nextPoint = {};
 
-    var duckMover = new ObjectMover(duck);
+    var duckMover = new ObjectMover(duck, true);
+    setTimeout(function () { duckMover.updateCam(); 500 });
 
     // superquack variables
     //    var localStun = false;
@@ -90,7 +91,6 @@ function playerControls(scene, duck, flyingDuck) {
     bus.subscribe("foundStick", stickCounter);
 
 
-
     bus.subscribe("gridTest", gridTest);
 
     function gridTest() {
@@ -98,6 +98,10 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function fly() {
+        if (!active)
+        {
+            return;
+        }
         duckMover.flyToggle();
         if (duck.userData.inAir) {
             duck.visible = false;
@@ -316,8 +320,7 @@ function playerControls(scene, duck, flyingDuck) {
             return;
         }
 
-        // don't check anything if duck is in water or air
-        if (duck.userData.inWater === false && duck.userData.inAir === false) {
+        if (duck.userData.inAir === false) {
             // console.log("duckling AI follow function here");
             bus.publish("callSound");
         }
@@ -374,7 +377,7 @@ function playerControls(scene, duck, flyingDuck) {
 
 
     function superQuackSkill() {
-        if (!active) {
+        if (!active || stunLength <= 0) {
             return;
         }
 
@@ -426,7 +429,7 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function speedBoostSkill() {
-        if (!active) {
+        if (!active || speedLength <= 0) {
             return;
         }
 
@@ -443,7 +446,7 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function invisibilitySkill() {
-        if (!active) {
+        if (!active || invisLength <= 0) {
             return;
         }
 

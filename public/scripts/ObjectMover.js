@@ -1,7 +1,6 @@
 /* global bus*/
 /* global grid*/
-function ObjectMover(object)
-{
+function ObjectMover(object, isDuck) {
 	var maxPosition = 185;
 	var duckFlightHeight = 20;
 	var hawkFlightHeight = 35;
@@ -10,10 +9,18 @@ function ObjectMover(object)
 	this.down = down;
 	this.rotateDown = rotateDown;
 	this.left = left;
-	this.rotateLeft = rotateLeft;
+	this.rotateLeft = rotateLeft
 	this.right = right;
 	this.rotateRight = rotateRight;
 	this.flyToggle = flyToggle;
+	this.updateCam = updateCam;
+
+	function updateCam() {
+		if (!isDuck)
+			return;
+		var pos = new THREE.Vector3(object.position.x, object.position.y, object.position.z);
+		bus.publish("updateCam", pos);
+	}
 
 	function up() {
 		rotateUp();
@@ -21,12 +28,12 @@ function ObjectMover(object)
 		{
 			object.position.x -= 10;
 			grid.updateActor(object);
+			updateCam();
 		}
 	}
 
 	function rotateUp() {
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'left':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -40,18 +47,18 @@ function ObjectMover(object)
 		object.userData.currentDirection = 'up';
 	}
 
-	function left()	{
+	function left() {
 		rotateLeft();
 		if (object.position.z <= maxPosition) // if within bounds
 		{
 			object.position.z += 10;
 			grid.updateActor(object);
+			updateCam();
 		}
 	}
 
 	function rotateLeft() {
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'down':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -71,12 +78,12 @@ function ObjectMover(object)
 		{
 			object.position.x += 10;
 			grid.updateActor(object);
+			updateCam();
 		}
 	}
 
 	function rotateDown() {
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'right':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -96,12 +103,12 @@ function ObjectMover(object)
 		{
 			object.position.z -= 10;
 			grid.updateActor(object);
+			updateCam();
 		}
 	}
 
 	function rotateRight() {
-		switch (object.userData.currentDirection)
-		{
+		switch (object.userData.currentDirection) {
 			case 'up':
 				object.rotateY(-(Math.PI / 2));
 				break;
@@ -123,16 +130,15 @@ function ObjectMover(object)
 		currentSquareInfo = grid.getEnvOnlyInfo(point.z, point.x);
 
 		// landing
-		if (object.userData.inAir == true)
-		{
+		if (object.userData.inAir == true) {
 			// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
-			if (currentSquareInfo != componentType.obstacle && currentSquareInfo != componentType.fox && 
-				currentSquareInfo != componentType.hawk && currentSquareInfo != componentType.croq && 
-				currentSquareInfo != componentType.egg)	{
+			if (currentSquareInfo != componentType.obstacle && currentSquareInfo != componentType.fox &&
+				currentSquareInfo != componentType.hawk && currentSquareInfo != componentType.croq &&
+				currentSquareInfo != componentType.egg) {
 
 				var belowObject = grid.getActorObject(point, object);
 				object.position.y -= duckFlightHeight;
-				
+
 				// if we land in water, toggle flag
 				if (currentSquareInfo == componentType.water) {
 					object.userData.inWater = true;
@@ -140,20 +146,18 @@ function ObjectMover(object)
 				bus.publish("flySound");
 				object.userData.inAir = false;
 
-				if (belowObject != null && belowObject.userData.componentType == componentType.stick)	{
+				if (belowObject != null && belowObject.userData.componentType == componentType.stick) {
 					bus.publish("foundStick", belowObject);
 				}
 			}
 		}
 
 		// takeoff
-		else
-		{
+		else {
 			object.position.y += duckFlightHeight;
 			object.userData.inAir = true;
 			// if we take off from water, toggle flag
-			if (currentSquareInfo == 2)
-			{
+			if (currentSquareInfo == 2) {
 				object.userData.inWater = false;
 			}
 			bus.publish("flySound");

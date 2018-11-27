@@ -129,23 +129,20 @@ function setup() {
 
         var level = createBaseLevel();
 
-        level.min[componentType.duckling] = 3;
-        level.max[componentType.duckling] = 4;
+        level.min[componentType.duckling] = 10;
+        level.max[componentType.duckling] = 10;
 
         level.min[componentType.hawk] = 0;
         level.max[componentType.hawk] = 0;
 
-        level.min[componentType.fox] = 1;
-        level.max[componentType.fox] = 2;
+        level.min[componentType.fox] = 4;
+        level.max[componentType.fox] = 5;
 
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
         level.min[componentType.grass] = 4;
         level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
 
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
@@ -181,9 +178,6 @@ function setup() {
         level.min[componentType.grass] = 4;
         level.max[componentType.grass] = 4;
 
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
-
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
@@ -215,12 +209,6 @@ function setup() {
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
-
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
@@ -230,10 +218,8 @@ function setup() {
         level.min[componentType.grass] = 60;
         level.max[componentType.grass] = 80;
 
-        //level.minHatchTime = 5;
-        //level.maxHatchTime = 15;
-        level.minHatchTime = 999;
-        level.maxHatchTime = 999;
+        level.minHatchTime = 5;
+        level.maxHatchTime = 15;
 
         levels.push(level);
     }
@@ -253,12 +239,6 @@ function setup() {
 
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
-
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
 
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
@@ -291,12 +271,6 @@ function setup() {
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
-
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
@@ -328,13 +302,7 @@ function setup() {
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
-
-        level.min[componentType.stick] = 12;
+        level.max[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
         level.min[componentType.obstacle] = 60;
@@ -364,12 +332,6 @@ function setup() {
 
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
-
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
 
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
@@ -402,12 +364,6 @@ function setup() {
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
-
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
@@ -439,12 +395,6 @@ function setup() {
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
 
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
-
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;
 
@@ -475,12 +425,6 @@ function setup() {
 
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;
-
-        level.min[componentType.grass] = 4;
-        level.max[componentType.grass] = 4;
-
-        level.min[componentType.obstacle] = 4;
-        level.max[componentType.obstacle] = 4;
 
         level.min[componentType.stick] = 12;
         level.max[componentType.stick] = 12;

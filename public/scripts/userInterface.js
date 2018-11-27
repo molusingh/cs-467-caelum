@@ -5,7 +5,8 @@
 /*
  * Simply create instance of object to activate user interface
  */
-function UserInterface() {
+function UserInterface()
+{
 	var keyDown = false;
 	var speedBoost = false;
 
@@ -93,8 +94,10 @@ function UserInterface() {
 	/*
 	 * returns a function that publishes the specified event
 	 */
-	function getPublishFunction(eventType) {
-		return function () {
+	function getPublishFunction(eventType)
+	{
+		return function()
+		{
 			bus.publish(eventType);
 		};
 	}
@@ -102,38 +105,81 @@ function UserInterface() {
 	/*
 	 * Returns a function that toggles the display for the specified ID
 	 */
-	function getToggleDisplayFunction(elementID) {
+	function getToggleDisplayFunction(elementID)
+	{
 		var id = '#' + elementID;
-		return function () {
-			if ($(id).css("display") == "none") {
+		return function()
+		{
+			if ($(id).css("display") == "none")
+			{
 				$(id).show();
 			}
-			else {
+			else
+			{
 				$(id).hide();
 			}
 		};
 	}
 
+	bus.subscribe('validateSkillLevel', validateSkillButtons);
+
+	function validateSkillButtons()
+	{
+		var id = '#quackButton';
+		if (stunLength <= 0)
+		{
+			$(id).hide();
+		}
+		else
+		{
+			$(id).show();
+		}
+		id = '#speedButton';
+		if (speedLength <= 0)
+		{
+			$(id).hide();
+		}
+		else
+		{
+			$(id).show();
+		}
+		id = '#invisibilityButton';
+		if (invisLength <= 0)
+		{
+			$(id).hide();
+		}
+		else
+		{
+			$(id).show();
+		}
+	}
+
 	/*
 	 * Restarts the game
 	 */
-	function restart() {
+	function restart()
+	{
+
 		location.reload();
 	}
 
 	/*
 	 * toggles the displays for the how to play and start screen
 	 */
-	function flipBetweenStartAndHowToPlay(event) {
+	function flipBetweenStartAndHowToPlay(event)
+	{
 		getToggleDisplayFunction("startScreen")();
 		getToggleDisplayFunction("howToPlayScreen")();
 	}
 
-	function toggleSpeedBoost() {
-		if (speedBoost === false) {
+	function toggleSpeedBoost()
+	{
+		if (speedBoost === false)
+		{
 			speedBoost = true;
 		}
-		else {
+		else
+		{
 			speedBoost = false;
 		}
 	}
@@ -141,14 +187,18 @@ function UserInterface() {
 	/*
 	 * Called when a key is pressed
 	 */
-	function onKeyDown(event) {
+	function onKeyDown(event)
+	{
 
-		switch (event.keyCode) {
+		switch (event.keyCode)
+		{
 			case 38: // up
 			case 87: // W
-				if (keyDown === false) {
+				if (keyDown === false)
+				{
 					bus.publish("duckUp");
-					if (speedBoost === true) {
+					if (speedBoost === true)
+					{
 						return;
 					}
 					keyDown = true;
@@ -157,9 +207,11 @@ function UserInterface() {
 
 			case 37: // left
 			case 65: // A
-				if (keyDown === false) {
+				if (keyDown === false)
+				{
 					bus.publish("duckLeft");
-					if (speedBoost === true) {
+					if (speedBoost === true)
+					{
 						return;
 					}
 					keyDown = true;
@@ -169,9 +221,11 @@ function UserInterface() {
 
 			case 40: // down
 			case 83: // S
-				if (keyDown === false) {
+				if (keyDown === false)
+				{
 					bus.publish("duckDown");
-					if (speedBoost === true) {
+					if (speedBoost === true)
+					{
 						return;
 					}
 					keyDown = true;
@@ -180,9 +234,11 @@ function UserInterface() {
 
 			case 39: // right
 			case 68: // D
-				if (keyDown === false) {
+				if (keyDown === false)
+				{
 					bus.publish("duckRight");
-					if (speedBoost === true) {
+					if (speedBoost === true)
+					{
 						return;
 					}
 					keyDown = true;
@@ -223,17 +279,20 @@ function UserInterface() {
 				//	bus.publish("speedBoostSound");
 				break;
 
-/*			case 32: // SPACEBAR
-				var currentSticks = document.getElementById('sticksOutput');
-            	var numSticks = currentSticks.innerHTML;
-            	numSticks++;
-            	currentSticks.innerHTML = numSticks;
-*/		}
+				/*			case 32: // SPACEBAR
+								var currentSticks = document.getElementById('sticksOutput');
+				            	var numSticks = currentSticks.innerHTML;
+				            	numSticks++;
+				            	currentSticks.innerHTML = numSticks;
+				*/
+		}
 	}
 
-	function onKeyUp(event) {
+	function onKeyUp(event)
+	{
 
-		switch (event.keyCode) {
+		switch (event.keyCode)
+		{
 
 
 			case 38: // up
@@ -258,7 +317,8 @@ function UserInterface() {
 		}
 	}
 
-	function updateDucklingStatusLabels(args) {
+	function updateDucklingStatusLabels(args)
+	{
 
 		$('#roamingOutput').text(args.roaming);
 		$('#killedOutput').text(args.dead);

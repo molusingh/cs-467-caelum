@@ -123,6 +123,7 @@ function gameAI(scene, clock) {
         savedThisLevel = 0;
         numSticks = 0;
         currentSticks.innerHTML = numSticks;
+        bus.publish('validateSkillLevel');
     }
 
     function sendSettings() {

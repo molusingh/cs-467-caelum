@@ -103,7 +103,7 @@ function ducklingAI(scene, hatchling, egg)
             return;
         }
         var targetType = componentType.duck;
-        target = grid.getActorsInRadius(duckling.position, callRadius * 10, targetType)[0];
+        target = grid.getActorsInRadius(duckling.position, callRadius, targetType)[0];
     }
 
     function targetInRange()
@@ -112,9 +112,9 @@ function ducklingAI(scene, hatchling, egg)
         {
             return false;
         }
-        if (Math.abs(target.position.x - duckling.position.x) > 100 ||
-            Math.abs(target.position.y - duckling.position.y) > 100 ||
-            Math.abs(target.position.z - duckling.position.z) > 100)
+        if (Math.abs(target.position.x - duckling.position.x) > 50 ||
+            Math.abs(target.position.y - duckling.position.y) > 50 ||
+            Math.abs(target.position.z - duckling.position.z) > 50)
         {
             target = null;
             return false; // target got too far away

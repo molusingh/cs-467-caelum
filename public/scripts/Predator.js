@@ -26,7 +26,8 @@ global stunLength
  * @param predator 3d predator object
  * @param type the type of the predator
  */
-function Predator(scene, predator, type) {
+function Predator(scene, predator, type)
+{
     // public functions
     this.toggleActive = toggleActive;
     this.setActive = setActive;
@@ -55,19 +56,23 @@ function Predator(scene, predator, type) {
     var stunTimeoutId = null;
     bus.subscribe("stunned", stun);
 
-    function stun(object) {
-        if (object != predator) {
+    function stun(object)
+    {
+        if (object != predator)
+        {
             return;
         }
         setActive(false);
-        stunTimeoutId = setTimeout(function () { setActive(true); }, stunLength * 1000);
+        stunTimeoutId = setTimeout(function() { setActive(true); }, stunLength * 1000);
     }
 
-    function spawn() {
+    function spawn()
+    {
         grid.placeActor(predator);
     }
 
-    function despawn() {
+    function despawn()
+    {
         //currentState = predatorState.despawn;
         predator.position.y = -100;
         active = false;
@@ -75,25 +80,31 @@ function Predator(scene, predator, type) {
         clearInterval(moveIntervalId);
     }
 
-    function getActor() {
+    function getActor()
+    {
         return predator;
     }
 
     // initialize the predator
-    function init() {
-        if (type == predatorType.fox) {
+    function init()
+    {
+        if (type == predatorType.fox)
+        {
             predator.position.y = 0.1;
         }
-        else if (type == predatorType.croq) {
+        else if (type == predatorType.croq)
+        {
             predator.position.y = 0.1;
         }
-        else if (type == predatorType.hawk) {
+        else if (type == predatorType.hawk)
+        {
             predator.position.y = hawkY;
         }
 
         target = findTargets(componentType.duck)[0];
         bus.subscribe('movepredator', move);
-        if (type != predatorType.hawk || true) {
+        if (type != predatorType.hawk || true)
+        {
             moveIntervalId = setInterval(move, 1000);
         }
         // console.log("INIT UUID: " + predator.uuid);
@@ -101,25 +112,31 @@ function Predator(scene, predator, type) {
     }
 
     // locates the specified targets
-    function findTargets(targetType) {
+    function findTargets(targetType)
+    {
         return grid.getActorsInRadius(predator.position, 100, targetType);
     }
 
-    function getPath(targetType) {
-        if (invisActive) {
+    function getPath(targetType)
+    {
+        if (invisActive)
+        {
             return null;
         }
         var targets = findTargets(targetType);
         var path = null;
         if (targets) // if predator found targets
         {
-            for (var i = 0; i < targets.length; ++i) {
+            for (var i = 0; i < targets.length; ++i)
+            {
                 target = targets[i];
-                if (target.userData.inAir && type != predatorType.hawk) {
+                if (target.userData.inAir && type != predatorType.hawk)
+                {
                     return null;
                 }
                 path = findPath(predator.position, target.position, isLegalMove);
-                if (path) {
+                if (path)
+                {
                     break;
                 }
             }
@@ -128,8 +145,10 @@ function Predator(scene, predator, type) {
     }
 
     // moves the predator
-    function move() {
-        if (!active) {
+    function move()
+    {
+        if (!active)
+        {
             return;
         }
         if (type == predatorType.hawk) // for hawks
@@ -156,10 +175,10 @@ function Predator(scene, predator, type) {
             while (!validRandom) // until direction is valid
             {
                 ++count;
-                if (count > 100) // if object is stuck
+                if (count > 1000) // if object is stuck
                 {
                     despawn();
-                    console.log('stuck');
+                    console.log('stuck predator, type: ' + type);
                     return;
                 }
                 var directions = ['up', 'down', 'left', 'right'];
@@ -170,7 +189,8 @@ function Predator(scene, predator, type) {
         }
         else if (path && isLegalMove(path.point)) // follow path
         {
-            if (path.move != 'stay') {
+            if (path.move != 'stay')
+            {
                 predatorMover[path.move]();
             }
         }
@@ -181,8 +201,10 @@ function Predator(scene, predator, type) {
             {
                 predator.position.y = actor.position.y; // move in y to target
             }
-            if (Math.abs(predator.position.y - actor.position.y) < 0.1) {
-                if (actor.userData.componentType == componentType.egg) {
+            if (Math.abs(predator.position.y - actor.position.y) < 0.1)
+            {
+                if (actor.userData.componentType == componentType.egg)
+                {
                     bus.publish("eggEaten", actor);
                     /* 
                     var egg = grid.getActorObject(path.point, true);
@@ -196,7 +218,8 @@ function Predator(scene, predator, type) {
                     egg.position.y = -100;
                     */
                 }
-                else {
+                else
+                {
                     bus.publish("kill", grid.getActorObject(path.point));
                 }
 
@@ -210,25 +233,31 @@ function Predator(scene, predator, type) {
         grid.updateActor(predator);
     }
 
-    function setActive(value) {
+    function setActive(value)
+    {
         active = value;
     }
 
-    function setState(newState) {
+    function setState(newState)
+    {
         currentState = newState;
     }
 
-    function toggleActive() {
+    function toggleActive()
+    {
         active = !active;
     }
 
-    function update() {
-        if (currentState === predatorState.init) {
+    function update()
+    {
+        if (currentState === predatorState.init)
+        {
             init();
             currentState = predatorState.alive;
         }
 
-        if (currentState === predatorState.despawn) {
+        if (currentState === predatorState.despawn)
+        {
             predator.position.y = -100;
             active = false;
             currentState = predatorState.pool;
@@ -239,42 +268,52 @@ function Predator(scene, predator, type) {
     }
 
     // returns true if specified move to target is legal
-    function isLegalMove(target) {
-        if (!active) {
+    function isLegalMove(target)
+    {
+        if (!active)
+        {
             return false;
         }
         var actor = grid.getActor(target); // actor at current target
         if (actor != null && actor != componentType.duck &&
-            actor != componentType.duckling && actor != componentType.egg) {
+            actor != componentType.duckling && actor != componentType.egg)
+        {
             return false;
         }
         var squareType = grid.getEnvOnlyInfo(target.z, target.x);
         var validSquares;
-        if (type == predatorType.fox) {
+        if (type == predatorType.fox)
+        {
             validSquares = [componentType.land, componentType.grass];
         }
-        else if (type == predatorType.croq) {
+        else if (type == predatorType.croq)
+        {
             validSquares = [componentType.water];
         }
-        else if (type == predatorType.hawk) {
+        else if (type == predatorType.hawk)
+        {
             validSquares = [
                 componentType.air, componentType.land, componentType.water
             ];
         }
-        else {
+        else
+        {
             return false;
         }
         return validSquares.find(validate) != undefined;
 
-        function validate(element) {
+        function validate(element)
+        {
             return element == squareType;
         }
     }
 
     // returns true if move in specified direction from start poiint is legal
-    function isValid(start, direction) {
+    function isValid(start, direction)
+    {
         var target = {};
-        switch (direction) {
+        switch (direction)
+        {
             case 'up':
                 target.z = start.z;
                 target.x = start.x - 10;

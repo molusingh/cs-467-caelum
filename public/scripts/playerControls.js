@@ -97,6 +97,10 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function fly() {
+        if (!active)
+        {
+            return;
+        }
         duckMover.flyToggle();
         if (duck.userData.inAir) {
             duck.visible = false;
@@ -372,7 +376,7 @@ function playerControls(scene, duck, flyingDuck) {
 
 
     function superQuackSkill() {
-        if (!active) {
+        if (!active || stunLength <= 0) {
             return;
         }
 
@@ -424,7 +428,7 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function speedBoostSkill() {
-        if (!active) {
+        if (!active || speedLength <= 0) {
             return;
         }
 
@@ -441,7 +445,7 @@ function playerControls(scene, duck, flyingDuck) {
     }
 
     function invisibilitySkill() {
-        if (!active) {
+        if (!active || invisLength <= 0) {
             return;
         }
 

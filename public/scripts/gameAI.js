@@ -28,9 +28,9 @@ function gameAI(scene, clock) {
     var quackLevel = 0;
     var speedLevel = 0;
     var invisibilityLevel = 0;
-    var quackCost = 100;
-    var speedCost = 100;
-    var invisibilityCost = 100;
+    var quackCost = 500;
+    var speedCost = 500;
+    var invisibilityCost = 500;
     var savedThisLevel = 0;
     var currentSticks = document.getElementById('sticksOutput');
     var numSticks = currentSticks.innerHTML;
@@ -123,6 +123,7 @@ function gameAI(scene, clock) {
         savedThisLevel = 0;
         numSticks = 0;
         currentSticks.innerHTML = numSticks;
+        bus.publish('validateSkillLevel');
     }
 
     function sendSettings() {
@@ -236,15 +237,12 @@ function gameAI(scene, clock) {
         $('#levelOutput').text(currentLevel);
         updateGlobalSkills();
 
-        // console.log("gameState:" + currentState);
-
         if (currentState === gameState.level) {
             level.update();
             switch (level.getState()) {
                 case levelState.preGame:
                     $('#loadingScreen').show();
                     sendSettings();
-                    // console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:

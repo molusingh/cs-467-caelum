@@ -129,14 +129,14 @@ function setup() {
 
         var level = createBaseLevel();
 
-        level.min[componentType.duckling] = 10;
-        level.max[componentType.duckling] = 10;
+        level.min[componentType.duckling] = 2;
+        level.max[componentType.duckling] = 2;
 
         level.min[componentType.hawk] = 0;
         level.max[componentType.hawk] = 0;
 
-        level.min[componentType.fox] = 4;
-        level.max[componentType.fox] = 5;
+        level.min[componentType.fox] = 2;
+        level.max[componentType.fox] = 2;
 
         level.min[componentType.croq] = 3;
         level.max[componentType.croq] = 5;

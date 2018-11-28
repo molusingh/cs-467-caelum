@@ -563,6 +563,9 @@ function playerControls(scene, duck, flyingDuck) {
 
     this.cleanup = function () {
         nestBuilder.cleanup();
+        if (duck.userData.inAir === true) {
+            fly();
+        }
     }
 
 

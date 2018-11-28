@@ -323,6 +323,11 @@ function ducklingAI(scene, hatchling, egg)
             componentType.water,
             componentType.nest
         ];
+        var actor = grid.getActor(target);
+        if (actor == componentType.stick) // ignore spots with sticks
+        {
+            return false;
+        }
         return validSquares.find(validate) != undefined;
 
         function validate(element)

@@ -23,10 +23,9 @@ function UserInterface()
 	bus.subscribe("playerLoses", getToggleDisplayFunction("loseScreen"));
 	bus.subscribe("toggleSpeedBoost", toggleSpeedBoost);
 	bus.subscribe("updateDucklingLabels", updateDucklingStatusLabels);
-
+	bus.subscribe('validateSkillLevel', validateSkillButtons);
 
 	// interface event callbacks
-
 	// movement buttons
 	$(document).keydown(onKeyDown);
 	$(document).keyup(onKeyUp);
@@ -49,16 +48,16 @@ function UserInterface()
 	$("#musicButton").click(getPublishFunction("toggleMusic"));
 	$("#nextLevelButton").click(getPublishFunction("endPickBoosts"));
 
-	// player control Buttons
-	$("#skillButtons").click(getPublishFunction("skillButtonClicked"));
-	$("#actionButtons").click(getPublishFunction("actionButtonClicked"));
-
 	$("#flyButton").click(getPublishFunction("flyToggle"));
 	$("#jumpButton").click(getPublishFunction("jump"));
 	$("#callButton").click(getPublishFunction("call"));
 	$("#nestButton").click(getPublishFunction("nest"));
 
 	// skill request buttons
+	$("#flyButton").click(getPublishFunction("flyToggle"));
+	$("#jumpButton").click(getPublishFunction("jump"));
+	$("#callButton").click(getPublishFunction("call"));
+	$("#nestButton").click(getPublishFunction("nest"));
 	$("#invisibilityButton").click(getPublishFunction("invisibilitySkillRequested"));
 	$("#speedButton").click(getPublishFunction("speedSkillRequested"));
 	$("#quackButton").click(getPublishFunction("quackSkillRequested"));
@@ -68,28 +67,13 @@ function UserInterface()
 	$("#upgradeSpeedButton").click(getPublishFunction("speedUpgrade"));
 	$("#upgradeQuackButton").click(getPublishFunction("quackUpgrade"));
 
-	// skill buttons
-	$("#invisibilityButton").click(getPublishFunction("makeInvisible"));
-	$("#speedButton").click(getPublishFunction("increaseSpeed"));
-	$("#quackButton").click(getPublishFunction("quack"));
-
 	// mouse click sound publishers
-	// includes skillButtons, movementControls, and actionButtons
-	$("#gameControls").click(getPublishFunction("clickSound"));
-	// start button at title
-	$("#startButton").click(getPublishFunction("clickSound"));
-	// how to play button at title
-	$("#howToPlayButton").click(getPublishFunction("clickSound"));
+	$("#gameControls").click(getPublishFunction("clickSound")); // includes skillButtons, movementControls, and actionButtons
+	$("#startButton").click(getPublishFunction("clickSound")); // start button at title
+	$("#howToPlayButton").click(getPublishFunction("clickSound")); // how to play button at title
 	$("#closeHowToPlayButton").click(getPublishFunction("clickSound"));
-	// menu button
-	$("#menuButton").click(getPublishFunction("clickSound"));
-	// all buttons in menu
-	$("#menu").click(getPublishFunction("clickSound"));
-
-	// skill sounds
-	//	$("#invisibilityButton").click(getPublishFunction("invisibilitySound"));
-	//	$("#speedButton").click(getPublishFunction("speedBoostSound"));
-	//	$("#quackButton").click(getPublishFunction("superQuackSound"));
+	$("#menuButton").click(getPublishFunction("clickSound")); // menu button
+	$("#menu").click(getPublishFunction("clickSound"));// all buttons in menu
 
 	/*
 	 * returns a function that publishes the specified event
@@ -120,8 +104,6 @@ function UserInterface()
 			}
 		};
 	}
-
-	bus.subscribe('validateSkillLevel', validateSkillButtons);
 
 	function validateSkillButtons()
 	{
@@ -266,17 +248,14 @@ function UserInterface()
 
 			case 81: // Q 
 				bus.publish("invisibilitySkillRequested");
-				//	bus.publish("invisibilitySound");
 				break;
 
 			case 69: // E
 				bus.publish("quackSkillRequested");
-				// bus.publish("superQuackSound");
 				break;
 
 			case 82: // R
 				bus.publish("speedSkillRequested");
-				//	bus.publish("speedBoostSound");
 				break;
 
 				/*			case 32: // SPACEBAR

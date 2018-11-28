@@ -19,7 +19,6 @@ function assetGen(scene) {
         createWater();
         generateLand();
         recordLandInGrid();
-        //these need to be dynamic
         generateLandObstacles(config.getCount(componentType.obstacle));
         generateGrassObstacles(config.getCount(componentType.grass));
     }
@@ -292,7 +291,7 @@ function assetGen(scene) {
         for (var i = 0; i < 40; i++) {
             for (var j = 0; j < 40; j++) {
                 var vector = new THREE.Vector2(i, j);
-                var isLand = identifyObject(vector, landObjects);
+                var isLand = identifyObject(vector);
                 if (isLand === 1) {
                     grid.setEnvSquare(i, j, componentType.land);
                 }

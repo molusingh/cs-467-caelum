@@ -81,14 +81,11 @@ function levelAI(scene) {
 
         if (ducklingsDead + ducklingsNested == ducklingsSpawned) {
             setTimeout(callback, 250); // delay to end level
-            function callback()
-            {
-                if (ducklingsNested === 0) 
-                {
+            function callback() {
+                if (ducklingsNested === 0) {
                     currentState = levelState.loss;
                 }
-                else 
-                {
+                else {
                     currentState = levelState.end;
                 }
                 cleanup();
@@ -99,7 +96,6 @@ function levelAI(scene) {
 
     function foundStick(stick) {
         stick.position.y = -100;
-        removeActor(stick);
         grid.removeActor(stick);
     }
 
@@ -276,8 +272,6 @@ function levelAI(scene) {
 
     function populateAssets() {
 
-        var defaultLocation = new THREE.Vector2(20, 20);
-
         var foxCount = config.getCount(componentType.fox);
 
         var hawkCount = config.getCount(componentType.hawk);
@@ -428,7 +422,9 @@ function levelAI(scene) {
         var allPawns = pawnsInLevel.length;
         for (var i = 0; i < allPawns; i++) {
             pawnsInLevel[i].position.y = -100;
-            if (pawnsInLevel[i].userData.componentType === componentType.eggShell) {
+            var type = pawnsInLevel[i].userData.componentType;
+            if (type === componentType.eggShell ||
+                type === componentType.stick) {
                 pawnsInLevel[i].userData.available = true;
             }
         }

@@ -237,15 +237,12 @@ function gameAI(scene, clock) {
         $('#levelOutput').text(currentLevel);
         updateGlobalSkills();
 
-        // console.log("gameState:" + currentState);
-
         if (currentState === gameState.level) {
             level.update();
             switch (level.getState()) {
                 case levelState.preGame:
                     $('#loadingScreen').show();
                     sendSettings();
-                    // console.log("before BUILD");
                     level.setState(levelState.build);
                     break;
                 case levelState.ready:

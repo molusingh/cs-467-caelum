@@ -1,13 +1,4 @@
 /*
-Notes:
-subscribe: stun
-check what's around you: grid.getSquareInfo(x,z)
-find prey: grid.getActorsInRadius(position(x,z), actorType)
-must update grid after every move: grid.updateActor(actorID)
-ALL functions MUST be filtered through: if(!active) return;
-*/
-
-/*
 global ObjectMover
 global clock
 global grid
@@ -323,6 +314,11 @@ function ducklingAI(scene, hatchling, egg)
             componentType.water,
             componentType.nest
         ];
+        var actor = grid.getActor(target);
+        if (actor == componentType.stick) // ignore spots with sticks
+        {
+            return false;
+        }
         return validSquares.find(validate) != undefined;
 
         function validate(element)

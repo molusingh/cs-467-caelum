@@ -33,8 +33,8 @@ function playerControls(scene, duck, flyingDuck) {
     var active = false;
     var currentState = playerState.init;
 
+    // custom duck data configured here
     duck.userData.currentDirection = 'down';
-    // console.log(duck.userData.currentDirection);
     duck.userData.inAir = false;
     duck.userData.inWater = false;
     duck.position.y = .1;
@@ -112,27 +112,6 @@ function playerControls(scene, duck, flyingDuck) {
         }
     }
 
-
-    /* sounds for interface buttons
-    $("#movementControls").click(playSound.click);
-    $("#movementControls").click(playSound.move);
-    $("#skillButtons").click(playSound.click);
-    $("#actionButtons").click(playSound.click);
-    $("#startButton").click(playSound.click);
-    $("#howToPlayButton").click(playSound.click);
-    $("#menu").click(playSound.click);
-    $("#menuButton").click(playSound.click);
-
-    // skill sounds
-    $("#invisibilityButton").click(playSound.invisiblity);
-    $("#speedButton").click(playSound.speedBoost);
-
-
-    // action sounds
-    $("#flyButton").click(playSound.fly);
-    $("#jumpButton").click(playSound.jump);
-    $("#callButton").click(playSound.call);
-*/
     function duckUp(object) {
         if (!active) {
             return;
@@ -146,7 +125,6 @@ function playerControls(scene, duck, flyingDuck) {
             nextPoint.x = duck.position.x - 10;
             stickCheck(nextPoint);
             bus.publish("moveUp");
-            bus.publish("cameraKeyUp");
             bus.publish("playerMove");
 
         }
@@ -165,7 +143,6 @@ function playerControls(scene, duck, flyingDuck) {
             nextPoint.x = duck.position.x + 10
             stickCheck(nextPoint);
             bus.publish("moveDown");
-            bus.publish("cameraKeyDown");
             bus.publish("playerMove");
         }
     }
@@ -183,7 +160,6 @@ function playerControls(scene, duck, flyingDuck) {
             nextPoint.x = duck.position.x;
             stickCheck(nextPoint);
             bus.publish("moveLeft");
-            bus.publish("cameraKeyLeft");
             bus.publish("playerMove");
         }
     }
@@ -201,7 +177,6 @@ function playerControls(scene, duck, flyingDuck) {
             nextPoint.x = duck.position.x;
             stickCheck(nextPoint);
             bus.publish("moveRight");
-            bus.publish("cameraKeyRight");
             bus.publish("playerMove");
         }
     }
@@ -267,19 +242,15 @@ function playerControls(scene, duck, flyingDuck) {
 
             if (facing === 'up') {
                 bus.publish("moveUp");
-                bus.publish("cameraKeyUp");
             }
             else if (facing === 'left') {
                 bus.publish("moveLeft");
-                bus.publish("cameraKeyLeft");
             }
             else if (facing === 'down') {
                 bus.publish("moveDown");
-                bus.publish("cameraKeyDown");
             }
             else if (facing === 'right') {
                 bus.publish("moveRight");
-                bus.publish("cameraKeyRight");
             }
         }
 
@@ -295,19 +266,15 @@ function playerControls(scene, duck, flyingDuck) {
 
             if (facing === 'up') {
                 bus.publish("moveUp");
-                bus.publish("cameraKeyUp");
             }
             else if (facing === 'left') {
                 bus.publish("moveLeft");
-                bus.publish("cameraKeyLeft");
             }
             else if (facing === 'down') {
                 bus.publish("moveDown");
-                bus.publish("cameraKeyDown");
             }
             else if (facing === 'right') {
                 bus.publish("moveRight");
-                bus.publish("cameraKeyRight");
             }
         }
 
@@ -524,7 +491,6 @@ function playerControls(scene, duck, flyingDuck) {
         // all in-air moves are legal since they are over all tiles
         if (duck.userData.inAir === true) {
             return true;
-
         }
 
         // get type of square duck is facing
@@ -540,8 +506,6 @@ function playerControls(scene, duck, flyingDuck) {
         else if (facing === 'right') {
             nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
-
-        // console.log("NEXT: " + nextSquare);
 
         // moving from land to land, duckling, grass, egg, stick, or nest
         if (duck.userData.inWater === false && (nextSquare == componentType.land || nextSquare == componentType.grass || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
@@ -618,13 +582,5 @@ function playerControls(scene, duck, flyingDuck) {
             flyingDuck.rotation.z = duck.rotation.z;
 
         }
-
-/*        if (localStun === true) {
-            // stunLength is global, modified by superquack level
-            if (elapsedTime - beginStun > stunLength) {
-                resetStunStatus();
-            }
-        }
-*/    }
-
+    }
 }

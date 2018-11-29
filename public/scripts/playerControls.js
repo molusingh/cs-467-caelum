@@ -287,7 +287,6 @@ function playerControls(scene, duck, flyingDuck) {
         }
 
         if (duck.userData.inAir === false) {
-            // console.log("duckling AI follow function here");
             bus.publish("callSound");
         }
     }
@@ -458,7 +457,12 @@ function playerControls(scene, duck, flyingDuck) {
                 invisLock = false;
             }
         }
+    }
 
+    function resetLocks() {
+        stunLock = false;
+        speedLock = false;
+        invisLock = false;
     }
 
     function kill(victim) {
@@ -563,6 +567,10 @@ function playerControls(scene, duck, flyingDuck) {
 
     this.cleanup = function () {
         nestBuilder.cleanup();
+        resetLocks();
+        if (duck.userData.inAir === true) {
+            fly();
+        }
     }
 
 

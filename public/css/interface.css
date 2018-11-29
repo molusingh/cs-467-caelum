@@ -19,11 +19,15 @@ body {
 #menuButton {
     position: fixed;
     z-index: 10;
-    color: transparent;
+    color: white;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: lightgrey;
     font-size: xx-large;
     font-size: 2vmax;
+}
+
+span {
+    color: yellow;
 }
 
 .gameScreens {

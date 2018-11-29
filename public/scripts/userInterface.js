@@ -164,6 +164,10 @@ function UserInterface()
 		else
 		{
 			speedBoost = false;
+			clearInterval(speedIntervalIds.down);
+			clearInterval(speedIntervalIds.up);
+			clearInterval(speedIntervalIds.left);
+			clearInterval(speedIntervalIds.right);
 		}
 	}
 

@@ -250,13 +250,6 @@ function UserInterface()
 			case 82: // R
 				bus.publish("speedSkillRequested");
 				break;
-
-				/*			case 32: // SPACEBAR
-								var currentSticks = document.getElementById('sticksOutput');
-				            	var numSticks = currentSticks.innerHTML;
-				            	numSticks++;
-				            	currentSticks.innerHTML = numSticks;
-				*/
 		}
 	}
 
@@ -265,8 +258,6 @@ function UserInterface()
 
 		switch (event.keyCode)
 		{
-
-
 			case 38: // up
 			case 87: // W
 				keyDown = false;
@@ -291,11 +282,9 @@ function UserInterface()
 
 	function updateDucklingStatusLabels(args)
 	{
-
 		$('#roamingOutput').text(args.roaming);
 		$('#killedOutput').text(args.dead);
 		$('#nestedOutput').text(args.nested);
-
 	}
 
 }

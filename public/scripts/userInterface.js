@@ -9,6 +9,7 @@ function UserInterface()
 {
 	var keyDown = false;
 	var speedBoost = false;
+	var speedIntervalIds = {};
 
 	// interface event subscriptions
 	bus.subscribe("start", getToggleDisplayFunction("startScreen"));
@@ -33,6 +34,11 @@ function UserInterface()
 	$("#rightButton").click(getPublishFunction("duckRight"));
 	$("#downButton").click(getPublishFunction("duckDown"));
 	$("#upButton").click(getPublishFunction("duckUp"));
+
+	$("#leftButton").on('mousedown mouseup', speedLeft);
+	$("#rightButton").on('mousedown mouseup', speedRight);
+	$("#downButton").on('mousedown mouseup', speedDown);
+	$("#upButton").on('mousedown mouseup', speedUp);
 
 	// game state buttons
 	$("#restartButton").click(restart);
@@ -68,7 +74,7 @@ function UserInterface()
 	$("#howToPlayButton").click(getPublishFunction("clickSound")); // how to play button at title
 	$("#closeHowToPlayButton").click(getPublishFunction("clickSound"));
 	$("#menuButton").click(getPublishFunction("clickSound")); // menu button
-	$("#menu").click(getPublishFunction("clickSound"));// all buttons in menu
+	$("#menu").click(getPublishFunction("clickSound")); // all buttons in menu
 
 	/*
 	 * returns a function that publishes the specified event
@@ -158,6 +164,70 @@ function UserInterface()
 		else
 		{
 			speedBoost = false;
+		}
+	}
+
+	function speedDown(e)
+	{
+		if (e.type == "mousedown")
+		{
+			if (speedBoost == true)
+			{
+				speedIntervalIds.down =
+					setInterval(getPublishFunction("duckDown"), 100);
+			}
+		}
+		else if (e.type == "mouseup")
+		{
+			clearInterval(speedIntervalIds.down);
+		}
+	}
+
+	function speedUp(e)
+	{
+		if (e.type == "mousedown")
+		{
+			if (speedBoost == true)
+			{
+				speedIntervalIds.up =
+					setInterval(getPublishFunction("duckUp"), 100);
+			}
+		}
+		else if (e.type == "mouseup")
+		{
+			clearInterval(speedIntervalIds.up);
+		}
+	}
+
+	function speedLeft(e)
+	{
+		if (e.type == "mousedown")
+		{
+			if (speedBoost == true)
+			{
+				speedIntervalIds.left =
+					setInterval(getPublishFunction("duckLeft"), 100);
+			}
+		}
+		else if (e.type == "mouseup")
+		{
+			clearInterval(speedIntervalIds.left);
+		}
+	}
+
+	function speedRight(e)
+	{
+		if (e.type == "mousedown")
+		{
+			if (speedBoost == true)
+			{
+				speedIntervalIds.right =
+					setInterval(getPublishFunction("duckRight"), 100);
+			}
+		}
+		else if (e.type == "mouseup")
+		{
+			clearInterval(speedIntervalIds.right);
 		}
 	}
 

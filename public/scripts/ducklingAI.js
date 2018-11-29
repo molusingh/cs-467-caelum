@@ -1,13 +1,4 @@
 /*
-Notes:
-subscribe: stun
-check what's around you: grid.getSquareInfo(x,z)
-find prey: grid.getActorsInRadius(position(x,z), actorType)
-must update grid after every move: grid.updateActor(actorID)
-ALL functions MUST be filtered through: if(!active) return;
-*/
-
-/*
 global ObjectMover
 global clock
 global grid

@@ -48,11 +48,6 @@ function UserInterface()
 	$("#musicButton").click(getPublishFunction("toggleMusic"));
 	$("#nextLevelButton").click(getPublishFunction("endPickBoosts"));
 
-	$("#flyButton").click(getPublishFunction("flyToggle"));
-	$("#jumpButton").click(getPublishFunction("jump"));
-	$("#callButton").click(getPublishFunction("call"));
-	$("#nestButton").click(getPublishFunction("nest"));
-
 	// skill request buttons
 	$("#flyButton").click(getPublishFunction("flyToggle"));
 	$("#jumpButton").click(getPublishFunction("jump"));

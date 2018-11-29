@@ -20,6 +20,7 @@ bus.subscribe("levelChange", playSound.stopStunSound);
 bus.subscribe("ducklingHatched", playSound.crack);
 bus.subscribe("ducklingNested", playSound.ducklingNest);
 bus.subscribe("kill", playSound.enemyChomp);
+bus.subscribe("eggEaten", playSound.enemyChomp);
 bus.subscribe("pickBoosts", playSound.levelEnd); // plays on level end
 bus.subscribe("playerLoses", playSound.duckDeath);
 bus.subscribe("playerWins", playSound.win);

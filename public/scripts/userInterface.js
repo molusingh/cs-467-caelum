@@ -229,7 +229,6 @@ function UserInterface()
 
 			case 50: // 2
 				bus.publish("jump");
-				// sound published in playerControls.jumpSkill
 				break;
 
 			case 51: // 3
@@ -238,7 +237,6 @@ function UserInterface()
 
 			case 52: // 4
 				bus.publish("nest");
-				// sound published in playerControls.nestSkill
 				break;
 
 			case 81: // Q 

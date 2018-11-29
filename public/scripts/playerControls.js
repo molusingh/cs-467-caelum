@@ -287,7 +287,6 @@ function playerControls(scene, duck, flyingDuck) {
         }
 
         if (duck.userData.inAir === false) {
-            // console.log("duckling AI follow function here");
             bus.publish("callSound");
         }
     }

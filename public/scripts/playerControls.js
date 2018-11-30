@@ -404,7 +404,12 @@ function playerControls(scene, duck, flyingDuck) {
         else {
             bus.publish("speedBoostSound");
             bus.publish("toggleSpeedBoost");
-            speedTimeoutId = setTimeout(function () { bus.publish("toggleSpeedBoost"); }, speedLength * 1000);
+            speedTimeoutId = setTimeout(function () 
+            { 
+                bus.publish("toggleSpeedBoost"); 
+                bus.publish("clearSpeedTimers");
+                
+            }, speedLength * 1000);
             skillLockout("speed");
         }
 

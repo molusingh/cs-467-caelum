@@ -26,6 +26,10 @@ body {
     font-size: 2vmax;
 }
 
+img {
+  pointer-events: none;
+}
+
 span {
     color: yellow;
 }

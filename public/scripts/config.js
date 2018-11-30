@@ -296,7 +296,7 @@ function setup() {
         level.min[componentType.croq] = 6;
         level.max[componentType.croq] = 7;
 
-        level.max[componentType.stick] = 7;
+        level.min[componentType.stick] = 7;
         level.max[componentType.stick] = 7;
 
         level.min[componentType.obstacle] = 60;

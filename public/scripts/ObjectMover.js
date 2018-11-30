@@ -123,20 +123,18 @@ function ObjectMover(object, isDuck) {
 	}
 
 	function flyToggle() {
-		var currentSquareInfo;
 		var point = {};
 		point.z = object.position.z;
 		point.x = object.position.x;
-		currentSquareInfo = grid.getEnvOnlyInfo(point.z, point.x);
+		var belowObject = grid.getActorObject(point, object);
+		var currentSquareInfo = grid.getEnvOnlyInfo(point.z, point.x);
 
 		// landing
 		if (object.userData.inAir == true) {
-			// can't land on obstacle (3), fox (4), hawk (5), croq (6), or egg (9)
-			if (currentSquareInfo != componentType.obstacle && currentSquareInfo != componentType.fox &&
-				currentSquareInfo != componentType.hawk && currentSquareInfo != componentType.croq &&
-				currentSquareInfo != componentType.egg) {
+			// can't land on obstacle (3) or egg (9)
+			if (currentSquareInfo != componentType.obstacle &&
+				belowObject.userData.componentType != componentType.egg) {
 
-				var belowObject = grid.getActorObject(point, object);
 				object.position.y -= duckFlightHeight;
 
 				// if we land in water, toggle flag

@@ -25,7 +25,7 @@ function UserInterface()
 	bus.subscribe("toggleSpeedBoost", toggleSpeedBoost);
 	bus.subscribe("updateDucklingLabels", updateDucklingStatusLabels);
 	bus.subscribe('validateSkillLevel', validateSkillButtons);
-
+	bus.subscribe("clearSpeedTimers", clearSpeedTimers);
 	// interface event callbacks
 	// movement buttons
 	$(document).keydown(onKeyDown);
@@ -146,6 +146,14 @@ function UserInterface()
 		location.reload();
 	}
 
+	function clearSpeedTimers()
+	{
+		clearInterval(speedIntervalIds.down);
+		clearInterval(speedIntervalIds.up);
+		clearInterval(speedIntervalIds.left);
+		clearInterval(speedIntervalIds.right);
+	}
+
 	/*
 	 * toggles the displays for the how to play and start screen
 	 */
@@ -164,15 +172,13 @@ function UserInterface()
 		else
 		{
 			speedBoost = false;
-			clearInterval(speedIntervalIds.down);
-			clearInterval(speedIntervalIds.up);
-			clearInterval(speedIntervalIds.left);
-			clearInterval(speedIntervalIds.right);
+			clearSpeedTimers();
 		}
 	}
 
 	function speedDown(e)
 	{
+		clearSpeedTimers();
 		if (e.type == "mousedown")
 		{
 			if (speedBoost == true)
@@ -183,12 +189,13 @@ function UserInterface()
 		}
 		else if (e.type == "mouseup")
 		{
-			clearInterval(speedIntervalIds.down);
+			clearSpeedTimers();
 		}
 	}
 
 	function speedUp(e)
 	{
+		clearSpeedTimers();
 		if (e.type == "mousedown")
 		{
 			if (speedBoost == true)
@@ -199,12 +206,13 @@ function UserInterface()
 		}
 		else if (e.type == "mouseup")
 		{
-			clearInterval(speedIntervalIds.up);
+			clearSpeedTimers();
 		}
 	}
 
 	function speedLeft(e)
 	{
+		clearSpeedTimers();
 		if (e.type == "mousedown")
 		{
 			if (speedBoost == true)
@@ -215,12 +223,13 @@ function UserInterface()
 		}
 		else if (e.type == "mouseup")
 		{
-			clearInterval(speedIntervalIds.left);
+			clearSpeedTimers();
 		}
 	}
 
 	function speedRight(e)
 	{
+		clearSpeedTimers();
 		if (e.type == "mousedown")
 		{
 			if (speedBoost == true)
@@ -231,7 +240,7 @@ function UserInterface()
 		}
 		else if (e.type == "mouseup")
 		{
-			clearInterval(speedIntervalIds.right);
+			clearSpeedTimers();
 		}
 	}
 

@@ -132,8 +132,7 @@ function ObjectMover(object, isDuck) {
 		// landing
 		if (object.userData.inAir == true) {
 			// can't land on obstacle (3) or egg (9)
-			if (currentSquareInfo != componentType.obstacle &&
-				belowObject.userData.componentType != componentType.egg) {
+			if (currentSquareInfo != componentType.obstacle && (belowObject == null || belowObject.userData.componentType != componentType.egg)) {
 
 				object.position.y -= duckFlightHeight;
 

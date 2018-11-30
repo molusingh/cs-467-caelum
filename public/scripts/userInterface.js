@@ -35,10 +35,10 @@ function UserInterface()
 	$("#downButton").click(getPublishFunction("duckDown"));
 	$("#upButton").click(getPublishFunction("duckUp"));
 
-	$("#leftButton").on('mousedown mouseup', speedLeft);
-	$("#rightButton").on('mousedown mouseup', speedRight);
-	$("#downButton").on('mousedown mouseup', speedDown);
-	$("#upButton").on('mousedown mouseup', speedUp);
+	$("#leftButton").on('pointerdown pointerup', speedLeft);
+	$("#rightButton").on('pointerdown pointerup', speedRight);
+	$("#downButton").on('pointerdown pointerup', speedDown);
+	$("#upButton").on('pointerdown pointerup', speedUp);
 
 	// game state buttons
 	$("#restartButton").click(restart);
@@ -68,7 +68,7 @@ function UserInterface()
 	$("#upgradeSpeedButton").click(getPublishFunction("speedUpgrade"));
 	$("#upgradeQuackButton").click(getPublishFunction("quackUpgrade"));
 
-	// mouse click sound publishers
+	// pointer click sound publishers
 	$("#gameControls").click(getPublishFunction("clickSound")); // includes skillButtons, movementControls, and actionButtons
 	$("#startButton").click(getPublishFunction("clickSound")); // start button at title
 	$("#howToPlayButton").click(getPublishFunction("clickSound")); // how to play button at title
@@ -179,7 +179,7 @@ function UserInterface()
 	function speedDown(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "mousedown")
+		if (e.type == "pointerdown")
 		{
 			if (speedBoost == true)
 			{
@@ -187,7 +187,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckDown"), 100);
 			}
 		}
-		else if (e.type == "mouseup")
+		else if (e.type == "pointerup")
 		{
 			clearSpeedTimers();
 		}
@@ -196,7 +196,7 @@ function UserInterface()
 	function speedUp(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "mousedown")
+		if (e.type == "pointerdown")
 		{
 			if (speedBoost == true)
 			{
@@ -204,7 +204,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckUp"), 100);
 			}
 		}
-		else if (e.type == "mouseup")
+		else if (e.type == "pointerup")
 		{
 			clearSpeedTimers();
 		}
@@ -213,7 +213,7 @@ function UserInterface()
 	function speedLeft(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "mousedown")
+		if (e.type == "pointerdown")
 		{
 			if (speedBoost == true)
 			{
@@ -221,7 +221,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckLeft"), 100);
 			}
 		}
-		else if (e.type == "mouseup")
+		else if (e.type == "pointerup")
 		{
 			clearSpeedTimers();
 		}
@@ -230,7 +230,7 @@ function UserInterface()
 	function speedRight(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "mousedown")
+		if (e.type == "pointerdown")
 		{
 			if (speedBoost == true)
 			{
@@ -238,7 +238,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckRight"), 100);
 			}
 		}
-		else if (e.type == "mouseup")
+		else if (e.type == "pointerup")
 		{
 			clearSpeedTimers();
 		}

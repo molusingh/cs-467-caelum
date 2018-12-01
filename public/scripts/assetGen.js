@@ -297,6 +297,19 @@ function assetGen(scene) {
                 }
             }
         }
+
+        //let's double check any faulty rays
+        for (var i = 0; i < 40; i++) {
+            for (var j = 0; j < 40; j++) {
+                var vector = new THREE.Vector2(i, j);
+                if (grid.getGridSquareInfo(vector) === componentType.water) {
+                    var isLand = identifyObject(vector);
+                    if (isLand === 1) {
+                        grid.setEnvSquare(i, j, componentType.land);
+                    }
+                }
+            }
+        }
     }
 
 

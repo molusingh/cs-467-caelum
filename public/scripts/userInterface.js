@@ -35,11 +35,11 @@ function UserInterface()
 	$("#downButton").click(getPublishFunction("duckDown"));
 	$("#upButton").click(getPublishFunction("duckUp"));
 
-	$("#leftButton").on('pointerdown pointerup', speedLeft);
-	$("#rightButton").on('pointerdown pointerup', speedRight);
-	$("#downButton").on('pointerdown pointerup', speedDown);
-	$("#upButton").on('pointerdown pointerup', speedUp);
-
+	$("#leftButton").on('pointerdown pointerup touchend touchstart', speedLeft);
+	$("#rightButton").on('pointerdown pointerup touchend touchstart', speedRight);
+	$("#downButton").on('pointerdown pointerup touchend touchstart', speedDown);
+	$("#upButton").on('pointerdown pointerup touchend touchstart', speedUp);
+	
 	// game state buttons
 	$("#restartButton").click(restart);
 	$("#restartButton2").click(restart);
@@ -179,7 +179,7 @@ function UserInterface()
 	function speedDown(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "pointerdown")
+		if (e.type == "pointerdown" || e.type == 'touchend')
 		{
 			if (speedBoost == true)
 			{
@@ -187,7 +187,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckDown"), 100);
 			}
 		}
-		else if (e.type == "pointerup")
+		else if (e.type == "pointerup" || e.type == 'touchstart')
 		{
 			clearSpeedTimers();
 		}
@@ -196,7 +196,7 @@ function UserInterface()
 	function speedUp(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "pointerdown")
+		if (e.type == "pointerdown"  || e.type == 'touchend')
 		{
 			if (speedBoost == true)
 			{
@@ -204,7 +204,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckUp"), 100);
 			}
 		}
-		else if (e.type == "pointerup")
+		else if (e.type == "pointerup" || e.type == 'touchstart')
 		{
 			clearSpeedTimers();
 		}
@@ -213,7 +213,7 @@ function UserInterface()
 	function speedLeft(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "pointerdown")
+		if (e.type == "pointerdown"  || e.type == 'touchend')
 		{
 			if (speedBoost == true)
 			{
@@ -221,7 +221,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckLeft"), 100);
 			}
 		}
-		else if (e.type == "pointerup")
+		else if (e.type == "pointerup" || e.type == 'touchstart')
 		{
 			clearSpeedTimers();
 		}
@@ -230,7 +230,7 @@ function UserInterface()
 	function speedRight(e)
 	{
 		clearSpeedTimers();
-		if (e.type == "pointerdown")
+		if (e.type == "pointerdown"  || e.type == 'touchend')
 		{
 			if (speedBoost == true)
 			{
@@ -238,7 +238,7 @@ function UserInterface()
 					setInterval(getPublishFunction("duckRight"), 100);
 			}
 		}
-		else if (e.type == "pointerup")
+		else if (e.type == "pointerup" || e.type == 'touchstart')
 		{
 			clearSpeedTimers();
 		}

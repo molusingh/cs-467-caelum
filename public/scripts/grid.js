@@ -127,6 +127,10 @@ function board() {
         return null;
     }
 
+    this.getGridSquareInfo = function (vector) {
+        return getNormalizedSquareInfo(vector.x, vector.y);
+    }
+
     this.reset = function () {
         initializeEnvTable(40, 40);
         for (var i; i < actorTable.length; i++) {

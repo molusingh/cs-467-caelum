@@ -236,7 +236,7 @@ function playerControls(scene, duck, flyingDuck) {
         }
 
         // if duck isn't in water and the square it is facing is water, go ahead
-        if (duck.userData.inWater === false && nextSquare == componentType.water) {
+        if (duck.userData.inWater === false && nextSquare == componentType.water && nextSquare != componentType.duckling) {
             bus.publish("jumpSound");
             duck.userData.inWater = true;
 
@@ -255,7 +255,7 @@ function playerControls(scene, duck, flyingDuck) {
         }
 
         // if duck is in water and the square it is facing is land, duckling, grass, egg, stick, or nest go ahead
-        if (duck.userData.inWater === true && (nextSquare == componentType.land || nextSquare == componentType.duckling || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
+        if (duck.userData.inWater === true && (nextSquare == componentType.land || nextSquare == componentType.grass || nextSquare == componentType.egg || nextSquare == componentType.stick || nextSquare == componentType.nest)) {
 
             bus.publish("jumpSound");
             duck.userData.inWater = false;

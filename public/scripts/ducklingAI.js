@@ -52,7 +52,6 @@ function ducklingAI(scene, hatchling, egg)
 
     function hatch()
     {
-
         hatchling.position.x = egg.position.x;
         hatchling.position.z = egg.position.z;
         duckling = hatchling;
@@ -82,8 +81,18 @@ function ducklingAI(scene, hatchling, egg)
     {
         hatchling.position.y = -100;
         egg.position.y = .1;
-        hatchingTimeoutId = setTimeout(function() { hatch(); },
-            egg.userData.hatchTime * 1000);
+        hatchingTimeoutId = setTimeout(callback, egg.userData.hatchTime * 1000);
+        function callback()
+        {
+            if (!active)
+            {
+                hatchingTimeoutId = 
+                    setTimeout(callback, egg.userData.hatchTime * 1000);
+                return;
+            }
+            hatch();
+            
+        }
     }
 
     // locates the specified target

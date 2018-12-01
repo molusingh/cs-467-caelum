@@ -504,16 +504,16 @@ function playerControls(scene, duck, flyingDuck) {
 
         // get type of square duck is facing
         if (facing === 'up') {
-            nextSquare = grid.getEnvOnlyInfo(duck.position.z, duck.position.x - 10);
+            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x - 10);
         }
         else if (facing === 'left') {
-            nextSquare = grid.getEnvOnlyInfo(duck.position.z + 10, duck.position.x);
+            nextSquare = grid.getSquareInfo(duck.position.z + 10, duck.position.x);
         }
         else if (facing === 'down') {
-            nextSquare = grid.getEnvOnlyInfo(duck.position.z, duck.position.x + 10);
+            nextSquare = grid.getSquareInfo(duck.position.z, duck.position.x + 10);
         }
         else if (facing === 'right') {
-            nextSquare = grid.getEnvOnlyInfo(duck.position.z - 10, duck.position.x);
+            nextSquare = grid.getSquareInfo(duck.position.z - 10, duck.position.x);
         }
 
         // moving from land to land, duckling, grass, egg, stick, or nest
